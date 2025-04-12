@@ -12,14 +12,14 @@ const Hero = () => {
             Hello, I'm
           </p>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-6 animate-fade-in opacity-0" style={{ animationDelay: '0.4s' }}>
-            Your Name
+            Harmanpreet Singh
           </h1>
           <h2 className="text-xl md:text-2xl text-muted-foreground mb-8 animate-fade-in opacity-0" style={{ animationDelay: '0.6s' }}>
-            <span className="gradient-text font-medium">Professional Title</span> - Specialized in creating impactful digital experiences
+            <span className="gradient-text font-medium">Data Scientist</span> - Specialized in Machine Learning & AI
           </h2>
           <p className="text-foreground/80 max-w-xl mb-10 animate-fade-in opacity-0" style={{ animationDelay: '0.8s' }}>
-            I am a passionate professional dedicated to delivering exceptional results through innovation, 
-            creative problem-solving, and attention to detail.
+            I am a passionate data scientist with expertise in machine learning, LLMs, and cloud technologies.
+            Dedicated to delivering exceptional results through innovation, data-driven insights, and creative problem-solving.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 animate-fade-in opacity-0" style={{ animationDelay: '1s' }}>
             <Button asChild className="bg-gradient-to-r from-accent1 to-accent2 hover:opacity-90 transition-opacity">

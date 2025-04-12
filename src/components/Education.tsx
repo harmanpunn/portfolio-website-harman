@@ -22,45 +22,33 @@ type Education = {
 const educations: Education[] = [
   {
     id: 1,
-    degree: "Master's Degree",
-    institution: "University Name",
-    location: "City, Country",
-    period: "Sep 2015 - Jun 2017",
-    description: "Completed advanced studies with a focus on specialized areas of interest, developing deeper knowledge and research skills.",
+    degree: "Masters in Computer Science",
+    institution: "Rutgers, The State University of New Jersey",
+    location: "New Brunswick, NJ",
+    period: "2022 - 2024",
+    description: "Completed advanced studies with a focus on machine learning, artificial intelligence, and data science.",
     highlights: [
-      "Graduated with honors / high distinction",
-      "Thesis focused on innovative solutions in the field",
-      "Participated in research projects and academic conferences"
+      "Research Assistant for longitudinal study of local news in New Jersey",
+      "Research assistant analyzing CS enrollment and performance trends",
+      "Full Stack Developer and Machine Learning Engineer for GRID project",
+      "Developed multiple AI and ML projects showcasing practical applications"
     ],
-    subjects: ["Advanced Subject 1", "Advanced Subject 2", "Research Methods", "Specialized Topic"]
+    subjects: ["Machine Learning", "Artificial Intelligence", "Data Science", "Natural Language Processing", "Deep Learning"]
   },
   {
     id: 2,
-    degree: "Bachelor's Degree",
-    institution: "University Name",
-    location: "City, Country",
-    period: "Sep 2011 - Jun 2015",
-    description: "Built a strong foundation in core principles and methodologies, developing fundamental skills and knowledge.",
+    degree: "Bachelors of Technology in Electronics and Communication",
+    institution: "Dr. B.R Ambedkar National Institute of Technology",
+    location: "Jalandhar, India",
+    period: "2013 - 2017",
+    description: "Built a strong foundation in engineering principles, programming, and technology fundamentals.",
     highlights: [
-      "Dean's List for academic excellence",
-      "Completed capstone project with distinction",
-      "Participated in student organizations and competitions"
+      "Developed alcohol detection and accident prevention technology",
+      "Worked on various electronic and programming projects",
+      "Participated in technical competitions and hackathons",
+      "Learned fundamentals of programming and engineering design"
     ],
-    subjects: ["Core Subject 1", "Core Subject 2", "Core Subject 3", "Elective Topic"]
-  },
-  {
-    id: 3,
-    degree: "Relevant Certification",
-    institution: "Certification Authority",
-    location: "Online / City, Country",
-    period: "Jan 2018 - Mar 2018",
-    description: "Earned professional certification demonstrating specialized skills and industry-recognized qualifications.",
-    highlights: [
-      "Achieved top score in practical assessments",
-      "Completed challenging hands-on projects",
-      "Applied learnings to real-world scenarios"
-    ],
-    subjects: ["Certification Topic 1", "Certification Topic 2", "Practical Applications"]
+    subjects: ["Electronics", "Communication Systems", "Programming", "Digital Signal Processing", "Engineering Mathematics"]
   }
 ];
 
@@ -158,23 +146,23 @@ const Education = () => {
             <div className="flex items-start">
               <Award className="h-10 w-10 text-accent1 mr-4 flex-shrink-0 mt-1" />
               <div>
-                <h3 className="text-xl font-medium mb-4">Additional Certifications & Achievements</h3>
+                <h3 className="text-xl font-medium mb-4">Additional Achievements & Recognitions</h3>
                 <ul className="space-y-3">
                   <li className="flex items-start">
                     <span className="text-accent1 mr-2">•</span>
-                    <span className="text-foreground/80">Professional Certification in Relevant Field (2020)</span>
+                    <span className="text-foreground/80">Published a Medium article on Joi – Form validation made simple</span>
                   </li>
                   <li className="flex items-start">
                     <span className="text-accent1 mr-2">•</span>
-                    <span className="text-foreground/80">Advanced Training in Specialized Technology (2019)</span>
+                    <span className="text-foreground/80">Received "Rookie Award" for exceptional performance</span>
                   </li>
                   <li className="flex items-start">
                     <span className="text-accent1 mr-2">•</span>
-                    <span className="text-foreground/80">Industry Recognition Award for Excellence (2018)</span>
+                    <span className="text-foreground/80">Received "Made a difference" award for amazing client impact</span>
                   </li>
                   <li className="flex items-start">
                     <span className="text-accent1 mr-2">•</span>
-                    <span className="text-foreground/80">Completed Advanced Workshop in Emerging Technology (2017)</span>
+                    <span className="text-foreground/80">Research Assistant in multiple academic studies at Rutgers University</span>
                   </li>
                 </ul>
               </div>

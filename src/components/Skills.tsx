@@ -2,13 +2,13 @@
 import { useEffect, useRef } from 'react';
 import { 
   Code, 
-  PenTool, 
-  Terminal, 
-  GitBranch, 
   Database, 
-  Users, 
+  Server, 
+  GitBranch, 
+  Cloud, 
+  Cpu, 
   BarChart, 
-  Compass 
+  Bot
 } from 'lucide-react';
 
 type Skill = {
@@ -17,19 +17,19 @@ type Skill = {
 };
 
 const technicalSkills: Skill[] = [
-  { name: "JavaScript / TypeScript", percentage: 90 },
-  { name: "React / Next.js", percentage: 85 },
-  { name: "HTML / CSS", percentage: 95 },
-  { name: "Node.js", percentage: 80 },
-  { name: "SQL / NoSQL", percentage: 75 },
+  { name: "Python", percentage: 95 },
+  { name: "Machine Learning", percentage: 90 },
+  { name: "LLMs & RAG", percentage: 85 },
+  { name: "AWS", percentage: 85 },
+  { name: "Data Analysis", percentage: 90 },
 ];
 
 const softSkills: Skill[] = [
-  { name: "Communication", percentage: 90 },
   { name: "Problem Solving", percentage: 95 },
+  { name: "Communication", percentage: 90 },
   { name: "Teamwork", percentage: 85 },
   { name: "Time Management", percentage: 80 },
-  { name: "Leadership", percentage: 75 },
+  { name: "Research", percentage: 90 },
 ];
 
 const SkillCard = ({ 
@@ -94,50 +94,50 @@ const Skills = () => {
         <div className="max-w-3xl mx-auto text-center mb-16 animate-on-scroll">
           <h2 className="text-3xl font-serif font-bold mb-4">My Skills</h2>
           <p className="text-foreground/70">
-            A combination of technical expertise and soft skills that enable me to deliver exceptional results.
+            A combination of technical expertise and soft skills that enable me to deliver exceptional results in data science and machine learning.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
           <SkillCard 
             icon={Code} 
-            title="Frontend Development" 
-            description="Creating responsive, accessible and performant user interfaces with modern frameworks."
+            title="Programming Languages" 
+            description="Python, R, Java, JavaScript, HTML/CSS for building data-driven applications and interfaces."
           />
           <SkillCard 
-            icon={Terminal} 
-            title="Backend Development" 
-            description="Building robust server-side applications and APIs to power digital experiences."
+            icon={Cpu} 
+            title="Machine Learning" 
+            description="Expertise in PyTorch, TensorFlow, scikit-learn for predictive modeling and AI solutions."
+          />
+          <SkillCard 
+            icon={Bot} 
+            title="LLMs & RAG" 
+            description="Experience with GPT, LangChain, and building Retrieval Augmented Generation systems."
           />
           <SkillCard 
             icon={Database} 
-            title="Database Design" 
-            description="Designing efficient database schemas and optimizing query performance."
+            title="Data Engineering" 
+            description="Proficient in SQL, MongoDB, Vector Databases, and data pipeline development."
           />
           <SkillCard 
-            icon={PenTool} 
-            title="UI/UX Design" 
-            description="Crafting intuitive and visually appealing interfaces focused on user experience."
+            icon={Cloud} 
+            title="Cloud & AWS" 
+            description="AWS (S3, SageMaker, Redshift, Quicksight, EC2, Lambda) for scalable deployments."
+          />
+          <SkillCard 
+            icon={Server} 
+            title="MLOps" 
+            description="Building end-to-end ML pipelines, automated deployments, and monitoring solutions."
           />
           <SkillCard 
             icon={GitBranch} 
-            title="Version Control" 
-            description="Maintaining code quality and collaboration through efficient version control."
-          />
-          <SkillCard 
-            icon={Compass} 
-            title="Project Architecture" 
-            description="Designing scalable and maintainable software architectures."
-          />
-          <SkillCard 
-            icon={Users} 
-            title="Team Collaboration" 
-            description="Working effectively with cross-functional teams to achieve project goals."
+            title="DevOps" 
+            description="Docker, CI/CD, Jenkins for streamlined development and deployment processes."
           />
           <SkillCard 
             icon={BarChart} 
-            title="Performance Optimization" 
-            description="Optimizing applications for speed, efficiency and resource utilization."
+            title="Data Analysis" 
+            description="Pandas, NumPy, and visualization tools for extracting insights from complex datasets."
           />
         </div>
 

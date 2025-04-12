@@ -23,47 +23,85 @@ type Experience = {
 const experiences: Experience[] = [
   {
     id: 1,
-    title: "Senior Position",
-    company: "Company Name",
-    location: "City, Country",
-    period: "Jan 2022 - Present",
-    description: "Led the development of key initiatives and projects, collaborating with cross-functional teams to deliver high-quality solutions.",
+    title: "Data Scientist",
+    company: "Invidi Technologies",
+    location: "Princeton, NJ",
+    period: "June 2024 - Present",
+    description: "Leading data science initiatives focused on forecasting, optimization, and MLOps solutions.",
     achievements: [
-      "Spearheaded the implementation of new technologies that improved system performance by 40%",
-      "Managed a team of 5 developers, mentoring junior staff and improving team productivity",
-      "Reduced application load time by 30% through code optimization and performance enhancements"
+      "Built an MLOps pipeline using AWS Sagemaker and API Gateway to deploy ML models as scalable, serverless endpoints, integrated with CI/CD for automated deployment and real-time monitoring",
+      "Achieved 60-70% accuracy in forecasting impressions at ad and inventory levels using models like ARIMA, SARIMA, RandomForest, and XGBoost",
+      "Developed an ML-driven ad scheduling optimization system, improving pacing accuracy by 15% and reducing under/over-delivery by 30%",
+      "Conducting research on an LLM-powered campaign log classification pipeline to extract key insights",
+      "Developed and deployed multiple reporting dashboards in QuickSight, providing actionable insights on inventory utilization"
     ],
-    skills: ["Leadership", "React", "TypeScript", "Node.js", "Team Management"],
+    skills: ["Python", "Machine Learning", "Forecasting", "Analytics", "QuickSight", "Time Series", "Regression", "AWS", "REST APIs"],
     url: "#"
   },
   {
     id: 2,
-    title: "Mid-level Position",
-    company: "Previous Company",
-    location: "City, Country",
-    period: "Jun 2019 - Dec 2021",
-    description: "Developed and maintained applications, focusing on code quality, performance and user experience.",
+    title: "Senior Software Engineer",
+    company: "Visa Inc.",
+    location: "San Francisco, CA",
+    period: "August 2021 - August 2022",
+    description: "Developed enterprise applications and ML-powered features for Visa's internal platforms.",
     achievements: [
-      "Designed and implemented key features that increased user engagement by 25%",
-      "Collaborated with UX designers to improve application usability and accessibility",
-      "Participated in code reviews and technical planning sessions"
+      "Collaborated with product teams to redesign entire Visa's intranet, improving retention and user experience by 40%",
+      "10x improvement in jobs listing page response time by implementing targeted scheduling & caching",
+      "Developed an ML-powered job recommendation engine, enhancing user engagement and increasing click-through rates",
+      "Enhanced Visa's chatbot using NLP, improving response accuracy and cutting query resolution time by 30%",
+      "Constructed 10+ REST APIs for Employee Dashboard, facilitating efficient data integration across various product teams"
     ],
-    skills: ["JavaScript", "React", "CSS", "API Integration", "Testing"],
+    skills: ["Java", "JavaScript", "Python", "Adobe Experience Manager (AEM)", "React.js", "Machine Learning", "REST APIs"],
     url: "#"
   },
   {
     id: 3,
-    title: "Junior Position",
-    company: "First Company",
-    location: "City, Country",
-    period: "Feb 2017 - May 2019",
-    description: "Started my professional journey developing applications and learning industry best practices.",
+    title: "Backend Engineer",
+    company: "Netcentric, A Cognizant Digital Business",
+    location: "Zurich, Switzerland",
+    period: "November 2019 - July 2021",
+    description: "Developed backend solutions for major international clients including Kia Motors and InterContinental Hotels Group.",
     achievements: [
-      "Contributed to multiple projects, learning various technologies and frameworks",
-      "Assisted in troubleshooting and resolving issues in production environments",
-      "Participated in agile development processes and daily stand-ups"
+      "Translation of 50+ wireframes and creative designs into functional requirements, and subsequently into technical design",
+      "Capitalized on Adobe Analytics to apply real-time analytics and segmentation across marketing channels",
+      "60% automation of workflow by implementing CI/CD pipelines for deployment and testing",
+      "Deployed Brokers (RabbitMQ), REST APIs and remote procedure call to interconnect microservices",
+      "Leveraged AEM as content management system to create a consistent experience increasing traffic by 32%"
     ],
-    skills: ["JavaScript", "HTML", "CSS", "Git", "Teamwork"],
+    skills: ["Java", "JavaScript", "AEM", "Adobe Analytics", "Machine Learning", "Angular", "OSGi", "AWS", "CSS/SCSS"],
+    url: "#"
+  },
+  {
+    id: 4,
+    title: "Associate Technology",
+    company: "Publicis Sapient",
+    location: "Gurgaon, India",
+    period: "December 2017 - October 2019",
+    description: "Developed web solutions and ML models for clients and internal projects.",
+    achievements: [
+      "Analytics to gauge the effectiveness of marketing campaigns, create customer profiles to boost profitability",
+      "Developed components, templates, services, and servlets to drive the entire Roche Diagnostics website",
+      "15% performance improvement in search functionality by integrating with Search & Promote",
+      "Built an employee attrition prediction program utilizing XGBoost with an accuracy of 91%",
+      "Orchestrated data pipeline resulting in a 50% automation of workflow"
+    ],
+    skills: ["Java", "JavaScript", "Python", "AEM", "Django", "Analytics", "Machine Learning", "Apache Sling", "CSS/SCSS"],
+    url: "#"
+  },
+  {
+    id: 5,
+    title: "Software Developer Intern",
+    company: "Invidi Technologies",
+    location: "Princeton, NJ",
+    period: "May 2023 - May 2024",
+    description: "Developed advanced inventory scheduling system for efficient ad campaign delivery.",
+    achievements: [
+      "Devised an efficient inventory scheduler using Python that matches media inventory with campaign data",
+      "Achieved 98% utilization rate of ad inventory by designing and implementing advanced scheduling rules",
+      "Analyzed 4 years of TV audience data and large AWS Redshift data sets, providing actionable viewership insights"
+    ],
+    skills: ["Python", "AWS Redshift", "Data Analysis", "Scheduling Algorithms", "SQL"],
     url: "#"
   }
 ];
