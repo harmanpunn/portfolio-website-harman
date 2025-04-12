@@ -1,0 +1,254 @@
+
+import { useEffect, useRef, useState } from 'react';
+import { 
+  ExternalLink, 
+  Github, 
+  LayoutGrid, 
+  List
+} from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+
+type Project = {
+  id: number;
+  title: string;
+  description: string;
+  image: string;
+  tags: string[];
+  demoUrl?: string;
+  repoUrl?: string;
+};
+
+const projects: Project[] = [
+  {
+    id: 1,
+    title: "Project One",
+    description: "A comprehensive solution that addressed specific challenges and delivered tangible results. Utilized cutting-edge technologies and methodologies.",
+    image: "https://placehold.co/600x400/e2e8f0/1e293b?text=Project+One",
+    tags: ["React", "TypeScript", "Tailwind CSS", "Node.js"],
+    demoUrl: "#",
+    repoUrl: "#"
+  },
+  {
+    id: 2,
+    title: "Project Two",
+    description: "An innovative approach to solving complex problems, focusing on user experience and performance optimization.",
+    image: "https://placehold.co/600x400/e2e8f0/1e293b?text=Project+Two",
+    tags: ["Next.js", "GraphQL", "Styled Components"],
+    demoUrl: "#",
+    repoUrl: "#"
+  },
+  {
+    id: 3,
+    title: "Project Three",
+    description: "A collaborative effort that showcased teamwork and technical excellence, resulting in a highly effective solution.",
+    image: "https://placehold.co/600x400/e2e8f0/1e293b?text=Project+Three",
+    tags: ["JavaScript", "Express", "MongoDB", "Docker"],
+    demoUrl: "#",
+    repoUrl: "#"
+  },
+  {
+    id: 4,
+    title: "Project Four",
+    description: "A user-centric application designed to enhance productivity and streamline workflows through intuitive interfaces.",
+    image: "https://placehold.co/600x400/e2e8f0/1e293b?text=Project+Four",
+    tags: ["Vue.js", "Firebase", "SCSS", "Webpack"],
+    demoUrl: "#",
+    repoUrl: "#"
+  },
+  {
+    id: 5,
+    title: "Project Five",
+    description: "An enterprise-grade solution that addressed specific business needs while maintaining high performance and security standards.",
+    image: "https://placehold.co/600x400/e2e8f0/1e293b?text=Project+Five",
+    tags: ["Angular", "TypeScript", "Java Spring", "PostgreSQL"],
+    demoUrl: "#",
+    repoUrl: "#"
+  },
+  {
+    id: 6,
+    title: "Project Six",
+    description: "A mobile-first application designed to provide seamless experiences across devices and platforms.",
+    image: "https://placehold.co/600x400/e2e8f0/1e293b?text=Project+Six",
+    tags: ["React Native", "Redux", "Firebase", "Jest"],
+    demoUrl: "#",
+    repoUrl: "#"
+  }
+];
+
+const Projects = () => {
+  const [view, setView] = useState<'grid' | 'list'>('grid');
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animated');
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    const animatedElements = document.querySelectorAll('.animate-on-scroll');
+    animatedElements.forEach((el) => observer.observe(el));
+
+    return () => {
+      animatedElements.forEach((el) => observer.unobserve(el));
+    };
+  }, []);
+
+  const GridProject = ({ project }: { project: Project }) => (
+    <div className="animate-on-scroll card-hover rounded-lg overflow-hidden border border-border bg-background shadow-sm">
+      <div className="relative h-48 overflow-hidden">
+        <img 
+          src={project.image} 
+          alt={project.title} 
+          className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
+        />
+      </div>
+      <div className="p-6">
+        <h3 className="text-xl font-medium mb-2">{project.title}</h3>
+        <p className="text-foreground/70 text-sm mb-4 line-clamp-3">
+          {project.description}
+        </p>
+        <div className="flex flex-wrap gap-2 mb-4">
+          {project.tags.map((tag, i) => (
+            <Badge key={i} variant="secondary" className="font-normal text-xs">
+              {tag}
+            </Badge>
+          ))}
+        </div>
+        <div className="flex space-x-3">
+          {project.demoUrl && (
+            <a 
+              href={project.demoUrl} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-flex items-center text-sm text-accent1 hover:text-accent2 transition-colors"
+            >
+              <span className="mr-1">Live Demo</span>
+              <ExternalLink className="h-3 w-3" />
+            </a>
+          )}
+          {project.repoUrl && (
+            <a 
+              href={project.repoUrl} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-flex items-center text-sm text-accent1 hover:text-accent2 transition-colors"
+            >
+              <span className="mr-1">Code</span>
+              <Github className="h-3 w-3" />
+            </a>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+
+  const ListProject = ({ project }: { project: Project }) => (
+    <div className="animate-on-scroll card-hover rounded-lg border border-border bg-background shadow-sm p-6">
+      <div className="flex flex-col md:flex-row md:items-center gap-6">
+        <div className="md:w-1/4 h-32 md:h-24 rounded overflow-hidden">
+          <img 
+            src={project.image} 
+            alt={project.title} 
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="md:w-3/4">
+          <h3 className="text-xl font-medium mb-2">{project.title}</h3>
+          <p className="text-foreground/70 text-sm mb-3">
+            {project.description}
+          </p>
+          <div className="flex flex-wrap gap-2 mb-3">
+            {project.tags.map((tag, i) => (
+              <Badge key={i} variant="secondary" className="font-normal text-xs">
+                {tag}
+              </Badge>
+            ))}
+          </div>
+          <div className="flex space-x-3">
+            {project.demoUrl && (
+              <a 
+                href={project.demoUrl} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center text-sm text-accent1 hover:text-accent2 transition-colors"
+              >
+                <span className="mr-1">Live Demo</span>
+                <ExternalLink className="h-3 w-3" />
+              </a>
+            )}
+            {project.repoUrl && (
+              <a 
+                href={project.repoUrl} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center text-sm text-accent1 hover:text-accent2 transition-colors"
+              >
+                <span className="mr-1">Code</span>
+                <Github className="h-3 w-3" />
+              </a>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <section id="projects" ref={sectionRef} className="section-padding">
+      <div className="container mx-auto">
+        <div className="max-w-3xl mx-auto text-center mb-16 animate-on-scroll">
+          <h2 className="text-3xl font-serif font-bold mb-4">My Projects</h2>
+          <p className="text-foreground/70">
+            A collection of my notable projects, demonstrating my technical skills and creative problem-solving.
+          </p>
+        </div>
+
+        <div className="flex justify-end mb-8">
+          <div className="inline-flex p-1 bg-muted rounded-md">
+            <Button
+              variant={view === 'grid' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => setView('grid')}
+              className="flex items-center"
+            >
+              <LayoutGrid className="h-4 w-4 mr-1" />
+              <span>Grid</span>
+            </Button>
+            <Button
+              variant={view === 'list' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => setView('list')}
+              className="flex items-center"
+            >
+              <List className="h-4 w-4 mr-1" />
+              <span>List</span>
+            </Button>
+          </div>
+        </div>
+
+        {view === 'grid' ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {projects.map(project => (
+              <GridProject key={project.id} project={project} />
+            ))}
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {projects.map(project => (
+              <ListProject key={project.id} project={project} />
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+};
+
+export default Projects;
