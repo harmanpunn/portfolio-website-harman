@@ -1,6 +1,7 @@
 
 import { useEffect, useRef } from 'react';
 import { Github, Linkedin, Twitter, Mail } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 const About = () => {
   const sectionRef = useRef<HTMLElement>(null);
@@ -48,16 +49,22 @@ const About = () => {
               </p>
               
               <div className="flex space-x-4">
-                <a href="https://github.com/" target="_blank" rel="noopener noreferrer" className="text-foreground/70 hover:text-accent1 transition-colors">
+                <a href="https://github.com/" target="_blank" rel="noopener noreferrer" 
+                   className="text-foreground/70 hover:text-accent1 transition-colors"
+                   aria-label="GitHub Profile">
                   <Github className="h-5 w-5" />
                 </a>
-                <a href="https://linkedin.com/in/harmanpunn" target="_blank" rel="noopener noreferrer" className="text-foreground/70 hover:text-accent1 transition-colors">
+                <a href="https://linkedin.com/in/harmanpunn" target="_blank" rel="noopener noreferrer" 
+                   className="text-foreground/70 hover:text-accent1 transition-colors"
+                   aria-label="LinkedIn Profile">
                   <Linkedin className="h-5 w-5" />
                 </a>
-                <a href="#" className="text-foreground/70 hover:text-accent1 transition-colors">
+                <a href="#" className="text-foreground/70 hover:text-accent1 transition-colors"
+                   aria-label="Twitter Profile">
                   <Twitter className="h-5 w-5" />
                 </a>
-                <a href="mailto:harmanpunn@gmail.com" className="text-foreground/70 hover:text-accent1 transition-colors">
+                <a href="mailto:harmanpunn@gmail.com" className="text-foreground/70 hover:text-accent1 transition-colors"
+                   aria-label="Email Me">
                   <Mail className="h-5 w-5" />
                 </a>
               </div>
@@ -66,25 +73,25 @@ const About = () => {
           
           <div className="animate-on-scroll">
             <div className="rounded-lg overflow-hidden bg-gradient-to-br from-background to-secondary/50 p-1">
-              <div className="bg-background rounded-lg p-6 md:p-8 shadow-inner">
-                <h3 className="text-xl font-medium mb-4">About Me</h3>
-                
-                <div className="space-y-4">
-                  <div className="grid grid-cols-3 gap-2">
-                    <div className="text-foreground/70">Location:</div>
-                    <div className="col-span-2 font-medium">New Brunswick, NJ</div>
-                  </div>
-                  
-                  <div className="grid grid-cols-3 gap-2">
-                    <div className="text-foreground/70">Languages:</div>
-                    <div className="col-span-2 font-medium">English, Hindi, Punjabi</div>
-                  </div>
-                  
-                  <div className="grid grid-cols-3 gap-2">
-                    <div className="text-foreground/70">Availability:</div>
-                    <div className="col-span-2 font-medium">Full-time</div>
-                  </div>
+              <div className="bg-background rounded-lg p-6 md:p-8 shadow-inner flex flex-col items-center">
+                <div className="w-40 h-40 mb-6 overflow-hidden rounded-full border-4 border-accent1/20">
+                  <Avatar className="w-full h-full">
+                    <AvatarImage src="/placeholder.svg" alt="Harmanpreet Singh" className="object-cover" />
+                    <AvatarFallback className="text-4xl font-serif bg-accent1/10 text-accent1">HS</AvatarFallback>
+                  </Avatar>
                 </div>
+                
+                <h3 className="text-xl font-medium mb-3">Let's Connect</h3>
+                <p className="text-center text-foreground/70 mb-4">
+                  I'm always open to discussing new projects, opportunities, or collaborations.
+                </p>
+                
+                <a 
+                  href="#contact" 
+                  className="inline-flex items-center px-5 py-2.5 rounded-full bg-gradient-to-r from-accent1 to-accent2 text-white font-medium transition-all hover:shadow-lg hover:scale-105"
+                >
+                  Get In Touch
+                </a>
               </div>
             </div>
           </div>
