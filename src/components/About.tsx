@@ -67,24 +67,9 @@ const About = () => {
           <div className="animate-on-scroll">
             <div className="rounded-lg overflow-hidden bg-gradient-to-br from-background to-secondary/50 p-1">
               <div className="bg-background rounded-lg p-6 md:p-8 shadow-inner">
-                <h3 className="text-xl font-medium mb-4">Personal Information</h3>
+                <h3 className="text-xl font-medium mb-4">About Me</h3>
                 
                 <div className="space-y-4">
-                  <div className="grid grid-cols-3 gap-2">
-                    <div className="text-foreground/70">Name:</div>
-                    <div className="col-span-2 font-medium">Harmanpreet Singh</div>
-                  </div>
-                  
-                  <div className="grid grid-cols-3 gap-2">
-                    <div className="text-foreground/70">Email:</div>
-                    <div className="col-span-2 font-medium">harmanpunn@gmail.com</div>
-                  </div>
-                  
-                  <div className="grid grid-cols-3 gap-2">
-                    <div className="text-foreground/70">Phone:</div>
-                    <div className="col-span-2 font-medium">+1 (848)-313-6708</div>
-                  </div>
-                  
                   <div className="grid grid-cols-3 gap-2">
                     <div className="text-foreground/70">Location:</div>
                     <div className="col-span-2 font-medium">New Brunswick, NJ</div>

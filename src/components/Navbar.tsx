@@ -22,7 +22,7 @@ const Navbar = () => {
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-background/90 backdrop-blur-md shadow-sm py-3' : 'bg-transparent py-5'}`}>
       <div className="container mx-auto px-6 flex items-center justify-between">
         <a href="#" className="text-xl font-serif font-bold">
-          <span className="gradient-text">Portfolio</span>
+          <span className="gradient-text">Harmanpreet Singh</span>
         </a>
         
         {/* Desktop Navigation */}

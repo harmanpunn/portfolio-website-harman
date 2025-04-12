@@ -12,7 +12,7 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="mb-6 md:mb-0">
             <a href="#" className="text-xl font-serif font-bold">
-              <span className="gradient-text">Portfolio</span>
+              <span className="gradient-text">Harmanpreet Singh</span>
             </a>
             <p className="mt-2 text-primary-foreground/70 text-sm">
               Crafting exceptional digital experiences.
@@ -39,7 +39,7 @@ const Footer = () => {
         
         <div className="border-t border-primary-foreground/10 mt-8 pt-8 flex flex-col sm:flex-row justify-between items-center">
           <p className="text-primary-foreground/70 text-sm mb-4 sm:mb-0">
-            &copy; {new Date().getFullYear()} Your Name. All rights reserved.
+            &copy; {new Date().getFullYear()} Harmanpreet Singh. All rights reserved.
           </p>
           
           <p className="text-primary-foreground/70 text-sm">
