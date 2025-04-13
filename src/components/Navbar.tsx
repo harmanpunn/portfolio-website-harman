@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const Navbar = () => {
@@ -34,6 +34,15 @@ const Navbar = () => {
           <a href="#education" className="nav-link">Education</a>
           <a href="#projects" className="nav-link">Projects</a>
           <a href="#contact" className="nav-link">Contact</a>
+          <a 
+            href="/resume.pdf" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="ml-2 inline-flex items-center justify-center px-4 py-1.5 rounded-full bg-gradient-to-r from-accent1 to-accent2 text-white font-medium transition-all hover:shadow-lg hover:scale-105"
+          >
+            <FileText className="mr-1 h-4 w-4" />
+            Resume
+          </a>
         </nav>
         
         <Button variant="ghost" size="icon" onClick={toggleMenu} className="md:hidden">
@@ -52,6 +61,16 @@ const Navbar = () => {
             <a href="#education" className="nav-link" onClick={toggleMenu}>Education</a>
             <a href="#projects" className="nav-link" onClick={toggleMenu}>Projects</a>
             <a href="#contact" className="nav-link" onClick={toggleMenu}>Contact</a>
+            <a 
+              href="/resume.pdf" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center px-4 py-1.5 mt-2 rounded-full bg-gradient-to-r from-accent1 to-accent2 text-white font-medium transition-all hover:shadow-lg hover:scale-105"
+              onClick={toggleMenu}
+            >
+              <FileText className="mr-1 h-4 w-4" />
+              Resume
+            </a>
           </nav>
         </div>
       )}

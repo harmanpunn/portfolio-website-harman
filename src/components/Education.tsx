@@ -15,7 +15,6 @@ type Education = {
   location: string;
   period: string;
   description: string;
-  highlights: string[];
   subjects: string[];
 };
 
@@ -26,13 +25,7 @@ const educations: Education[] = [
     institution: "Rutgers, The State University of New Jersey",
     location: "New Brunswick, NJ",
     period: "2022 - 2024",
-    description: "Completed advanced studies with a focus on machine learning, artificial intelligence, and data science.",
-    highlights: [
-      "Research Assistant for longitudinal study of local news in New Jersey",
-      "Research assistant analyzing CS enrollment and performance trends",
-      "Full Stack Developer and Machine Learning Engineer for GRID project",
-      "Developed multiple AI and ML projects showcasing practical applications"
-    ],
+    description: "Completed advanced studies with a focus on machine learning, artificial intelligence, and data science. Research Assistant for longitudinal study of local news in New Jersey and analyzing CS enrollment and performance trends.",
     subjects: ["Machine Learning", "Artificial Intelligence", "Data Science", "Natural Language Processing", "Deep Learning"]
   },
   {
@@ -41,13 +34,7 @@ const educations: Education[] = [
     institution: "Dr. B.R Ambedkar National Institute of Technology",
     location: "Jalandhar, India",
     period: "2013 - 2017",
-    description: "Built a strong foundation in engineering principles, programming, and technology fundamentals.",
-    highlights: [
-      "Developed alcohol detection and accident prevention technology",
-      "Worked on various electronic and programming projects",
-      "Participated in technical competitions and hackathons",
-      "Learned fundamentals of programming and engineering design"
-    ],
+    description: "Built a strong foundation in engineering principles, programming, and technology fundamentals. Developed alcohol detection and accident prevention technology. Worked on various electronic and programming projects.",
     subjects: ["Electronics", "Communication Systems", "Programming", "Digital Signal Processing", "Engineering Mathematics"]
   }
 ];
@@ -86,48 +73,34 @@ const Education = () => {
         </div>
 
         <div className="max-w-4xl mx-auto">
-          {educations.map((edu, index) => (
-            <div 
-              key={edu.id} 
-              className="timeline-item animate-on-scroll"
-              style={{ animationDelay: `${index * 0.2}s` }}
-            >
-              <div className="bg-background rounded-lg border border-border p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
-                <div className="flex flex-col md:flex-row md:items-center justify-between mb-4">
-                  <div>
+          <div className="relative border-l-2 border-accent2/30 pl-8 ml-8 md:ml-[30%]">
+            {educations.map((edu, index) => (
+              <div 
+                key={edu.id} 
+                className="animate-on-scroll mb-12 relative"
+                style={{ animationDelay: `${index * 0.2}s` }}
+              >
+                <div className="absolute -left-10 top-0 w-6 h-6 bg-accent2 rounded-full border-4 border-background z-10"></div>
+                <div className="bg-background rounded-lg border border-border p-6 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+                  <div className="flex flex-col md:flex-row justify-between mb-3">
                     <h3 className="text-xl font-medium">{edu.degree}</h3>
-                    <div className="flex items-center text-foreground/70 mt-1">
-                      <GraduationCap className="h-4 w-4 mr-1" />
-                      <span>{edu.institution}</span>
-                    </div>
-                  </div>
-                  <div className="mt-2 md:mt-0">
-                    <div className="flex items-center text-foreground/70 mb-1">
+                    <div className="flex items-center text-foreground/70">
                       <Calendar className="h-4 w-4 mr-1" />
                       <span>{edu.period}</span>
                     </div>
-                    <div className="flex items-center text-foreground/70">
-                      <MapPin className="h-4 w-4 mr-1" />
-                      <span>{edu.location}</span>
-                    </div>
                   </div>
-                </div>
+                  
+                  <div className="flex items-center text-foreground/70 mb-3">
+                    <GraduationCap className="h-4 w-4 mr-1" />
+                    <span className="mr-3">{edu.institution}</span>
+                    <MapPin className="h-4 w-4 mr-1" />
+                    <span>{edu.location}</span>
+                  </div>
 
-                <p className="text-foreground/80 mb-4">
-                  {edu.description}
-                </p>
+                  <p className="text-foreground/80 mb-4">
+                    {edu.description}
+                  </p>
 
-                <div className="mb-4">
-                  <h4 className="text-sm font-medium mb-2">Highlights:</h4>
-                  <ul className="list-disc list-inside space-y-1 text-foreground/80">
-                    {edu.highlights.map((highlight, i) => (
-                      <li key={i} className="text-sm">{highlight}</li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div>
-                  <h4 className="text-sm font-medium mb-2">Key Subjects:</h4>
                   <div className="flex flex-wrap gap-2">
                     {edu.subjects.map((subject, i) => (
                       <Badge key={i} variant="outline" className="font-normal">
@@ -137,8 +110,8 @@ const Education = () => {
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
         <div className="mt-16 max-w-4xl mx-auto">
