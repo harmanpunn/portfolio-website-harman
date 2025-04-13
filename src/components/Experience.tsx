@@ -105,59 +105,54 @@ const Experience = () => {
           </p>
         </div>
 
-        {/* Timeline with circles for years */}
         <div className="max-w-4xl mx-auto relative">
           {/* Vertical line for timeline */}
-          <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-0.5 bg-muted"></div>
+          <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-accent1 to-accent2 rounded-full"></div>
           
-          <div className="space-y-12">
+          <div className="space-y-6">
             {sortedExperiences.map((exp, index) => (
               <div 
                 key={exp.id} 
-                className={`relative flex items-center animate-on-scroll ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'}`}
+                className="group animate-on-scroll relative flex items-start pl-8"
                 style={{ animationDelay: `${index * 0.2}s` }}
               >
-                {/* Center circle with year */}
-                <div className="absolute left-1/2 transform -translate-x-1/2 z-10">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-r from-accent1 to-accent2 flex items-center justify-center shadow-md">
-                    <span className="text-white font-medium">{exp.year}</span>
-                  </div>
+                {/* Circle marker with year */}
+                <div className="absolute -left-4 w-8 h-8 bg-background border-4 border-accent1 rounded-full flex items-center justify-center z-10 transition-all duration-300 group-hover:scale-110 group-hover:border-accent2">
+                  <span className="text-xs font-bold">{exp.year}</span>
                 </div>
                 
                 {/* Content card */}
-                <div className={`w-5/12 ${index % 2 === 0 ? 'pr-12' : 'pl-12'}`}>
-                  <div className="bg-background rounded-lg border border-border/30 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden card-hover">
-                    {/* Header with subtle gradient */}
-                    <div className="bg-gradient-to-r from-accent1/5 to-accent2/5 p-5">
-                      <h3 className="text-xl font-medium">{exp.title}</h3>
-                      <div className="flex flex-wrap items-center text-foreground/70 gap-2 mt-1">
-                        <span className="font-medium">{exp.company}</span>
-                        
-                        <div className="flex items-center gap-1 text-sm">
-                          <MapPin className="h-3 w-3 text-accent1/70" />
-                          <span>{exp.location}</span>
-                        </div>
-                        
-                        <div className="flex items-center gap-1 text-sm">
-                          <Calendar className="h-3 w-3 text-accent1/70" />
-                          <span>{exp.period}</span>
-                        </div>
+                <div className="bg-background/80 backdrop-blur-sm rounded-lg border border-border/30 shadow-sm transition-all duration-300 w-full overflow-hidden group-hover:shadow-md group-hover:border-accent1/30 group-hover:-translate-y-1">
+                  {/* Header with subtle gradient */}
+                  <div className="bg-gradient-to-r from-accent1/5 via-accent2/10 to-transparent p-5">
+                    <h3 className="text-xl font-medium">{exp.title}</h3>
+                    <div className="flex flex-wrap items-center text-foreground/70 gap-2 mt-1">
+                      <span className="font-medium">{exp.company}</span>
+                      
+                      <div className="flex items-center gap-1 text-sm">
+                        <MapPin className="h-3 w-3 text-accent1/70" />
+                        <span>{exp.location}</span>
+                      </div>
+                      
+                      <div className="flex items-center gap-1 text-sm">
+                        <Calendar className="h-3 w-3 text-accent1/70" />
+                        <span>{exp.period}</span>
                       </div>
                     </div>
+                  </div>
+                  
+                  {/* Content */}
+                  <div className="p-5 pt-3">
+                    <p className="text-foreground/80 mb-4">
+                      {exp.description}
+                    </p>
                     
-                    {/* Content */}
-                    <div className="p-5">
-                      <p className="text-foreground/80 mb-4">
-                        {exp.description}
-                      </p>
-                      
-                      <div className="flex flex-wrap gap-2">
-                        {exp.skills.map((skill, i) => (
-                          <Badge key={i} variant="secondary" className="font-normal bg-secondary/50">
-                            {skill}
-                          </Badge>
-                        ))}
-                      </div>
+                    <div className="flex flex-wrap gap-2">
+                      {exp.skills.map((skill, i) => (
+                        <Badge key={i} variant="secondary" className="font-normal bg-secondary/50 group-hover:bg-accent1/10">
+                          {skill}
+                        </Badge>
+                      ))}
                     </div>
                   </div>
                 </div>

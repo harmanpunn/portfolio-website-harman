@@ -71,7 +71,7 @@ const Education = () => {
   );
 
   return (
-    <section id="education" ref={sectionRef} className="section-padding bg-muted/50">
+    <section id="education" ref={sectionRef} className="section-padding bg-muted/30">
       <div className="container mx-auto">
         <div className="max-w-3xl mx-auto text-center mb-16 animate-on-scroll">
           <h2 className="text-3xl font-serif font-bold mb-4">Education & Certifications</h2>
@@ -80,59 +80,54 @@ const Education = () => {
           </p>
         </div>
 
-        {/* Timeline with circles for years */}
         <div className="max-w-4xl mx-auto relative">
           {/* Vertical line for timeline */}
-          <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-0.5 bg-muted"></div>
+          <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-accent2 to-accent1 rounded-full"></div>
           
-          <div className="space-y-12">
+          <div className="space-y-6">
             {sortedEducations.map((edu, index) => (
               <div 
                 key={edu.id} 
-                className={`relative flex items-center animate-on-scroll ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'}`}
+                className="group animate-on-scroll relative flex items-start pl-8"
                 style={{ animationDelay: `${index * 0.2}s` }}
               >
-                {/* Center circle with year */}
-                <div className="absolute left-1/2 transform -translate-x-1/2 z-10">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-r from-accent2 to-accent1 flex items-center justify-center shadow-md">
-                    <span className="text-white font-medium">{edu.year}</span>
-                  </div>
+                {/* Circle marker with year */}
+                <div className="absolute -left-4 w-8 h-8 bg-background border-4 border-accent2 rounded-full flex items-center justify-center z-10 transition-all duration-300 group-hover:scale-110 group-hover:border-accent1">
+                  <span className="text-xs font-bold">{edu.year}</span>
                 </div>
                 
                 {/* Content card */}
-                <div className={`w-5/12 ${index % 2 === 0 ? 'pr-12' : 'pl-12'}`}>
-                  <div className="bg-background rounded-lg border border-border/30 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden card-hover">
-                    {/* Header with subtle gradient */}
-                    <div className="bg-gradient-to-r from-accent2/5 to-accent1/5 p-5">
-                      <h3 className="text-xl font-medium">{edu.degree}</h3>
-                      <div className="flex flex-wrap items-center text-foreground/70 gap-2 mt-1">
-                        <span className="font-medium">{edu.institution}</span>
-                        
-                        <div className="flex items-center gap-1 text-sm">
-                          <MapPin className="h-3 w-3 text-accent2/70" />
-                          <span>{edu.location}</span>
-                        </div>
-                        
-                        <div className="flex items-center gap-1 text-sm">
-                          <Calendar className="h-3 w-3 text-accent2/70" />
-                          <span>{edu.period}</span>
-                        </div>
+                <div className="bg-background/80 backdrop-blur-sm rounded-lg border border-border/30 shadow-sm transition-all duration-300 w-full overflow-hidden group-hover:shadow-md group-hover:border-accent2/30 group-hover:-translate-y-1">
+                  {/* Header with subtle gradient */}
+                  <div className="bg-gradient-to-r from-accent2/5 via-accent1/10 to-transparent p-5">
+                    <h3 className="text-xl font-medium">{edu.degree}</h3>
+                    <div className="flex flex-wrap items-center text-foreground/70 gap-2 mt-1">
+                      <span className="font-medium">{edu.institution}</span>
+                      
+                      <div className="flex items-center gap-1 text-sm">
+                        <MapPin className="h-3 w-3 text-accent2/70" />
+                        <span>{edu.location}</span>
+                      </div>
+                      
+                      <div className="flex items-center gap-1 text-sm">
+                        <Calendar className="h-3 w-3 text-accent2/70" />
+                        <span>{edu.period}</span>
                       </div>
                     </div>
+                  </div>
+                  
+                  {/* Content */}
+                  <div className="p-5 pt-3">
+                    <p className="text-foreground/80 mb-4">
+                      {edu.description}
+                    </p>
                     
-                    {/* Content */}
-                    <div className="p-5">
-                      <p className="text-foreground/80 mb-4">
-                        {edu.description}
-                      </p>
-                      
-                      <div className="flex flex-wrap gap-2">
-                        {edu.subjects.map((subject, i) => (
-                          <Badge key={i} variant="outline" className="font-normal">
-                            {subject}
-                          </Badge>
-                        ))}
-                      </div>
+                    <div className="flex flex-wrap gap-2">
+                      {edu.subjects.map((subject, i) => (
+                        <Badge key={i} variant="outline" className="font-normal group-hover:bg-accent2/10 transition-colors">
+                          {subject}
+                        </Badge>
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -141,27 +136,27 @@ const Education = () => {
           </div>
         </div>
 
-        <div className="mt-24 max-w-4xl mx-auto">
-          <div className="bg-gradient-to-r from-accent1/10 to-accent2/10 rounded-lg p-8 animate-on-scroll">
+        <div className="mt-16 max-w-4xl mx-auto">
+          <div className="bg-gradient-to-r from-background to-accent1/5 backdrop-blur-sm rounded-lg border border-accent1/10 p-8 animate-on-scroll shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
             <div className="flex items-start">
               <Award className="h-10 w-10 text-accent1 mr-4 flex-shrink-0 mt-1" />
               <div>
                 <h3 className="text-xl font-medium mb-4">Additional Achievements & Recognitions</h3>
                 <ul className="space-y-3">
-                  <li className="flex items-start">
-                    <span className="text-accent1 mr-2">•</span>
+                  <li className="flex items-start group">
+                    <span className="text-accent1 mr-2 transition-transform duration-300 group-hover:translate-x-1">•</span>
                     <span className="text-foreground/80">Published a Medium article on Joi – Form validation made simple</span>
                   </li>
-                  <li className="flex items-start">
-                    <span className="text-accent1 mr-2">•</span>
+                  <li className="flex items-start group">
+                    <span className="text-accent1 mr-2 transition-transform duration-300 group-hover:translate-x-1">•</span>
                     <span className="text-foreground/80">Received "Rookie Award" for exceptional performance</span>
                   </li>
-                  <li className="flex items-start">
-                    <span className="text-accent1 mr-2">•</span>
+                  <li className="flex items-start group">
+                    <span className="text-accent1 mr-2 transition-transform duration-300 group-hover:translate-x-1">•</span>
                     <span className="text-foreground/80">Received "Made a difference" award for amazing client impact</span>
                   </li>
-                  <li className="flex items-start">
-                    <span className="text-accent1 mr-2">•</span>
+                  <li className="flex items-start group">
+                    <span className="text-accent1 mr-2 transition-transform duration-300 group-hover:translate-x-1">•</span>
                     <span className="text-foreground/80">Research Assistant in multiple academic studies at Rutgers University</span>
                   </li>
                 </ul>
