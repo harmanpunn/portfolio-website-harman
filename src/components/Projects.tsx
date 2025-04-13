@@ -179,26 +179,47 @@ const ListProject = ({ project }: { project: Project }) => (
 const Projects = () => {
   const [view, setView] = useState<'grid' | 'list'>('grid');
   const sectionRef = useRef<HTMLElement>(null);
+  
+  // Function to initialize animations
+  const initializeAnimations = () => {
+    // Small delay to ensure DOM is updated after view change
+    setTimeout(() => {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('animated');
+            }
+          });
+        },
+        { threshold: 0.1 }
+      );
+  
+      const animatedElements = document.querySelectorAll('.animate-on-scroll:not(.animated)');
+      animatedElements.forEach((el) => observer.observe(el));
+  
+      return () => {
+        animatedElements.forEach((el) => observer.unobserve(el));
+      };
+    }, 50);
+  };
 
+  // Initial animation setup
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('animated');
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    const animatedElements = document.querySelectorAll('.animate-on-scroll');
-    animatedElements.forEach((el) => observer.observe(el));
-
-    return () => {
-      animatedElements.forEach((el) => observer.unobserve(el));
-    };
+    initializeAnimations();
   }, []);
+  
+  // Re-initialize animations when view changes
+  useEffect(() => {
+    // Force all project items to be visible immediately after view change
+    const projectItems = document.querySelectorAll('.animate-on-scroll');
+    projectItems.forEach(item => {
+      item.classList.add('animated');
+    });
+    
+    // Re-run initialization for any new elements
+    initializeAnimations();
+  }, [view]);
 
   return (
     <section id="projects" ref={sectionRef} className="section-padding">
