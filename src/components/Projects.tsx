@@ -42,7 +42,7 @@ const projects: Project[] = [
     id: 3,
     title: "Global Socioeconomic Patterns in Suicide Trends",
     description: "Analysis of the impact of GDP on suicide rates globally using R, revealing key economic correlations and age/gender factors through data visualizations.",
-    image: "https://placehold.co/600x400/e2e8f0/1e293b?text=Suicide+Trends",
+    image: "https://placehold.co/600x400/e2e8f0/1e293b?text=Socioeconomic+Analysis",
     tags: ["R", "Data Analysis", "Visualization", "Statistics", "Social Science"],
     demoUrl: "#",
     repoUrl: "#"
