@@ -1,6 +1,6 @@
 
 import { useEffect, useRef } from 'react';
-import { Briefcase, Clock, MapPin, Calendar } from 'lucide-react';
+import { Briefcase, MapPin, Calendar } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 type Experience = {
@@ -105,23 +105,28 @@ const Experience = () => {
           </p>
         </div>
 
-        {/* Timeline with side years */}
-        <div className="max-w-4xl mx-auto">
-          <div className="space-y-10">
+        {/* Timeline with circles for years */}
+        <div className="max-w-4xl mx-auto relative">
+          {/* Vertical line for timeline */}
+          <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-0.5 bg-muted"></div>
+          
+          <div className="space-y-12">
             {sortedExperiences.map((exp, index) => (
               <div 
                 key={exp.id} 
-                className="relative flex animate-on-scroll"
+                className={`relative flex items-center animate-on-scroll ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'}`}
                 style={{ animationDelay: `${index * 0.2}s` }}
               >
-                {/* Left column for year */}
-                <div className="w-16 pt-5 flex-shrink-0">
-                  <span className="text-base font-medium text-accent1 block">{exp.year}</span>
+                {/* Center circle with year */}
+                <div className="absolute left-1/2 transform -translate-x-1/2 z-10">
+                  <div className="w-16 h-16 rounded-full bg-gradient-to-r from-accent1 to-accent2 flex items-center justify-center shadow-md">
+                    <span className="text-white font-medium">{exp.year}</span>
+                  </div>
                 </div>
                 
-                {/* Right column for content */}
-                <div className="flex-grow">
-                  <div className="bg-background rounded-lg border border-border/30 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
+                {/* Content card */}
+                <div className={`w-5/12 ${index % 2 === 0 ? 'pr-12' : 'pl-12'}`}>
+                  <div className="bg-background rounded-lg border border-border/30 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden card-hover">
                     {/* Header with subtle gradient */}
                     <div className="bg-gradient-to-r from-accent1/5 to-accent2/5 p-5">
                       <h3 className="text-xl font-medium">{exp.title}</h3>

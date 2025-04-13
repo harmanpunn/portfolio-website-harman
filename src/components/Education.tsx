@@ -80,23 +80,28 @@ const Education = () => {
           </p>
         </div>
 
-        {/* Timeline with side years */}
-        <div className="max-w-4xl mx-auto">
-          <div className="space-y-10">
+        {/* Timeline with circles for years */}
+        <div className="max-w-4xl mx-auto relative">
+          {/* Vertical line for timeline */}
+          <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-0.5 bg-muted"></div>
+          
+          <div className="space-y-12">
             {sortedEducations.map((edu, index) => (
               <div 
                 key={edu.id} 
-                className="relative flex animate-on-scroll"
+                className={`relative flex items-center animate-on-scroll ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'}`}
                 style={{ animationDelay: `${index * 0.2}s` }}
               >
-                {/* Left column for year */}
-                <div className="w-16 pt-5 flex-shrink-0">
-                  <span className="text-base font-medium text-accent2 block">{edu.year}</span>
+                {/* Center circle with year */}
+                <div className="absolute left-1/2 transform -translate-x-1/2 z-10">
+                  <div className="w-16 h-16 rounded-full bg-gradient-to-r from-accent2 to-accent1 flex items-center justify-center shadow-md">
+                    <span className="text-white font-medium">{edu.year}</span>
+                  </div>
                 </div>
                 
-                {/* Right column for content */}
-                <div className="flex-grow">
-                  <div className="bg-background rounded-lg border border-border/30 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
+                {/* Content card */}
+                <div className={`w-5/12 ${index % 2 === 0 ? 'pr-12' : 'pl-12'}`}>
+                  <div className="bg-background rounded-lg border border-border/30 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden card-hover">
                     {/* Header with subtle gradient */}
                     <div className="bg-gradient-to-r from-accent2/5 to-accent1/5 p-5">
                       <h3 className="text-xl font-medium">{edu.degree}</h3>
@@ -136,7 +141,7 @@ const Education = () => {
           </div>
         </div>
 
-        <div className="mt-16 max-w-4xl mx-auto">
+        <div className="mt-24 max-w-4xl mx-auto">
           <div className="bg-gradient-to-r from-accent1/10 to-accent2/10 rounded-lg p-8 animate-on-scroll">
             <div className="flex items-start">
               <Award className="h-10 w-10 text-accent1 mr-4 flex-shrink-0 mt-1" />
