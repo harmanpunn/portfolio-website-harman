@@ -105,10 +105,10 @@ const Experience = () => {
           </p>
         </div>
 
-        {/* Modern Vertical Timeline */}
+        {/* Subtle Vertical Timeline */}
         <div className="max-w-4xl mx-auto relative">
           {/* Timeline Line */}
-          <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-accent1 to-accent2 ml-6 md:ml-9 rounded-full"></div>
+          <div className="absolute left-0 top-0 bottom-0 w-px bg-gradient-to-b from-accent1/40 to-accent2/40 ml-8 md:ml-10 rounded-full"></div>
           
           {/* Timeline Items */}
           <div className="space-y-12">
@@ -118,26 +118,27 @@ const Experience = () => {
                 className="relative animate-on-scroll"
                 style={{ animationDelay: `${index * 0.2}s` }}
               >
-                {/* Year marker */}
-                <div className="absolute left-0 md:left-1 w-12 md:w-16 h-12 md:h-16 rounded-full flex items-center justify-center bg-background border-4 border-accent1 z-10 shadow-lg">
-                  <span className="font-bold text-accent1">{exp.year}</span>
+                {/* Year marker - subtle design */}
+                <div className="absolute left-0 md:left-0 w-16 h-5 flex items-center justify-center z-10">
+                  <div className="absolute w-3 h-3 rounded-full bg-accent1/60 shadow-sm"></div>
+                  <span className="absolute ml-8 text-sm font-medium text-accent1/80">{exp.year}</span>
                 </div>
                 
                 {/* Content Card */}
-                <div className="ml-20 md:ml-28 bg-background rounded-lg border border-border shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden">
-                  {/* Header with gradient */}
-                  <div className="bg-gradient-to-r from-accent1/10 to-accent2/10 p-5">
+                <div className="ml-20 md:ml-28 bg-background rounded-lg border border-border/60 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
+                  {/* Header with subtle gradient */}
+                  <div className="bg-gradient-to-r from-accent1/5 to-accent2/5 p-5">
                     <h3 className="text-xl font-medium">{exp.title}</h3>
                     <div className="flex flex-wrap items-center text-foreground/70 gap-2 mt-1">
                       <span className="font-medium">{exp.company}</span>
                       
                       <div className="flex items-center gap-1 text-sm">
-                        <MapPin className="h-3 w-3 text-accent1" />
+                        <MapPin className="h-3 w-3 text-accent1/70" />
                         <span>{exp.location}</span>
                       </div>
                       
                       <div className="flex items-center gap-1 text-sm">
-                        <Calendar className="h-3 w-3 text-accent1" />
+                        <Calendar className="h-3 w-3 text-accent1/70" />
                         <span>{exp.period}</span>
                       </div>
                     </div>
@@ -151,7 +152,7 @@ const Experience = () => {
                     
                     <div className="flex flex-wrap gap-2">
                       {exp.skills.map((skill, i) => (
-                        <Badge key={i} variant="secondary" className="font-normal">
+                        <Badge key={i} variant="secondary" className="font-normal bg-secondary/50">
                           {skill}
                         </Badge>
                       ))}
