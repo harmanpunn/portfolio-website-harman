@@ -49,13 +49,9 @@ const About = () => {
               building MLOps pipelines, forecasting models, and AI-driven applications, I deliver data-driven solutions 
               that create tangible business impact.
             </p>
-            <p className="text-foreground/80 mb-4">
+            <p className="text-foreground/80 mb-8">
               My journey began with a passion for leveraging data to solve complex problems, and has evolved into a career 
               where I combine technical expertise with creative problem-solving to achieve outstanding outcomes.
-            </p>
-            <p className="text-foreground/80 mb-8">
-              I am available for short-term projects and part-time longer-term engagements. Let's connect and discuss how 
-              we can work together on your next data challenge.
             </p>
             
             <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4 mt-4">
