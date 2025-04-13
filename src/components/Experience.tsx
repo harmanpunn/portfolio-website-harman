@@ -106,32 +106,30 @@ const Experience = () => {
         </div>
 
         {/* Horizontal Timeline */}
-        <div className="hidden md:block max-w-5xl mx-auto mb-20 animate-on-scroll">
-          <div className="relative flex items-center justify-between">
-            {/* Timeline Line */}
-            <div className="absolute left-0 right-0 h-1 bg-gradient-to-r from-accent1 to-accent2 rounded-full"></div>
-            
-            {/* Timeline Points with Year Labels */}
-            <div className="flex justify-between relative w-full">
-              {sortedExperiences.map((exp, index) => (
-                <div key={exp.id} className="flex flex-col items-center relative">
-                  {/* Timeline Node */}
-                  <div className="w-5 h-5 rounded-full bg-gradient-to-r from-accent1 to-accent2 border-4 border-background shadow-md z-10"></div>
-                  
-                  {/* Year Label */}
-                  <div className="mt-3 font-medium text-sm">{exp.year}</div>
-                  
-                  {/* Position Label (alternating top/bottom) */}
-                  <div 
-                    className={`absolute w-40 text-center ${index % 2 === 0 ? '-top-20' : 'top-12'} 
-                                 transition-all duration-300 hover:scale-105`}
-                  >
-                    <div className="font-medium text-accent1">{exp.title}</div>
-                    <div className="text-xs text-foreground/70 mt-1">{exp.company}</div>
-                  </div>
+        <div className="hidden md:block max-w-5xl mx-auto mb-20 animate-on-scroll relative">
+          {/* Timeline Line */}
+          <div className="absolute left-0 right-0 top-6 h-1 bg-gradient-to-r from-accent1 to-accent2 rounded-full"></div>
+          
+          {/* Timeline Points with Year Labels */}
+          <div className="flex justify-between relative w-full">
+            {sortedExperiences.map((exp, index) => (
+              <div key={exp.id} className="flex flex-col items-center relative">
+                {/* Timeline Node */}
+                <div className="w-5 h-5 mt-4 rounded-full bg-gradient-to-r from-accent1 to-accent2 border-4 border-background shadow-md z-10"></div>
+                
+                {/* Year Label */}
+                <div className="mt-3 font-medium text-sm">{exp.year}</div>
+                
+                {/* Position Label (alternating top/bottom) */}
+                <div 
+                  className={`absolute w-32 text-center ${index % 2 === 0 ? '-top-16' : 'top-16'} 
+                              transition-all duration-300 hover:scale-105`}
+                >
+                  <div className="font-medium text-accent1 text-sm">{exp.title}</div>
+                  <div className="text-xs text-foreground/70 mt-1">{exp.company.split(',')[0]}</div>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         </div>
 
