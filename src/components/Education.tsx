@@ -80,10 +80,10 @@ const Education = () => {
           </p>
         </div>
 
-        {/* Modern Vertical Timeline */}
+        {/* Minimal Timeline */}
         <div className="max-w-4xl mx-auto relative">
           {/* Timeline Line */}
-          <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-accent2 to-accent1 ml-6 md:ml-9 rounded-full"></div>
+          <div className="absolute left-9 top-0 bottom-0 w-px bg-accent2/30 rounded-full"></div>
           
           {/* Timeline Items */}
           <div className="space-y-12">
@@ -93,26 +93,27 @@ const Education = () => {
                 className="relative animate-on-scroll"
                 style={{ animationDelay: `${index * 0.2}s` }}
               >
-                {/* Year marker */}
-                <div className="absolute left-0 md:left-1 w-12 md:w-16 h-12 md:h-16 rounded-full flex items-center justify-center bg-background border-4 border-accent2 z-10 shadow-lg">
-                  <span className="font-bold text-accent2">{edu.year}</span>
+                {/* Year marker and dot - separated clearly */}
+                <div className="absolute left-0 flex items-center h-6">
+                  <span className="text-sm font-medium text-accent2/80 w-7 text-right">{edu.year}</span>
+                  <div className="mx-2 w-2 h-2 rounded-full bg-accent2/60"></div>
                 </div>
                 
                 {/* Content Card */}
-                <div className="ml-20 md:ml-28 bg-background rounded-lg border border-border shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden">
-                  {/* Header with gradient */}
-                  <div className="bg-gradient-to-r from-accent2/10 to-accent1/10 p-5">
+                <div className="ml-20 bg-background rounded-lg border border-border/40 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
+                  {/* Header with subtle gradient */}
+                  <div className="bg-gradient-to-r from-accent2/5 to-accent1/5 p-5">
                     <h3 className="text-xl font-medium">{edu.degree}</h3>
                     <div className="flex flex-wrap items-center text-foreground/70 gap-2 mt-1">
                       <span className="font-medium">{edu.institution}</span>
                       
                       <div className="flex items-center gap-1 text-sm">
-                        <MapPin className="h-3 w-3 text-accent2" />
+                        <MapPin className="h-3 w-3 text-accent2/70" />
                         <span>{edu.location}</span>
                       </div>
                       
                       <div className="flex items-center gap-1 text-sm">
-                        <Calendar className="h-3 w-3 text-accent2" />
+                        <Calendar className="h-3 w-3 text-accent2/70" />
                         <span>{edu.period}</span>
                       </div>
                     </div>
