@@ -30,12 +30,12 @@ const About = () => {
     <section id="about" ref={sectionRef} className="section-padding bg-gradient-to-r from-background to-accent/5">
       <div className="container mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          {/* Left side - Large Image */}
+          {/* Left side - Golden Gate Bridge Image */}
           <div className="animate-on-scroll h-full">
             <div className="rounded-lg overflow-hidden shadow-lg h-full">
               <img 
-                src="/lovable-uploads/8dcd001c-be43-4ae2-a04a-399fdcc04dce.png" 
-                alt="Profile" 
+                src="https://images.unsplash.com/photo-1501594907352-04cda38ebc29?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2669&q=80" 
+                alt="Golden Gate Bridge" 
                 className="w-full h-full object-cover aspect-[4/3]" 
               />
             </div>
