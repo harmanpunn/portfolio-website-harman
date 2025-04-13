@@ -5,7 +5,6 @@ import {
   Award
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
 
 type Education = {
   id: number;
@@ -64,9 +63,9 @@ const Education = () => {
     };
   }, []);
 
-  // Sort educations by year in ascending order
+  // Sort educations by year in descending order (most recent first)
   const sortedEducations = [...educations].sort((a, b) => 
-    parseInt(a.year) - parseInt(b.year)
+    parseInt(b.year) - parseInt(a.year)
   );
 
   return (
@@ -79,26 +78,29 @@ const Education = () => {
           </p>
         </div>
 
-        {/* Horizontal Timeline for larger screens */}
-        <div className="hidden md:block max-w-5xl mx-auto mb-16 animate-on-scroll">
-          <div className="relative">
+        {/* Horizontal Timeline */}
+        <div className="hidden md:block max-w-5xl mx-auto mb-20 animate-on-scroll">
+          <div className="relative flex items-center justify-between">
             {/* Timeline Line */}
-            <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-accent2/30 -translate-y-1/2"></div>
+            <div className="absolute left-0 right-0 h-1 bg-gradient-to-r from-accent1 to-accent2 rounded-full"></div>
             
-            {/* Timeline Points */}
-            <div className="flex justify-between relative">
+            {/* Timeline Points with Year Labels */}
+            <div className="flex justify-between relative w-full">
               {sortedEducations.map((edu, index) => (
-                <div key={edu.id} className="flex flex-col items-center">
+                <div key={edu.id} className="flex flex-col items-center relative">
                   {/* Timeline Node */}
-                  <div className="relative z-10 w-4 h-4 rounded-full bg-accent2 border-4 border-background mb-2"></div>
+                  <div className="w-5 h-5 rounded-full bg-gradient-to-r from-accent2 to-accent1 border-4 border-background shadow-md z-10"></div>
                   
-                  {/* Year */}
-                  <div className="text-lg font-medium">{edu.year}</div>
+                  {/* Year Label */}
+                  <div className="mt-3 font-medium text-sm">{edu.year}</div>
                   
-                  {/* Degree (alternating top/bottom) */}
-                  <div className={`absolute w-48 text-center ${index % 2 === 0 ? '-top-20' : 'top-12'}`}>
-                    <div className="font-medium text-accent2">{edu.degree.split(' ').slice(0, 3).join(' ')}</div>
-                    <div className="text-sm text-foreground/70 italic">{edu.institution.split(',')[0]}</div>
+                  {/* Degree Label (alternating top/bottom) */}
+                  <div 
+                    className={`absolute w-40 text-center ${index % 2 === 0 ? '-top-20' : 'top-12'} 
+                                transition-all duration-300 hover:scale-105`}
+                  >
+                    <div className="font-medium text-accent2">{edu.degree.split(' ').slice(0, 2).join(' ')}</div>
+                    <div className="text-xs text-foreground/70 mt-1">{edu.institution.split(',')[0]}</div>
                   </div>
                 </div>
               ))}

@@ -100,6 +100,7 @@ const Projects = () => {
     };
   }, []);
 
+  // Define the grid project component
   const GridProject = ({ project }: { project: Project }) => (
     <div className="animate-on-scroll card-hover rounded-lg overflow-hidden border border-border bg-background shadow-sm">
       <div className="relative h-48 overflow-hidden">
@@ -149,6 +150,7 @@ const Projects = () => {
     </div>
   );
 
+  // Define the list project component
   const ListProject = ({ project }: { project: Project }) => (
     <div className="animate-on-scroll card-hover rounded-lg border border-border bg-background shadow-sm p-6">
       <div className="flex flex-col md:flex-row md:items-center gap-6">
