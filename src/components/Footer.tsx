@@ -14,9 +14,6 @@ const Footer = () => {
             <a href="#" className="text-xl font-serif font-bold">
               <span className="gradient-text">Harmanpreet Singh</span>
             </a>
-            <p className="mt-2 text-primary-foreground/70 text-sm">
-              Crafting exceptional digital experiences.
-            </p>
           </div>
           
           <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-8">
