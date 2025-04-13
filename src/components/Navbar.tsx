@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { Menu, X, FileText } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const Navbar = () => {
@@ -38,9 +38,8 @@ const Navbar = () => {
             href="/Harmanpreet Singh Resume.pdf" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="ml-4 px-5 py-2 rounded-full border border-accent1 text-accent1 font-medium transition-all hover:shadow-sm hover:scale-105 flex items-center gap-2"
+            className="ml-4 px-5 py-2 rounded-full border border-accent1 text-accent1 font-medium transition-all hover:shadow-sm hover:scale-105"
           >
-            <FileText className="h-4 w-4" />
             Resume
           </a>
         </nav>
@@ -65,10 +64,9 @@ const Navbar = () => {
               href="/Harmanpreet Singh Resume.pdf" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center px-5 py-2 mt-2 rounded-full border border-accent1 text-accent1 font-medium transition-all hover:shadow-sm gap-2"
+              className="inline-flex items-center justify-center px-5 py-2 mt-2 rounded-full border border-accent1 text-accent1 font-medium transition-all hover:shadow-sm"
               onClick={toggleMenu}
             >
-              <FileText className="h-4 w-4" />
               Resume
             </a>
           </nav>
