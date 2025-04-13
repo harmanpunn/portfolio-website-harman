@@ -76,7 +76,6 @@ const projects: Project[] = [
   }
 ];
 
-// Define the grid project component outside the main component to avoid recreation on each render
 const GridProject = ({ project }: { project: Project }) => (
   <div className="animate-on-scroll card-hover rounded-lg overflow-hidden border border-border bg-background shadow-sm">
     <div className="relative h-48 overflow-hidden">
@@ -126,7 +125,6 @@ const GridProject = ({ project }: { project: Project }) => (
   </div>
 );
 
-// Define the list project component outside the main component to avoid recreation on each render
 const ListProject = ({ project }: { project: Project }) => (
   <div className="animate-on-scroll card-hover rounded-lg border border-border bg-background shadow-sm p-6">
     <div className="flex flex-col md:flex-row md:items-center gap-6">

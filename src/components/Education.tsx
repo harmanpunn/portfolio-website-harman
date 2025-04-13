@@ -2,7 +2,9 @@
 import { useEffect, useRef } from 'react';
 import { 
   GraduationCap, 
-  Award
+  Award,
+  MapPin,
+  Calendar
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
@@ -78,71 +80,62 @@ const Education = () => {
           </p>
         </div>
 
-        {/* Horizontal Timeline */}
-        <div className="hidden md:block max-w-5xl mx-auto mb-20 animate-on-scroll relative">
+        {/* Modern Vertical Timeline */}
+        <div className="max-w-4xl mx-auto relative">
           {/* Timeline Line */}
-          <div className="absolute left-0 right-0 top-6 h-1 bg-gradient-to-r from-accent2 to-accent1 rounded-full"></div>
+          <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-accent2 to-accent1 ml-6 md:ml-9 rounded-full"></div>
           
-          {/* Timeline Points with Year Labels */}
-          <div className="flex justify-between relative w-full">
+          {/* Timeline Items */}
+          <div className="space-y-12">
             {sortedEducations.map((edu, index) => (
-              <div key={edu.id} className="flex flex-col items-center relative">
-                {/* Timeline Node */}
-                <div className="w-5 h-5 mt-4 rounded-full bg-gradient-to-r from-accent2 to-accent1 border-4 border-background shadow-md z-10"></div>
+              <div 
+                key={edu.id} 
+                className="relative animate-on-scroll"
+                style={{ animationDelay: `${index * 0.2}s` }}
+              >
+                {/* Year marker */}
+                <div className="absolute left-0 md:left-1 w-12 md:w-16 h-12 md:h-16 rounded-full flex items-center justify-center bg-background border-4 border-accent2 z-10 shadow-lg">
+                  <span className="font-bold text-accent2">{edu.year}</span>
+                </div>
                 
-                {/* Year Label */}
-                <div className="mt-3 font-medium text-sm">{edu.year}</div>
-                
-                {/* Degree Label (alternating top/bottom) */}
-                <div 
-                  className={`absolute w-32 text-center ${index % 2 === 0 ? '-top-16' : 'top-16'} 
-                              transition-all duration-300 hover:scale-105`}
-                >
-                  <div className="font-medium text-accent2 text-sm">{edu.degree.split(' ').slice(0, 2).join(' ')}</div>
-                  <div className="text-xs text-foreground/70 mt-1">{edu.institution.split(',')[0]}</div>
+                {/* Content Card */}
+                <div className="ml-20 md:ml-28 bg-background rounded-lg border border-border shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden">
+                  {/* Header with gradient */}
+                  <div className="bg-gradient-to-r from-accent2/10 to-accent1/10 p-5">
+                    <h3 className="text-xl font-medium">{edu.degree}</h3>
+                    <div className="flex flex-wrap items-center text-foreground/70 gap-2 mt-1">
+                      <span className="font-medium">{edu.institution}</span>
+                      
+                      <div className="flex items-center gap-1 text-sm">
+                        <MapPin className="h-3 w-3 text-accent2" />
+                        <span>{edu.location}</span>
+                      </div>
+                      
+                      <div className="flex items-center gap-1 text-sm">
+                        <Calendar className="h-3 w-3 text-accent2" />
+                        <span>{edu.period}</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Content */}
+                  <div className="p-5">
+                    <p className="text-foreground/80 mb-4">
+                      {edu.description}
+                    </p>
+                    
+                    <div className="flex flex-wrap gap-2">
+                      {edu.subjects.map((subject, i) => (
+                        <Badge key={i} variant="outline" className="font-normal">
+                          {subject}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
-        </div>
-
-        {/* Detailed Education Cards */}
-        <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-          {sortedEducations.map((edu, index) => (
-            <div 
-              key={edu.id} 
-              className="animate-on-scroll bg-background rounded-lg border border-border p-6 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1"
-              style={{ animationDelay: `${index * 0.2}s` }}
-            >
-              <div className="flex items-start gap-4">
-                <div className="bg-accent2/10 p-3 rounded-full">
-                  <GraduationCap className="h-6 w-6 text-accent2" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-medium">{edu.degree}</h3>
-                  <div className="text-foreground/70 mt-1">{edu.institution}</div>
-                  <div className="text-foreground/60 text-sm mb-3">{edu.period}</div>
-                  
-                  <p className="text-foreground/80 mb-4">
-                    {edu.description}
-                  </p>
-                  
-                  <div className="flex flex-wrap gap-2">
-                    {edu.subjects.slice(0, 4).map((subject, i) => (
-                      <Badge key={i} variant="outline" className="font-normal">
-                        {subject}
-                      </Badge>
-                    ))}
-                    {edu.subjects.length > 4 && (
-                      <Badge variant="outline" className="font-normal">
-                        +{edu.subjects.length - 4} more
-                      </Badge>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
         </div>
 
         <div className="mt-16 max-w-4xl mx-auto">

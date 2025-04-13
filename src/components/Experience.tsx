@@ -1,6 +1,6 @@
 
 import { useEffect, useRef } from 'react';
-import { Briefcase } from 'lucide-react';
+import { Briefcase, Clock, MapPin, Calendar } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 type Experience = {
@@ -105,71 +105,62 @@ const Experience = () => {
           </p>
         </div>
 
-        {/* Horizontal Timeline */}
-        <div className="hidden md:block max-w-5xl mx-auto mb-20 animate-on-scroll relative">
+        {/* Modern Vertical Timeline */}
+        <div className="max-w-4xl mx-auto relative">
           {/* Timeline Line */}
-          <div className="absolute left-0 right-0 top-6 h-1 bg-gradient-to-r from-accent1 to-accent2 rounded-full"></div>
+          <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-accent1 to-accent2 ml-6 md:ml-9 rounded-full"></div>
           
-          {/* Timeline Points with Year Labels */}
-          <div className="flex justify-between relative w-full">
+          {/* Timeline Items */}
+          <div className="space-y-12">
             {sortedExperiences.map((exp, index) => (
-              <div key={exp.id} className="flex flex-col items-center relative">
-                {/* Timeline Node */}
-                <div className="w-5 h-5 mt-4 rounded-full bg-gradient-to-r from-accent1 to-accent2 border-4 border-background shadow-md z-10"></div>
+              <div 
+                key={exp.id} 
+                className="relative animate-on-scroll"
+                style={{ animationDelay: `${index * 0.2}s` }}
+              >
+                {/* Year marker */}
+                <div className="absolute left-0 md:left-1 w-12 md:w-16 h-12 md:h-16 rounded-full flex items-center justify-center bg-background border-4 border-accent1 z-10 shadow-lg">
+                  <span className="font-bold text-accent1">{exp.year}</span>
+                </div>
                 
-                {/* Year Label */}
-                <div className="mt-3 font-medium text-sm">{exp.year}</div>
-                
-                {/* Position Label (alternating top/bottom) */}
-                <div 
-                  className={`absolute w-32 text-center ${index % 2 === 0 ? '-top-16' : 'top-16'} 
-                              transition-all duration-300 hover:scale-105`}
-                >
-                  <div className="font-medium text-accent1 text-sm">{exp.title}</div>
-                  <div className="text-xs text-foreground/70 mt-1">{exp.company.split(',')[0]}</div>
+                {/* Content Card */}
+                <div className="ml-20 md:ml-28 bg-background rounded-lg border border-border shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden">
+                  {/* Header with gradient */}
+                  <div className="bg-gradient-to-r from-accent1/10 to-accent2/10 p-5">
+                    <h3 className="text-xl font-medium">{exp.title}</h3>
+                    <div className="flex flex-wrap items-center text-foreground/70 gap-2 mt-1">
+                      <span className="font-medium">{exp.company}</span>
+                      
+                      <div className="flex items-center gap-1 text-sm">
+                        <MapPin className="h-3 w-3 text-accent1" />
+                        <span>{exp.location}</span>
+                      </div>
+                      
+                      <div className="flex items-center gap-1 text-sm">
+                        <Calendar className="h-3 w-3 text-accent1" />
+                        <span>{exp.period}</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Content */}
+                  <div className="p-5">
+                    <p className="text-foreground/80 mb-4">
+                      {exp.description}
+                    </p>
+                    
+                    <div className="flex flex-wrap gap-2">
+                      {exp.skills.map((skill, i) => (
+                        <Badge key={i} variant="secondary" className="font-normal">
+                          {skill}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
-        </div>
-
-        {/* Detailed Experience Cards */}
-        <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-          {sortedExperiences.map((exp, index) => (
-            <div 
-              key={exp.id} 
-              className="animate-on-scroll bg-background rounded-lg border border-border p-6 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1"
-              style={{ animationDelay: `${index * 0.2}s` }}
-            >
-              <div className="flex items-start gap-4">
-                <div className="bg-accent1/10 p-3 rounded-full">
-                  <Briefcase className="h-6 w-6 text-accent1" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-medium">{exp.title}</h3>
-                  <div className="text-foreground/70 mt-1">{exp.company} • {exp.location}</div>
-                  <div className="text-foreground/60 text-sm mb-3">{exp.period}</div>
-                  
-                  <p className="text-foreground/80 mb-4">
-                    {exp.description}
-                  </p>
-                  
-                  <div className="flex flex-wrap gap-2">
-                    {exp.skills.slice(0, 4).map((skill, i) => (
-                      <Badge key={i} variant="secondary" className="font-normal">
-                        {skill}
-                      </Badge>
-                    ))}
-                    {exp.skills.length > 4 && (
-                      <Badge variant="outline" className="font-normal">
-                        +{exp.skills.length - 4} more
-                      </Badge>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
         </div>
       </div>
     </section>
