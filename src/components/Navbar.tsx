@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { Menu, X, FileText } from 'lucide-react';
+import { Menu, X, FileText, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const Navbar = () => {
@@ -26,7 +26,7 @@ const Navbar = () => {
         </a>
         
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-1">
+        <nav className="hidden md:flex items-center space-x-2">
           <a href="#home" className="nav-link">Home</a>
           <a href="#about" className="nav-link">About</a>
           <a href="#skills" className="nav-link">Skills</a>
@@ -38,9 +38,9 @@ const Navbar = () => {
             href="/resume.pdf" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="ml-2 inline-flex items-center justify-center px-4 py-1.5 rounded-full bg-gradient-to-r from-accent1 to-accent2 text-white font-medium transition-all hover:shadow-lg hover:scale-105"
+            className="ml-4 inline-flex items-center justify-center px-5 py-2 rounded-full bg-gradient-to-r from-accent1 to-accent2 text-white font-medium transition-all hover:shadow-lg hover:scale-105"
           >
-            <FileText className="mr-1 h-4 w-4" />
+            <Download className="mr-2 h-4 w-4" />
             Resume
           </a>
         </nav>
@@ -65,10 +65,10 @@ const Navbar = () => {
               href="/resume.pdf" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center px-4 py-1.5 mt-2 rounded-full bg-gradient-to-r from-accent1 to-accent2 text-white font-medium transition-all hover:shadow-lg hover:scale-105"
+              className="inline-flex items-center justify-center px-5 py-2 mt-2 rounded-full bg-gradient-to-r from-accent1 to-accent2 text-white font-medium transition-all hover:shadow-lg"
               onClick={toggleMenu}
             >
-              <FileText className="mr-1 h-4 w-4" />
+              <Download className="mr-2 h-4 w-4" />
               Resume
             </a>
           </nav>

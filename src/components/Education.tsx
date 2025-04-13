@@ -2,11 +2,10 @@
 import { useEffect, useRef } from 'react';
 import { 
   GraduationCap, 
-  Calendar, 
-  MapPin, 
   Award
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
 
 type Education = {
   id: number;
@@ -14,6 +13,7 @@ type Education = {
   institution: string;
   location: string;
   period: string;
+  year: string;
   description: string;
   subjects: string[];
 };
@@ -25,7 +25,8 @@ const educations: Education[] = [
     institution: "Rutgers, The State University of New Jersey",
     location: "New Brunswick, NJ",
     period: "2022 - 2024",
-    description: "Completed advanced studies with a focus on machine learning, artificial intelligence, and data science. Research Assistant for longitudinal study of local news in New Jersey and analyzing CS enrollment and performance trends.",
+    year: "2024",
+    description: "Completed advanced studies with a focus on machine learning, artificial intelligence, and data science. Research Assistant for longitudinal study of local news in New Jersey.",
     subjects: ["Machine Learning", "Artificial Intelligence", "Data Science", "Natural Language Processing", "Deep Learning"]
   },
   {
@@ -34,7 +35,8 @@ const educations: Education[] = [
     institution: "Dr. B.R Ambedkar National Institute of Technology",
     location: "Jalandhar, India",
     period: "2013 - 2017",
-    description: "Built a strong foundation in engineering principles, programming, and technology fundamentals. Developed alcohol detection and accident prevention technology. Worked on various electronic and programming projects.",
+    year: "2017",
+    description: "Built a strong foundation in engineering principles, programming, and technology fundamentals. Developed alcohol detection and accident prevention technology.",
     subjects: ["Electronics", "Communication Systems", "Programming", "Digital Signal Processing", "Engineering Mathematics"]
   }
 ];
@@ -62,6 +64,11 @@ const Education = () => {
     };
   }, []);
 
+  // Sort educations by year in ascending order
+  const sortedEducations = [...educations].sort((a, b) => 
+    parseInt(a.year) - parseInt(b.year)
+  );
+
   return (
     <section id="education" ref={sectionRef} className="section-padding bg-muted/50">
       <div className="container mx-auto">
@@ -72,46 +79,70 @@ const Education = () => {
           </p>
         </div>
 
-        <div className="max-w-4xl mx-auto">
-          <div className="relative border-l-2 border-accent2/30 pl-8 ml-8 md:ml-[30%]">
-            {educations.map((edu, index) => (
-              <div 
-                key={edu.id} 
-                className="animate-on-scroll mb-12 relative"
-                style={{ animationDelay: `${index * 0.2}s` }}
-              >
-                <div className="absolute -left-10 top-0 w-6 h-6 bg-accent2 rounded-full border-4 border-background z-10"></div>
-                <div className="bg-background rounded-lg border border-border p-6 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
-                  <div className="flex flex-col md:flex-row justify-between mb-3">
-                    <h3 className="text-xl font-medium">{edu.degree}</h3>
-                    <div className="flex items-center text-foreground/70">
-                      <Calendar className="h-4 w-4 mr-1" />
-                      <span>{edu.period}</span>
-                    </div>
-                  </div>
+        {/* Horizontal Timeline for larger screens */}
+        <div className="hidden md:block max-w-5xl mx-auto mb-16 animate-on-scroll">
+          <div className="relative">
+            {/* Timeline Line */}
+            <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-accent2/30 -translate-y-1/2"></div>
+            
+            {/* Timeline Points */}
+            <div className="flex justify-between relative">
+              {sortedEducations.map((edu, index) => (
+                <div key={edu.id} className="flex flex-col items-center">
+                  {/* Timeline Node */}
+                  <div className="relative z-10 w-4 h-4 rounded-full bg-accent2 border-4 border-background mb-2"></div>
                   
-                  <div className="flex items-center text-foreground/70 mb-3">
-                    <GraduationCap className="h-4 w-4 mr-1" />
-                    <span className="mr-3">{edu.institution}</span>
-                    <MapPin className="h-4 w-4 mr-1" />
-                    <span>{edu.location}</span>
+                  {/* Year */}
+                  <div className="text-lg font-medium">{edu.year}</div>
+                  
+                  {/* Degree (alternating top/bottom) */}
+                  <div className={`absolute w-48 text-center ${index % 2 === 0 ? '-top-20' : 'top-12'}`}>
+                    <div className="font-medium text-accent2">{edu.degree.split(' ').slice(0, 3).join(' ')}</div>
+                    <div className="text-sm text-foreground/70 italic">{edu.institution.split(',')[0]}</div>
                   </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
 
+        {/* Detailed Education Cards */}
+        <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+          {sortedEducations.map((edu, index) => (
+            <div 
+              key={edu.id} 
+              className="animate-on-scroll bg-background rounded-lg border border-border p-6 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1"
+              style={{ animationDelay: `${index * 0.2}s` }}
+            >
+              <div className="flex items-start gap-4">
+                <div className="bg-accent2/10 p-3 rounded-full">
+                  <GraduationCap className="h-6 w-6 text-accent2" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-medium">{edu.degree}</h3>
+                  <div className="text-foreground/70 mt-1">{edu.institution}</div>
+                  <div className="text-foreground/60 text-sm mb-3">{edu.period}</div>
+                  
                   <p className="text-foreground/80 mb-4">
                     {edu.description}
                   </p>
-
+                  
                   <div className="flex flex-wrap gap-2">
-                    {edu.subjects.map((subject, i) => (
+                    {edu.subjects.slice(0, 4).map((subject, i) => (
                       <Badge key={i} variant="outline" className="font-normal">
                         {subject}
                       </Badge>
                     ))}
+                    {edu.subjects.length > 4 && (
+                      <Badge variant="outline" className="font-normal">
+                        +{edu.subjects.length - 4} more
+                      </Badge>
+                    )}
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
 
         <div className="mt-16 max-w-4xl mx-auto">
