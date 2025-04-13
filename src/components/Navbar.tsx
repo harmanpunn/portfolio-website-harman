@@ -35,7 +35,7 @@ const Navbar = () => {
           <a href="#projects" className="nav-link">Projects</a>
           <a href="#contact" className="nav-link">Contact</a>
           <a 
-            href="/Harmanpreet Singh Resume.pdf" 
+            href={`${window.location.origin}/Harmanpreet Singh Resume.pdf`}
             target="_blank" 
             rel="noopener noreferrer"
             className="ml-4 px-5 py-2 rounded-full border border-accent1 text-accent1 font-medium transition-all hover:shadow-sm hover:scale-105"
@@ -61,7 +61,7 @@ const Navbar = () => {
             <a href="#projects" className="nav-link" onClick={toggleMenu}>Projects</a>
             <a href="#contact" className="nav-link" onClick={toggleMenu}>Contact</a>
             <a 
-              href="/Harmanpreet Singh Resume.pdf" 
+              href={`${window.location.origin}/Harmanpreet Singh Resume.pdf`}
               target="_blank" 
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center px-5 py-2 mt-2 rounded-full border border-accent1 text-accent1 font-medium transition-all hover:shadow-sm"
