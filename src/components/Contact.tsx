@@ -3,7 +3,8 @@ import { useEffect, useRef, useState } from 'react';
 import { 
   Send,
   CheckCircle,
-  Calendar
+  Calendar,
+  Mail
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -128,11 +129,19 @@ const Contact = () => {
           </div>
           
           <div className="animate-on-scroll">
-            <Card className="bg-background rounded-lg shadow-md p-8 h-full">
-              <h3 className="text-xl font-medium mb-6">Send Me a Message</h3>
+            <Card className="bg-background rounded-lg shadow-md p-6 h-full flex flex-col">
+              <div className="text-center mb-6">
+                <div className="inline-flex items-center justify-center bg-accent1/10 rounded-full p-3 mb-4">
+                  <Mail className="h-8 w-8 text-accent1" />
+                </div>
+                <h3 className="text-xl font-medium">Send Me a Message</h3>
+                <p className="text-foreground/70 mt-2">
+                  Feel free to reach out with any questions or inquiries.
+                </p>
+              </div>
               
               {isSubmitted ? (
-                <div className="flex flex-col items-center justify-center py-8">
+                <div className="flex flex-col items-center justify-center py-8 flex-grow">
                   <CheckCircle className="h-16 w-16 text-green-500 mb-4" />
                   <h4 className="text-xl font-medium mb-2">Message Sent!</h4>
                   <p className="text-foreground/70 text-center">
@@ -140,7 +149,7 @@ const Contact = () => {
                   </p>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} className="flex-grow">
                   <div className="space-y-4">
                     <div>
                       <label htmlFor="name" className="block text-sm font-medium mb-1">
@@ -185,7 +194,7 @@ const Contact = () => {
                       />
                     </div>
                     
-                    <div>
+                    <div className="flex-grow">
                       <label htmlFor="message" className="block text-sm font-medium mb-1">
                         Message
                       </label>
@@ -197,6 +206,7 @@ const Contact = () => {
                         placeholder="Your message"
                         rows={5}
                         required
+                        className="h-32"
                       />
                     </div>
                     
