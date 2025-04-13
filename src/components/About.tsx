@@ -37,7 +37,7 @@ const About = () => {
               <img 
                 src="/lovable-uploads/f83a212b-f5e0-4b48-8a12-55e39d05ce12.png" 
                 alt="Profile Photo" 
-                className="w-full h-full object-cover" 
+                className="w-full h-full object-cover object-top scale-125" 
               />
             </div>
           </div>
