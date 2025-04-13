@@ -1,6 +1,6 @@
 
 import { useEffect, useRef } from 'react';
-import { Github, Linkedin, Twitter, Mail } from 'lucide-react';
+import { Github, Linkedin, Instagram, Mail } from 'lucide-react';
 
 const About = () => {
   const sectionRef = useRef<HTMLElement>(null);
@@ -63,7 +63,7 @@ const About = () => {
               </a>
               
               <div className="flex space-x-4 items-center sm:ml-4">
-                <a href="https://github.com/" target="_blank" rel="noopener noreferrer" 
+                <a href="https://github.com/harmanpunn" target="_blank" rel="noopener noreferrer" 
                    className="text-foreground/70 hover:text-accent1 transition-colors"
                    aria-label="GitHub Profile">
                   <Github className="h-5 w-5" />
@@ -73,9 +73,10 @@ const About = () => {
                    aria-label="LinkedIn Profile">
                   <Linkedin className="h-5 w-5" />
                 </a>
-                <a href="#" className="text-foreground/70 hover:text-accent1 transition-colors"
-                   aria-label="Twitter Profile">
-                  <Twitter className="h-5 w-5" />
+                <a href="https://www.instagram.com/harmanpunn/" target="_blank" rel="noopener noreferrer" 
+                   className="text-foreground/70 hover:text-accent1 transition-colors"
+                   aria-label="Instagram Profile">
+                  <Instagram className="h-5 w-5" />
                 </a>
                 <a href="mailto:harmanpunn@gmail.com" className="text-foreground/70 hover:text-accent1 transition-colors"
                    aria-label="Email Me">

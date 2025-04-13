@@ -1,5 +1,5 @@
 
-import { ArrowUp } from 'lucide-react';
+import { ArrowUp, Github, Linkedin, Instagram, Mail } from 'lucide-react';
 
 const Footer = () => {
   const scrollToTop = () => {
@@ -42,9 +42,27 @@ const Footer = () => {
             &copy; {new Date().getFullYear()} Harmanpreet Singh. All rights reserved.
           </p>
           
-          <p className="text-primary-foreground/70 text-sm">
-            Designed & Built with <span className="text-red-400">❤</span>
-          </p>
+          <div className="flex space-x-4 items-center">
+            <a href="https://github.com/harmanpunn" target="_blank" rel="noopener noreferrer" 
+               className="text-primary-foreground/70 hover:text-primary-foreground transition-colors"
+               aria-label="GitHub Profile">
+              <Github className="h-4 w-4" />
+            </a>
+            <a href="https://linkedin.com/in/harmanpunn" target="_blank" rel="noopener noreferrer" 
+               className="text-primary-foreground/70 hover:text-primary-foreground transition-colors"
+               aria-label="LinkedIn Profile">
+              <Linkedin className="h-4 w-4" />
+            </a>
+            <a href="https://www.instagram.com/harmanpunn/" target="_blank" rel="noopener noreferrer" 
+               className="text-primary-foreground/70 hover:text-primary-foreground transition-colors"
+               aria-label="Instagram Profile">
+              <Instagram className="h-4 w-4" />
+            </a>
+            <a href="mailto:harmanpunn@gmail.com" className="text-primary-foreground/70 hover:text-primary-foreground transition-colors"
+               aria-label="Email Me">
+              <Mail className="h-4 w-4" />
+            </a>
+          </div>
         </div>
       </div>
     </footer>
