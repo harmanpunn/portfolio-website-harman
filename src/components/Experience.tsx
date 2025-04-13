@@ -105,56 +105,54 @@ const Experience = () => {
           </p>
         </div>
 
-        {/* Clean Timeline */}
-        <div className="max-w-4xl mx-auto relative">
-          {/* Timeline Line */}
-          <div className="absolute left-[42px] top-0 bottom-0 w-px bg-accent1/20 rounded-full"></div>
-          
-          {/* Timeline Items */}
-          <div className="space-y-12">
+        {/* Timeline with side years */}
+        <div className="max-w-4xl mx-auto">
+          <div className="space-y-10">
             {sortedExperiences.map((exp, index) => (
               <div 
                 key={exp.id} 
-                className="relative animate-on-scroll"
+                className="relative flex animate-on-scroll"
                 style={{ animationDelay: `${index * 0.2}s` }}
               >
-                {/* Year marker - clean and minimal */}
-                <div className="absolute left-0 flex items-center h-6">
-                  <span className="w-10 text-base font-medium text-accent1/80 text-center">{exp.year}</span>
+                {/* Left column for year */}
+                <div className="w-16 pt-5 flex-shrink-0">
+                  <span className="text-base font-medium text-accent1 block">{exp.year}</span>
                 </div>
                 
-                {/* Content Card */}
-                <div className="ml-16 bg-background rounded-lg border border-border/30 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
-                  {/* Header with subtle gradient */}
-                  <div className="bg-gradient-to-r from-accent1/5 to-accent2/5 p-5">
-                    <h3 className="text-xl font-medium">{exp.title}</h3>
-                    <div className="flex flex-wrap items-center text-foreground/70 gap-2 mt-1">
-                      <span className="font-medium">{exp.company}</span>
-                      
-                      <div className="flex items-center gap-1 text-sm">
-                        <MapPin className="h-3 w-3 text-accent1/70" />
-                        <span>{exp.location}</span>
-                      </div>
-                      
-                      <div className="flex items-center gap-1 text-sm">
-                        <Calendar className="h-3 w-3 text-accent1/70" />
-                        <span>{exp.period}</span>
+                {/* Right column for content */}
+                <div className="flex-grow">
+                  <div className="bg-background rounded-lg border border-border/30 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
+                    {/* Header with subtle gradient */}
+                    <div className="bg-gradient-to-r from-accent1/5 to-accent2/5 p-5">
+                      <h3 className="text-xl font-medium">{exp.title}</h3>
+                      <div className="flex flex-wrap items-center text-foreground/70 gap-2 mt-1">
+                        <span className="font-medium">{exp.company}</span>
+                        
+                        <div className="flex items-center gap-1 text-sm">
+                          <MapPin className="h-3 w-3 text-accent1/70" />
+                          <span>{exp.location}</span>
+                        </div>
+                        
+                        <div className="flex items-center gap-1 text-sm">
+                          <Calendar className="h-3 w-3 text-accent1/70" />
+                          <span>{exp.period}</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  
-                  {/* Content */}
-                  <div className="p-5">
-                    <p className="text-foreground/80 mb-4">
-                      {exp.description}
-                    </p>
                     
-                    <div className="flex flex-wrap gap-2">
-                      {exp.skills.map((skill, i) => (
-                        <Badge key={i} variant="secondary" className="font-normal bg-secondary/50">
-                          {skill}
-                        </Badge>
-                      ))}
+                    {/* Content */}
+                    <div className="p-5">
+                      <p className="text-foreground/80 mb-4">
+                        {exp.description}
+                      </p>
+                      
+                      <div className="flex flex-wrap gap-2">
+                        {exp.skills.map((skill, i) => (
+                          <Badge key={i} variant="secondary" className="font-normal bg-secondary/50">
+                            {skill}
+                          </Badge>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>

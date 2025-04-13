@@ -80,56 +80,54 @@ const Education = () => {
           </p>
         </div>
 
-        {/* Clean Timeline */}
-        <div className="max-w-4xl mx-auto relative">
-          {/* Timeline Line */}
-          <div className="absolute left-[42px] top-0 bottom-0 w-px bg-accent2/20 rounded-full"></div>
-          
-          {/* Timeline Items */}
-          <div className="space-y-12">
+        {/* Timeline with side years */}
+        <div className="max-w-4xl mx-auto">
+          <div className="space-y-10">
             {sortedEducations.map((edu, index) => (
               <div 
                 key={edu.id} 
-                className="relative animate-on-scroll"
+                className="relative flex animate-on-scroll"
                 style={{ animationDelay: `${index * 0.2}s` }}
               >
-                {/* Year marker - clean and minimal */}
-                <div className="absolute left-0 flex items-center h-6">
-                  <span className="w-10 text-base font-medium text-accent2/80 text-center">{edu.year}</span>
+                {/* Left column for year */}
+                <div className="w-16 pt-5 flex-shrink-0">
+                  <span className="text-base font-medium text-accent2 block">{edu.year}</span>
                 </div>
                 
-                {/* Content Card */}
-                <div className="ml-16 bg-background rounded-lg border border-border/30 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
-                  {/* Header with subtle gradient */}
-                  <div className="bg-gradient-to-r from-accent2/5 to-accent1/5 p-5">
-                    <h3 className="text-xl font-medium">{edu.degree}</h3>
-                    <div className="flex flex-wrap items-center text-foreground/70 gap-2 mt-1">
-                      <span className="font-medium">{edu.institution}</span>
-                      
-                      <div className="flex items-center gap-1 text-sm">
-                        <MapPin className="h-3 w-3 text-accent2/70" />
-                        <span>{edu.location}</span>
-                      </div>
-                      
-                      <div className="flex items-center gap-1 text-sm">
-                        <Calendar className="h-3 w-3 text-accent2/70" />
-                        <span>{edu.period}</span>
+                {/* Right column for content */}
+                <div className="flex-grow">
+                  <div className="bg-background rounded-lg border border-border/30 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
+                    {/* Header with subtle gradient */}
+                    <div className="bg-gradient-to-r from-accent2/5 to-accent1/5 p-5">
+                      <h3 className="text-xl font-medium">{edu.degree}</h3>
+                      <div className="flex flex-wrap items-center text-foreground/70 gap-2 mt-1">
+                        <span className="font-medium">{edu.institution}</span>
+                        
+                        <div className="flex items-center gap-1 text-sm">
+                          <MapPin className="h-3 w-3 text-accent2/70" />
+                          <span>{edu.location}</span>
+                        </div>
+                        
+                        <div className="flex items-center gap-1 text-sm">
+                          <Calendar className="h-3 w-3 text-accent2/70" />
+                          <span>{edu.period}</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  
-                  {/* Content */}
-                  <div className="p-5">
-                    <p className="text-foreground/80 mb-4">
-                      {edu.description}
-                    </p>
                     
-                    <div className="flex flex-wrap gap-2">
-                      {edu.subjects.map((subject, i) => (
-                        <Badge key={i} variant="outline" className="font-normal">
-                          {subject}
-                        </Badge>
-                      ))}
+                    {/* Content */}
+                    <div className="p-5">
+                      <p className="text-foreground/80 mb-4">
+                        {edu.description}
+                      </p>
+                      
+                      <div className="flex flex-wrap gap-2">
+                        {edu.subjects.map((subject, i) => (
+                          <Badge key={i} variant="outline" className="font-normal">
+                            {subject}
+                          </Badge>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
