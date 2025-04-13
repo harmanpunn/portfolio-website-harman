@@ -120,7 +120,7 @@ const Contact = () => {
               <div className="flex-grow">
                 <div 
                   className="calendly-inline-widget" 
-                  data-url="https://calendly.com/harmanpunn/30min"
+                  data-url="https://calendly.com/harmanpunn/coffee-chat"
                   style={{ minWidth: '320px', height: '630px' }}
                 ></div>
               </div>
