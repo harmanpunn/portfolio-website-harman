@@ -1,19 +1,15 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { 
-  Send, 
-  MapPin, 
-  Mail, 
-  Phone,
+  Send,
   CheckCircle,
-  Github,
-  Linkedin,
-  Instagram
+  Calendar
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
+import { Card } from '@/components/ui/card';
 
 const Contact = () => {
   const [formState, setFormState] = useState({
@@ -26,6 +22,7 @@ const Contact = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const { toast } = useToast();
   const sectionRef = useRef<HTMLElement>(null);
+  const [showCalendly, setShowCalendly] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormState({
@@ -62,6 +59,22 @@ const Contact = () => {
   };
 
   useEffect(() => {
+    // Add Calendly script
+    const head = document.querySelector('head');
+    const script = document.createElement('script');
+    script.src = 'https://assets.calendly.com/assets/external/widget.js';
+    script.async = true;
+    head?.appendChild(script);
+
+    return () => {
+      // Clean up script when component unmounts
+      if (head?.contains(script)) {
+        head.removeChild(script);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -87,67 +100,35 @@ const Contact = () => {
         <div className="max-w-3xl mx-auto text-center mb-16 animate-on-scroll">
           <h2 className="text-3xl font-serif font-bold mb-4">Get In Touch</h2>
           <p className="text-foreground/70">
-            Have a question or want to work together? Feel free to reach out. I'd love to hear from you!
+            Have a question or want to work together? Schedule a meeting or send me a message!
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-5xl mx-auto">
           <div className="animate-on-scroll">
-            <h3 className="text-xl font-medium mb-6">Contact Information</h3>
-            
-            <div className="space-y-6">
-              <div className="flex items-start">
-                <div className="bg-background rounded-full p-3 shadow-sm mr-4">
-                  <MapPin className="h-6 w-6 text-accent1" />
+            <Card className="p-6 shadow-md h-full flex flex-col">
+              <div className="text-center mb-6">
+                <div className="inline-flex items-center justify-center bg-accent1/10 rounded-full p-3 mb-4">
+                  <Calendar className="h-8 w-8 text-accent1" />
                 </div>
-                <div>
-                  <h4 className="text-base font-medium mb-1">Location</h4>
-                  <p className="text-foreground/70">City, Country</p>
-                </div>
+                <h3 className="text-xl font-medium">Schedule a Meeting</h3>
+                <p className="text-foreground/70 mt-2">
+                  Choose a time that works for you using my online calendar.
+                </p>
               </div>
               
-              <div className="flex items-start">
-                <div className="bg-background rounded-full p-3 shadow-sm mr-4">
-                  <Mail className="h-6 w-6 text-accent1" />
-                </div>
-                <div>
-                  <h4 className="text-base font-medium mb-1">Email</h4>
-                  <p className="text-foreground/70">your.email@example.com</p>
-                </div>
+              <div className="flex-grow">
+                <div 
+                  className="calendly-inline-widget" 
+                  data-url="https://calendly.com/harmanpunn/30min"
+                  style={{ minWidth: '320px', height: '630px' }}
+                ></div>
               </div>
-              
-              <div className="flex items-start">
-                <div className="bg-background rounded-full p-3 shadow-sm mr-4">
-                  <Phone className="h-6 w-6 text-accent1" />
-                </div>
-                <div>
-                  <h4 className="text-base font-medium mb-1">Phone</h4>
-                  <p className="text-foreground/70">+1 (123) 456-7890</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="mt-10">
-              <h3 className="text-xl font-medium mb-4">Follow Me</h3>
-              <div className="flex space-x-4">
-                <a href="https://linkedin.com/in/harmanpunn" target="_blank" rel="noopener noreferrer" className="bg-background rounded-full p-3 shadow-sm text-foreground/70 hover:text-accent1 transition-colors">
-                  <Linkedin className="h-5 w-5" />
-                </a>
-                <a href="https://github.com/harmanpunn" target="_blank" rel="noopener noreferrer" className="bg-background rounded-full p-3 shadow-sm text-foreground/70 hover:text-accent1 transition-colors">
-                  <Github className="h-5 w-5" />
-                </a>
-                <a href="https://www.instagram.com/harmanpunn/" target="_blank" rel="noopener noreferrer" className="bg-background rounded-full p-3 shadow-sm text-foreground/70 hover:text-accent1 transition-colors">
-                  <Instagram className="h-5 w-5" />
-                </a>
-                <a href="mailto:harmanpunn@gmail.com" className="bg-background rounded-full p-3 shadow-sm text-foreground/70 hover:text-accent1 transition-colors">
-                  <Mail className="h-5 w-5" />
-                </a>
-              </div>
-            </div>
+            </Card>
           </div>
           
           <div className="animate-on-scroll">
-            <div className="bg-background rounded-lg shadow-sm p-8 border border-border">
+            <Card className="bg-background rounded-lg shadow-md p-8 h-full">
               <h3 className="text-xl font-medium mb-6">Send Me a Message</h3>
               
               {isSubmitted ? (
@@ -242,7 +223,7 @@ const Contact = () => {
                   </div>
                 </form>
               )}
-            </div>
+            </Card>
           </div>
         </div>
       </div>
