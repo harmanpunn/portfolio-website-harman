@@ -107,24 +107,24 @@ const Experience = () => {
 
         <div className="max-w-4xl mx-auto relative">
           {/* Vertical line for timeline */}
-          <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-accent1 to-accent2 rounded-full"></div>
+          <div className="absolute left-[28px] top-0 bottom-0 w-1 bg-accent1 rounded-full"></div>
           
-          <div className="space-y-6">
+          <div className="space-y-12">
             {sortedExperiences.map((exp, index) => (
               <div 
                 key={exp.id} 
-                className="group animate-on-scroll relative flex items-start pl-8"
+                className="group animate-on-scroll relative flex items-start"
                 style={{ animationDelay: `${index * 0.2}s` }}
               >
-                {/* Circle marker with year */}
-                <div className="absolute -left-4 w-8 h-8 bg-background border-4 border-accent1 rounded-full flex items-center justify-center z-10 transition-all duration-300 group-hover:scale-110 group-hover:border-accent2">
-                  <span className="text-xs font-bold">{exp.year}</span>
+                {/* Circle marker with year - now bigger and centered vertically */}
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-14 h-14 bg-background border-4 border-accent1 rounded-full flex items-center justify-center z-10 transition-all duration-300 group-hover:scale-110 group-hover:border-accent2 shadow-md">
+                  <span className="text-sm font-bold">{exp.year}</span>
                 </div>
                 
-                {/* Content card */}
-                <div className="bg-background/80 backdrop-blur-sm rounded-lg border border-border/30 shadow-sm transition-all duration-300 w-full overflow-hidden group-hover:shadow-md group-hover:border-accent1/30 group-hover:-translate-y-1">
-                  {/* Header with subtle gradient */}
-                  <div className="bg-gradient-to-r from-accent1/5 via-accent2/10 to-transparent p-5">
+                {/* Content card - moved to the right with more space */}
+                <div className="bg-background/80 backdrop-blur-sm rounded-lg border border-border/30 shadow-sm transition-all duration-300 ml-20 w-full overflow-hidden group-hover:shadow-md group-hover:border-accent1/30 group-hover:-translate-y-1">
+                  {/* Header */}
+                  <div className="bg-background p-5 border-b border-border/10">
                     <h3 className="text-xl font-medium">{exp.title}</h3>
                     <div className="flex flex-wrap items-center text-foreground/70 gap-2 mt-1">
                       <span className="font-medium">{exp.company}</span>
@@ -142,14 +142,14 @@ const Experience = () => {
                   </div>
                   
                   {/* Content */}
-                  <div className="p-5 pt-3">
+                  <div className="p-5">
                     <p className="text-foreground/80 mb-4">
                       {exp.description}
                     </p>
                     
                     <div className="flex flex-wrap gap-2">
                       {exp.skills.map((skill, i) => (
-                        <Badge key={i} variant="secondary" className="font-normal bg-secondary/50 group-hover:bg-accent1/10">
+                        <Badge key={i} variant="secondary" className="font-normal">
                           {skill}
                         </Badge>
                       ))}

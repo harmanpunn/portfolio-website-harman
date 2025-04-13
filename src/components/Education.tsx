@@ -82,24 +82,24 @@ const Education = () => {
 
         <div className="max-w-4xl mx-auto relative">
           {/* Vertical line for timeline */}
-          <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-accent2 to-accent1 rounded-full"></div>
+          <div className="absolute left-[28px] top-0 bottom-0 w-1 bg-accent2 rounded-full"></div>
           
-          <div className="space-y-6">
+          <div className="space-y-12">
             {sortedEducations.map((edu, index) => (
               <div 
                 key={edu.id} 
-                className="group animate-on-scroll relative flex items-start pl-8"
+                className="group animate-on-scroll relative flex items-start"
                 style={{ animationDelay: `${index * 0.2}s` }}
               >
-                {/* Circle marker with year */}
-                <div className="absolute -left-4 w-8 h-8 bg-background border-4 border-accent2 rounded-full flex items-center justify-center z-10 transition-all duration-300 group-hover:scale-110 group-hover:border-accent1">
-                  <span className="text-xs font-bold">{edu.year}</span>
+                {/* Circle marker with year - now bigger and centered vertically */}
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-14 h-14 bg-background border-4 border-accent2 rounded-full flex items-center justify-center z-10 transition-all duration-300 group-hover:scale-110 group-hover:border-accent1 shadow-md">
+                  <span className="text-sm font-bold">{edu.year}</span>
                 </div>
                 
-                {/* Content card */}
-                <div className="bg-background/80 backdrop-blur-sm rounded-lg border border-border/30 shadow-sm transition-all duration-300 w-full overflow-hidden group-hover:shadow-md group-hover:border-accent2/30 group-hover:-translate-y-1">
-                  {/* Header with subtle gradient */}
-                  <div className="bg-gradient-to-r from-accent2/5 via-accent1/10 to-transparent p-5">
+                {/* Content card - moved to the right with more space */}
+                <div className="bg-background/80 backdrop-blur-sm rounded-lg border border-border/30 shadow-sm transition-all duration-300 ml-20 w-full overflow-hidden group-hover:shadow-md group-hover:border-accent2/30 group-hover:-translate-y-1">
+                  {/* Header */}
+                  <div className="bg-background p-5 border-b border-border/10">
                     <h3 className="text-xl font-medium">{edu.degree}</h3>
                     <div className="flex flex-wrap items-center text-foreground/70 gap-2 mt-1">
                       <span className="font-medium">{edu.institution}</span>
@@ -117,14 +117,14 @@ const Education = () => {
                   </div>
                   
                   {/* Content */}
-                  <div className="p-5 pt-3">
+                  <div className="p-5">
                     <p className="text-foreground/80 mb-4">
                       {edu.description}
                     </p>
                     
                     <div className="flex flex-wrap gap-2">
                       {edu.subjects.map((subject, i) => (
-                        <Badge key={i} variant="outline" className="font-normal group-hover:bg-accent2/10 transition-colors">
+                        <Badge key={i} variant="outline" className="font-normal">
                           {subject}
                         </Badge>
                       ))}
@@ -136,27 +136,28 @@ const Education = () => {
           </div>
         </div>
 
+        {/* Restoring the original theme for Additional Achievements section */}
         <div className="mt-16 max-w-4xl mx-auto">
-          <div className="bg-gradient-to-r from-background to-accent1/5 backdrop-blur-sm rounded-lg border border-accent1/10 p-8 animate-on-scroll shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+          <div className="bg-blue-50 rounded-lg border border-blue-100 p-8 animate-on-scroll shadow-sm transition-all duration-300 hover:shadow-md">
             <div className="flex items-start">
-              <Award className="h-10 w-10 text-accent1 mr-4 flex-shrink-0 mt-1" />
+              <Award className="h-10 w-10 text-blue-500 mr-4 flex-shrink-0 mt-1" />
               <div>
                 <h3 className="text-xl font-medium mb-4">Additional Achievements & Recognitions</h3>
                 <ul className="space-y-3">
                   <li className="flex items-start group">
-                    <span className="text-accent1 mr-2 transition-transform duration-300 group-hover:translate-x-1">•</span>
+                    <span className="text-blue-500 mr-2 text-lg">•</span>
                     <span className="text-foreground/80">Published a Medium article on Joi – Form validation made simple</span>
                   </li>
                   <li className="flex items-start group">
-                    <span className="text-accent1 mr-2 transition-transform duration-300 group-hover:translate-x-1">•</span>
+                    <span className="text-blue-500 mr-2 text-lg">•</span>
                     <span className="text-foreground/80">Received "Rookie Award" for exceptional performance</span>
                   </li>
                   <li className="flex items-start group">
-                    <span className="text-accent1 mr-2 transition-transform duration-300 group-hover:translate-x-1">•</span>
+                    <span className="text-blue-500 mr-2 text-lg">•</span>
                     <span className="text-foreground/80">Received "Made a difference" award for amazing client impact</span>
                   </li>
                   <li className="flex items-start group">
-                    <span className="text-accent1 mr-2 transition-transform duration-300 group-hover:translate-x-1">•</span>
+                    <span className="text-blue-500 mr-2 text-lg">•</span>
                     <span className="text-foreground/80">Research Assistant in multiple academic studies at Rutgers University</span>
                   </li>
                 </ul>
