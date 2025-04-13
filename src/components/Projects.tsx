@@ -26,8 +26,8 @@ const projects: Project[] = [
     description: "A Chrome extension utilizing FalconLLM and LangChain for efficient 60-word web content summarization with a user-friendly interface and interactive chat feature.",
     image: "https://placehold.co/600x400/e2e8f0/1e293b?text=InsightWing",
     tags: ["LLM", "LangChain", "Chrome Extension", "JavaScript", "HTML/CSS"],
-    demoUrl: "#",
-    repoUrl: "#"
+    demoUrl: "https://devpost.com/software/insightwing-ai-page-summarizer-chrome-extension",
+    repoUrl: "https://github.com/harmanpunn/page-summarizer"
   },
   {
     id: 2,
