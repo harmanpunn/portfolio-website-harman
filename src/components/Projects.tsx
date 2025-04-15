@@ -5,7 +5,7 @@ import {
   LayoutGrid, 
   List,
   Database,
-  Docker,
+  Server,  // Replacing Docker with Server
   Code,
   Video
 } from 'lucide-react';
@@ -103,7 +103,7 @@ const GridProject = ({ project }: { project: Project }) => {
     const tagLower = tags.map(tag => tag.toLowerCase());
     
     if (tagLower.includes('redis')) return <Database className="h-3 w-3 text-accent1" />;
-    if (tagLower.includes('docker')) return <Docker className="h-3 w-3 text-accent1" />;
+    if (tagLower.includes('docker')) return <Server className="h-3 w-3 text-accent1" />; // Updated icon
     if (tagLower.includes('kubernetes')) return <Code className="h-3 w-3 text-accent1" />;
     if (tagLower.includes('fastapi')) return <Video className="h-3 w-3 text-accent1" />;
     return null;
@@ -165,7 +165,7 @@ const ListProject = ({ project }: { project: Project }) => {
     const tagLower = tags.map(tag => tag.toLowerCase());
     
     if (tagLower.includes('redis')) return <Database className="h-3 w-3 text-accent1" />;
-    if (tagLower.includes('docker')) return <Docker className="h-3 w-3 text-accent1" />;
+    if (tagLower.includes('docker')) return <Server className="h-3 w-3 text-accent1" />; // Updated icon
     if (tagLower.includes('kubernetes')) return <Code className="h-3 w-3 text-accent1" />;
     if (tagLower.includes('fastapi')) return <Video className="h-3 w-3 text-accent1" />;
     return null;
