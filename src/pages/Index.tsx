@@ -1,5 +1,5 @@
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
 import About from '@/components/About';
@@ -11,13 +11,23 @@ import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
 
 const Index = () => {
+  const [animationsInitialized, setAnimationsInitialized] = useState(false);
+
   useEffect(() => {
+    // Mark elements for animation on initial load only
+    if (!animationsInitialized) {
+      const animatedElements = document.querySelectorAll('.animate-on-scroll');
+      animatedElements.forEach((el) => el.classList.add('needs-animation'));
+      setAnimationsInitialized(true);
+    }
+
     // Initialize animation observer
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add('animated');
+            entry.target.classList.remove('needs-animation');
           }
         });
       },
@@ -32,7 +42,7 @@ const Index = () => {
     return () => {
       animatedElements.forEach((el) => observer.unobserve(el));
     };
-  }, []);
+  }, [animationsInitialized]);
 
   return (
     <div className="min-h-screen">
