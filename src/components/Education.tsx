@@ -7,6 +7,7 @@ import {
   Calendar
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 type Education = {
   id: number;
@@ -44,6 +45,7 @@ const educations: Education[] = [
 
 const Education = () => {
   const sectionRef = useRef<HTMLElement>(null);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -70,6 +72,111 @@ const Education = () => {
     parseInt(b.year) - parseInt(a.year)
   );
 
+  // Mobile Education Card Component
+  const MobileEducationCard = ({ edu, index }: { edu: Education, index: number }) => (
+    <div 
+      className="animate-on-scroll mb-6 relative" 
+      style={{ animationDelay: `${index * 0.2}s` }}
+    >
+      {/* Year badge */}
+      <div className="bg-accent2 text-white text-sm font-medium py-1 px-3 rounded-full inline-block mb-3">
+        {edu.year}
+      </div>
+      
+      <div className="bg-background/80 backdrop-blur-sm rounded-lg border border-border/30 shadow-sm overflow-hidden hover:shadow-md hover:border-accent2/30 transition-all duration-300">
+        <div className="p-4 border-b border-border/10">
+          <h3 className="text-lg font-medium">{edu.degree}</h3>
+          <p className="font-medium">{edu.institution}</p>
+          
+          <div className="flex flex-wrap items-center text-foreground/70 gap-2 mt-1 text-xs">
+            <div className="flex items-center gap-1">
+              <MapPin className="h-3 w-3 text-accent2/70" />
+              <span>{edu.location}</span>
+            </div>
+            
+            <div className="flex items-center gap-1">
+              <Calendar className="h-3 w-3 text-accent2/70" />
+              <span>{edu.period}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div className="p-4">
+          <p className="text-foreground/80 mb-4 text-sm">
+            {edu.description}
+          </p>
+          
+          <div className="flex flex-wrap gap-1">
+            {edu.subjects.map((subject, i) => (
+              <Badge key={i} variant="outline" className="font-normal text-xs">
+                {subject}
+              </Badge>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Desktop Timeline Component
+  const DesktopTimeline = () => (
+    <div className="max-w-4xl mx-auto relative">
+      {/* Vertical line for timeline */}
+      <div className="absolute left-[28px] top-0 bottom-0 w-1 bg-accent2 rounded-full"></div>
+      
+      <div className="space-y-12">
+        {sortedEducations.map((edu, index) => (
+          <div 
+            key={edu.id} 
+            className="group animate-on-scroll relative flex items-start"
+            style={{ animationDelay: `${index * 0.2}s` }}
+          >
+            {/* Circle marker with year */}
+            <div className="absolute left-0 top-0 w-14 h-14 bg-background border-4 border-accent2 rounded-full flex items-center justify-center z-10 transition-all duration-300 group-hover:scale-110 group-hover:border-accent1 shadow-md -translate-y-1/2">
+              <span className="text-sm font-bold">{edu.year}</span>
+            </div>
+            
+            {/* Content card */}
+            <div className="bg-background/80 backdrop-blur-sm rounded-lg border border-border/30 shadow-sm transition-all duration-300 ml-20 w-full overflow-hidden group-hover:shadow-md group-hover:border-accent2/30 group-hover:-translate-y-1 mt-6">
+              {/* Header */}
+              <div className="bg-background p-5 border-b border-border/10">
+                <h3 className="text-xl font-medium">{edu.degree}</h3>
+                <p className="font-medium">{edu.institution}</p>
+                
+                <div className="flex flex-wrap items-center text-foreground/70 gap-2 mt-1 text-sm">
+                  <div className="flex items-center gap-1">
+                    <MapPin className="h-3 w-3 text-accent2/70" />
+                    <span>{edu.location}</span>
+                  </div>
+                  
+                  <div className="flex items-center gap-1">
+                    <Calendar className="h-3 w-3 text-accent2/70" />
+                    <span>{edu.period}</span>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Content */}
+              <div className="p-5">
+                <p className="text-foreground/80 mb-4">
+                  {edu.description}
+                </p>
+                
+                <div className="flex flex-wrap gap-2">
+                  {edu.subjects.map((subject, i) => (
+                    <Badge key={i} variant="outline" className="font-normal">
+                      {subject}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
   return (
     <section id="education" ref={sectionRef} className="section-padding bg-muted/30">
       <div className="container mx-auto">
@@ -80,63 +187,17 @@ const Education = () => {
           </p>
         </div>
 
-        <div className="max-w-4xl mx-auto relative">
-          {/* Vertical line for timeline */}
-          <div className="absolute left-[28px] top-0 bottom-0 w-1 bg-accent2 rounded-full"></div>
-          
-          <div className="space-y-12">
+        {isMobile ? (
+          <div className="space-y-2">
             {sortedEducations.map((edu, index) => (
-              <div 
-                key={edu.id} 
-                className="group animate-on-scroll relative flex items-start"
-                style={{ animationDelay: `${index * 0.2}s` }}
-              >
-                {/* Circle marker with year - now bigger and centered vertically */}
-                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-14 h-14 bg-background border-4 border-accent2 rounded-full flex items-center justify-center z-10 transition-all duration-300 group-hover:scale-110 group-hover:border-accent1 shadow-md">
-                  <span className="text-sm font-bold">{edu.year}</span>
-                </div>
-                
-                {/* Content card - moved to the right with more space */}
-                <div className="bg-background/80 backdrop-blur-sm rounded-lg border border-border/30 shadow-sm transition-all duration-300 ml-20 w-full overflow-hidden group-hover:shadow-md group-hover:border-accent2/30 group-hover:-translate-y-1">
-                  {/* Header */}
-                  <div className="bg-background p-5 border-b border-border/10">
-                    <h3 className="text-xl font-medium">{edu.degree}</h3>
-                    <div className="flex flex-wrap items-center text-foreground/70 gap-2 mt-1">
-                      <span className="font-medium">{edu.institution}</span>
-                      
-                      <div className="flex items-center gap-1 text-sm">
-                        <MapPin className="h-3 w-3 text-accent2/70" />
-                        <span>{edu.location}</span>
-                      </div>
-                      
-                      <div className="flex items-center gap-1 text-sm">
-                        <Calendar className="h-3 w-3 text-accent2/70" />
-                        <span>{edu.period}</span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Content */}
-                  <div className="p-5">
-                    <p className="text-foreground/80 mb-4">
-                      {edu.description}
-                    </p>
-                    
-                    <div className="flex flex-wrap gap-2">
-                      {edu.subjects.map((subject, i) => (
-                        <Badge key={i} variant="outline" className="font-normal">
-                          {subject}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <MobileEducationCard key={edu.id} edu={edu} index={index} />
             ))}
           </div>
-        </div>
+        ) : (
+          <DesktopTimeline />
+        )}
 
-        {/* Restoring the original theme for Additional Achievements section */}
+        {/* Achievements section */}
         <div className="mt-16 max-w-4xl mx-auto">
           <div className="bg-blue-50 rounded-lg border border-blue-100 p-8 animate-on-scroll shadow-sm transition-all duration-300 hover:shadow-md">
             <div className="flex items-start">
