@@ -45,10 +45,10 @@ const projects: Project[] = [
     id: 2,
     title: "Video Recommendation System",
     description: "A containerized, microservice-based video recommendation system built using FastAPI, Redis, Docker, and Kubernetes with autoscaling, service orchestration, and caching.",
-    image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=600&h=400&fit=crop",
+    image: "https://placehold.co/600x400/e2e8f0/1e293b?text=Video+Recommendation",
     tags: ["FastAPI", "Redis", "Docker", "Kubernetes", "Microservices"],
-    demoUrl: "#",
-    repoUrl: "#"
+    demoUrl: "https://github.com/harmanpunn/video-recommendation-system",
+    repoUrl: "https://github.com/harmanpunn/video-recommendation-system"
   },
   {
     id: 3,
@@ -207,24 +207,19 @@ const Projects = () => {
   const projectsPerPage = 6;
   const sectionRef = useRef<HTMLElement>(null);
   
-  // Calculate pagination values
   const totalPages = Math.ceil(projects.length / projectsPerPage);
   const indexOfLastProject = currentPage * projectsPerPage;
   const indexOfFirstProject = indexOfLastProject - projectsPerPage;
   const currentProjects = projects.slice(indexOfFirstProject, indexOfLastProject);
   
-  // Function to handle page changes
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    // Scroll to top of projects section
     if (sectionRef.current) {
       sectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
   
-  // Function to initialize animations
   const initializeAnimations = () => {
-    // Small delay to ensure DOM is updated after view change
     setTimeout(() => {
       const observer = new IntersectionObserver(
         (entries) => {
@@ -246,28 +241,22 @@ const Projects = () => {
     }, 50);
   };
 
-  // Initial animation setup
   useEffect(() => {
     initializeAnimations();
   }, []);
   
-  // Re-initialize animations when view changes or page changes
   useEffect(() => {
-    // Force all project items to be visible immediately after view change
     const projectItems = document.querySelectorAll('.animate-on-scroll');
     projectItems.forEach(item => {
       item.classList.add('animated');
     });
     
-    // Re-run initialization for any new elements
     initializeAnimations();
   }, [view, currentPage]);
 
-  // Generate pagination links
   const renderPaginationLinks = () => {
     const links = [];
     
-    // Show the first page always
     links.push(
       <PaginationItem key="page-1">
         <PaginationLink 
@@ -279,7 +268,6 @@ const Projects = () => {
       </PaginationItem>
     );
     
-    // Add ellipsis if necessary
     if (currentPage > 3) {
       links.push(
         <PaginationItem key="ellipsis-1">
@@ -288,9 +276,8 @@ const Projects = () => {
       );
     }
     
-    // Show pages around current page
     for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
-      if (i === 1 || i === totalPages) continue; // Skip first and last page (handled separately)
+      if (i === 1 || i === totalPages) continue;
       links.push(
         <PaginationItem key={`page-${i}`}>
           <PaginationLink 
@@ -303,7 +290,6 @@ const Projects = () => {
       );
     }
     
-    // Add ellipsis if necessary
     if (currentPage < totalPages - 2) {
       links.push(
         <PaginationItem key="ellipsis-2">
@@ -312,7 +298,6 @@ const Projects = () => {
       );
     }
     
-    // Show the last page if there are multiple pages
     if (totalPages > 1) {
       links.push(
         <PaginationItem key={`page-${totalPages}`}>
@@ -376,7 +361,6 @@ const Projects = () => {
           </div>
         )}
         
-        {/* Pagination */}
         {totalPages > 1 && (
           <div className="mt-12">
             <Pagination>
