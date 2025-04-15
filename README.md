@@ -17,7 +17,7 @@ This portfolio website is built with modern web technologies to create a seamles
 
 ## 🚀 Live Demo
 
-Visit the live website at: [harmanpunn.com](https://harmanpunn.com)
+Visit the live website at: [harmanpunn.me](https://harmanpunn.me)
 
 ## 🛠️ Technologies Used
 
