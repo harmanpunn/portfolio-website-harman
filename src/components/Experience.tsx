@@ -2,6 +2,7 @@
 import { useEffect, useRef } from 'react';
 import { Briefcase, MapPin, Calendar } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 type Experience = {
   id: number;
@@ -69,6 +70,7 @@ const experiences: Experience[] = [
 
 const Experience = () => {
   const sectionRef = useRef<HTMLElement>(null);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -105,51 +107,51 @@ const Experience = () => {
           </p>
         </div>
 
-        <div className="max-w-4xl mx-auto relative">
-          {/* Vertical line for timeline */}
-          <div className="absolute left-[28px] top-0 bottom-0 w-1 bg-accent1 rounded-full"></div>
+        <div className={`max-w-4xl mx-auto relative ${isMobile ? 'px-2' : ''}`}>
+          {/* Vertical line for timeline - adjusted for mobile */}
+          <div className={`absolute left-0 md:left-[28px] top-0 bottom-0 w-1 bg-accent1 rounded-full ${isMobile ? 'left-4' : ''}`}></div>
           
-          <div className="space-y-12">
+          <div className="space-y-8 md:space-y-12">
             {sortedExperiences.map((exp, index) => (
               <div 
                 key={exp.id} 
                 className="group animate-on-scroll relative flex items-start"
                 style={{ animationDelay: `${index * 0.2}s` }}
               >
-                {/* Circle marker with year - now bigger and centered vertically */}
-                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-14 h-14 bg-background border-4 border-accent1 rounded-full flex items-center justify-center z-10 transition-all duration-300 group-hover:scale-110 group-hover:border-accent2 shadow-md">
-                  <span className="text-sm font-bold">{exp.year}</span>
+                {/* Circle marker with year - positioned differently for mobile */}
+                <div className={`absolute ${isMobile ? 'left-4 -translate-x-1/2' : 'left-0'} top-1/2 -translate-y-1/2 w-10 h-10 md:w-14 md:h-14 bg-background border-4 border-accent1 rounded-full flex items-center justify-center z-10 transition-all duration-300 group-hover:scale-110 group-hover:border-accent2 shadow-md`}>
+                  <span className="text-xs md:text-sm font-bold">{exp.year}</span>
                 </div>
                 
-                {/* Content card - moved to the right with more space */}
-                <div className="bg-background/80 backdrop-blur-sm rounded-lg border border-border/30 shadow-sm transition-all duration-300 ml-20 w-full overflow-hidden group-hover:shadow-md group-hover:border-accent1/30 group-hover:-translate-y-1">
-                  {/* Header */}
-                  <div className="bg-background p-5 border-b border-border/10">
-                    <h3 className="text-xl font-medium">{exp.title}</h3>
-                    <div className="flex flex-wrap items-center text-foreground/70 gap-2 mt-1">
-                      <span className="font-medium">{exp.company}</span>
-                      
-                      <div className="flex items-center gap-1 text-sm">
+                {/* Content card - adjusted margins for mobile */}
+                <div className={`bg-background/80 backdrop-blur-sm rounded-lg border border-border/30 shadow-sm transition-all duration-300 ${isMobile ? 'ml-10' : 'ml-20'} w-full overflow-hidden group-hover:shadow-md group-hover:border-accent1/30 group-hover:-translate-y-1`}>
+                  {/* Header - simplified for mobile */}
+                  <div className="bg-background p-4 md:p-5 border-b border-border/10">
+                    <h3 className="text-lg md:text-xl font-medium">{exp.title}</h3>
+                    <p className="font-medium">{exp.company}</p>
+                    
+                    <div className="flex flex-wrap items-center text-foreground/70 gap-1 md:gap-2 mt-1 text-xs md:text-sm">
+                      <div className="flex items-center gap-1">
                         <MapPin className="h-3 w-3 text-accent1/70" />
                         <span>{exp.location}</span>
                       </div>
                       
-                      <div className="flex items-center gap-1 text-sm">
+                      <div className="flex items-center gap-1">
                         <Calendar className="h-3 w-3 text-accent1/70" />
                         <span>{exp.period}</span>
                       </div>
                     </div>
                   </div>
                   
-                  {/* Content */}
-                  <div className="p-5">
-                    <p className="text-foreground/80 mb-4">
+                  {/* Content - adjusted padding for mobile */}
+                  <div className="p-4 md:p-5">
+                    <p className="text-foreground/80 mb-4 text-sm md:text-base">
                       {exp.description}
                     </p>
                     
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-1 md:gap-2">
                       {exp.skills.map((skill, i) => (
-                        <Badge key={i} variant="secondary" className="font-normal">
+                        <Badge key={i} variant="secondary" className="font-normal text-xs md:text-sm">
                           {skill}
                         </Badge>
                       ))}
