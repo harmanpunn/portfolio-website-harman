@@ -3,7 +3,8 @@ import {
   GraduationCap, 
   Award,
   MapPin,
-  Calendar
+  Calendar,
+  Badge as BadgeIcon
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -67,18 +68,15 @@ const Education = () => {
     };
   }, []);
 
-  // Sort educations by year in descending order (most recent first)
   const sortedEducations = [...educations].sort((a, b) => 
     parseInt(b.year) - parseInt(a.year)
   );
 
-  // Mobile Education Card Component
   const MobileEducationCard = ({ edu, index }: { edu: Education, index: number }) => (
     <div 
       className="animate-on-scroll mb-8 relative" 
       style={{ animationDelay: `${index * 0.2}s` }}
     >
-      {/* Year badge */}
       <div className="bg-accent2 text-white text-sm font-bold py-1 px-4 rounded-full mb-4 inline-block w-auto">
         {edu.year}
       </div>
@@ -118,10 +116,8 @@ const Education = () => {
     </div>
   );
 
-  // Desktop Timeline Component
   const DesktopTimeline = () => (
     <div className="max-w-4xl mx-auto relative">
-      {/* Vertical line for timeline */}
       <div className="absolute left-[28px] top-4 bottom-4 w-1 bg-accent2/80 rounded-full"></div>
       
       <div className="space-y-16">
@@ -131,14 +127,11 @@ const Education = () => {
             className="group animate-on-scroll relative flex items-start"
             style={{ animationDelay: `${index * 0.2}s` }}
           >
-            {/* Circle marker with year */}
             <div className="absolute left-0 top-0 w-14 h-14 bg-white border-4 border-accent2 rounded-full flex items-center justify-center z-10 transition-all duration-300 group-hover:scale-110 group-hover:border-accent1 shadow-md">
               <span className="text-sm font-bold">{edu.year}</span>
             </div>
             
-            {/* Content card */}
             <div className="bg-background/80 backdrop-blur-sm rounded-lg border border-border/30 shadow-sm transition-all duration-300 ml-20 w-full overflow-hidden group-hover:shadow-md group-hover:border-accent2/30 group-hover:-translate-y-1">
-              {/* Header */}
               <div className="bg-background p-5 border-b border-border/10">
                 <h3 className="text-xl font-medium">{edu.degree}</h3>
                 <p className="font-medium">{edu.institution}</p>
@@ -156,7 +149,6 @@ const Education = () => {
                 </div>
               </div>
               
-              {/* Content */}
               <div className="p-5">
                 <p className="text-foreground/80 mb-4">
                   {edu.description}
@@ -177,7 +169,70 @@ const Education = () => {
     </div>
   );
 
-  // Show loading placeholder while we determine if it's mobile or not
+  const MobileAchievements = () => (
+    <div className="mt-8 px-4 animate-on-scroll">
+      <Card className="overflow-hidden border-blue-100 bg-blue-50 shadow-sm">
+        <CardContent className="p-6">
+          <div className="flex items-start space-x-4">
+            <BadgeIcon className="h-6 w-6 text-blue-500 flex-shrink-0" />
+            <div>
+              <h3 className="text-lg font-medium mb-3">Additional Achievements & Recognitions</h3>
+              <ul className="space-y-4">
+                <li className="flex items-start">
+                  <span className="text-blue-500 mr-2 text-lg">•</span>
+                  <span className="text-foreground/80 text-sm">Published a Medium article on Joi – Form validation made simple</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-blue-500 mr-2 text-lg">•</span>
+                  <span className="text-foreground/80 text-sm">Received "Rookie Award" for exceptional performance</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-blue-500 mr-2 text-lg">•</span>
+                  <span className="text-foreground/80 text-sm">Received "Made a difference" award for amazing client impact</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-blue-500 mr-2 text-lg">•</span>
+                  <span className="text-foreground/80 text-sm">Research Assistant in multiple academic studies at Rutgers University</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+
+  const DesktopAchievements = () => (
+    <div className="mt-16 max-w-4xl mx-auto px-4">
+      <div className="bg-blue-50 rounded-lg border border-blue-100 p-8 animate-on-scroll shadow-sm transition-all duration-300 hover:shadow-md">
+        <div className="flex items-start">
+          <Award className="h-10 w-10 text-blue-500 mr-4 flex-shrink-0 mt-1" />
+          <div>
+            <h3 className="text-xl font-medium mb-4">Additional Achievements & Recognitions</h3>
+            <ul className="space-y-3">
+              <li className="flex items-start group">
+                <span className="text-blue-500 mr-2 text-lg">•</span>
+                <span className="text-foreground/80">Published a Medium article on Joi – Form validation made simple</span>
+              </li>
+              <li className="flex items-start group">
+                <span className="text-blue-500 mr-2 text-lg">•</span>
+                <span className="text-foreground/80">Received "Rookie Award" for exceptional performance</span>
+              </li>
+              <li className="flex items-start group">
+                <span className="text-blue-500 mr-2 text-lg">•</span>
+                <span className="text-foreground/80">Received "Made a difference" award for amazing client impact</span>
+              </li>
+              <li className="flex items-start group">
+                <span className="text-blue-500 mr-2 text-lg">•</span>
+                <span className="text-foreground/80">Research Assistant in multiple academic studies at Rutgers University</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   if (isMobile === null) {
     return (
       <section id="education" className="section-padding bg-muted/30">
@@ -185,7 +240,6 @@ const Education = () => {
           <div className="max-w-3xl mx-auto text-center mb-16">
             <h2 className="text-3xl font-serif font-bold mb-4">Education & Certifications</h2>
           </div>
-          {/* Loading placeholder */}
           <div className="opacity-0">Loading...</div>
         </div>
       </section>
@@ -207,40 +261,14 @@ const Education = () => {
             {sortedEducations.map((edu, index) => (
               <MobileEducationCard key={edu.id} edu={edu} index={index} />
             ))}
+            <MobileAchievements />
           </div>
         ) : (
-          <DesktopTimeline />
+          <>
+            <DesktopTimeline />
+            <DesktopAchievements />
+          </>
         )}
-
-        {/* Achievements section */}
-        <div className="mt-16 max-w-4xl mx-auto px-4">
-          <div className="bg-blue-50 rounded-lg border border-blue-100 p-8 animate-on-scroll shadow-sm transition-all duration-300 hover:shadow-md">
-            <div className="flex items-start">
-              <Award className="h-10 w-10 text-blue-500 mr-4 flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="text-xl font-medium mb-4">Additional Achievements & Recognitions</h3>
-                <ul className="space-y-3">
-                  <li className="flex items-start group">
-                    <span className="text-blue-500 mr-2 text-lg">•</span>
-                    <span className="text-foreground/80">Published a Medium article on Joi – Form validation made simple</span>
-                  </li>
-                  <li className="flex items-start group">
-                    <span className="text-blue-500 mr-2 text-lg">•</span>
-                    <span className="text-foreground/80">Received "Rookie Award" for exceptional performance</span>
-                  </li>
-                  <li className="flex items-start group">
-                    <span className="text-blue-500 mr-2 text-lg">•</span>
-                    <span className="text-foreground/80">Received "Made a difference" award for amazing client impact</span>
-                  </li>
-                  <li className="flex items-start group">
-                    <span className="text-blue-500 mr-2 text-lg">•</span>
-                    <span className="text-foreground/80">Research Assistant in multiple academic studies at Rutgers University</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   );
