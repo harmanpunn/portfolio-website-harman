@@ -1,3 +1,4 @@
+
 import { useEffect, useRef } from 'react';
 import { 
   GraduationCap, 
@@ -171,31 +172,35 @@ const Education = () => {
 
   const MobileAchievements = () => (
     <div className="mt-8 px-4 animate-on-scroll">
-      <Card className="overflow-hidden border-blue-100 bg-blue-50 shadow-sm">
-        <CardContent className="p-6">
-          <div className="flex items-start space-x-4">
-            <BadgeIcon className="h-6 w-6 text-blue-500 flex-shrink-0" />
-            <div>
-              <h3 className="text-lg font-medium mb-3">Additional Achievements & Recognitions</h3>
-              <ul className="space-y-4">
-                <li className="flex items-start">
-                  <span className="text-blue-500 mr-2 text-lg">•</span>
-                  <span className="text-foreground/80 text-sm">Published a Medium article on Joi – Form validation made simple</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-blue-500 mr-2 text-lg">•</span>
-                  <span className="text-foreground/80 text-sm">Received "Rookie Award" for exceptional performance</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-blue-500 mr-2 text-lg">•</span>
-                  <span className="text-foreground/80 text-sm">Received "Made a difference" award for amazing client impact</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-blue-500 mr-2 text-lg">•</span>
-                  <span className="text-foreground/80 text-sm">Research Assistant in multiple academic studies at Rutgers University</span>
-                </li>
-              </ul>
+      <Card className="overflow-hidden border-blue-100 bg-blue-50/80 shadow-sm">
+        <CardContent className="p-5">
+          <div className="flex flex-col">
+            <div className="flex items-center justify-center mb-3">
+              <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center mb-2">
+                <Award className="h-6 w-6 text-blue-500" />
+              </div>
             </div>
+            
+            <h3 className="text-center text-lg font-medium mb-4">Additional Achievements & Recognitions</h3>
+            
+            <ul className="space-y-4">
+              <li className="flex items-start">
+                <span className="text-blue-500 mr-2 text-sm rounded-full flex-shrink-0 mt-1.5">•</span>
+                <span className="text-foreground/80 text-sm">Published a Medium article on Joi – Form validation made simple</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-blue-500 mr-2 text-sm rounded-full flex-shrink-0 mt-1.5">•</span>
+                <span className="text-foreground/80 text-sm">Received "Rookie Award" for exceptional performance</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-blue-500 mr-2 text-sm rounded-full flex-shrink-0 mt-1.5">•</span>
+                <span className="text-foreground/80 text-sm">Received "Made a difference" award for amazing client impact</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-blue-500 mr-2 text-sm rounded-full flex-shrink-0 mt-1.5">•</span>
+                <span className="text-foreground/80 text-sm">Research Assistant in multiple academic studies at Rutgers University</span>
+              </li>
+            </ul>
           </div>
         </CardContent>
       </Card>

@@ -16,12 +16,22 @@ export function useIsMobile() {
     // Initial check
     checkScreenSize();
     
-    // Add resize listener
-    window.addEventListener('resize', checkScreenSize);
+    // Add resize listener with debounce for better performance
+    let resizeTimer: ReturnType<typeof setTimeout>;
+    
+    const handleResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        checkScreenSize();
+      }, 100); // 100ms debounce
+    };
+    
+    window.addEventListener('resize', handleResize);
     
     // Cleanup
     return () => {
-      window.removeEventListener('resize', checkScreenSize);
+      window.removeEventListener('resize', handleResize);
+      clearTimeout(resizeTimer);
     };
   }, []);
 
