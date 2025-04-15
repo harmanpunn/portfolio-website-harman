@@ -21,17 +21,23 @@ const Index = () => {
       setAnimationsInitialized(true);
     }
 
-    // Initialize animation observer
+    // Initialize animation observer with better threshold and rootMargin
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add('animated');
-            entry.target.classList.remove('needs-animation');
+            // Add small delay to make animations more sequential
+            setTimeout(() => {
+              entry.target.classList.add('animated');
+              entry.target.classList.remove('needs-animation');
+            }, 100);
           }
         });
       },
-      { threshold: 0.1 }
+      { 
+        threshold: 0.15,
+        rootMargin: '0px 0px -100px 0px' // Trigger slightly earlier
+      }
     );
 
     // Observe all elements with animate-on-scroll class
