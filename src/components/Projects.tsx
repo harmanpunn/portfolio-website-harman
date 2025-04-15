@@ -8,6 +8,14 @@ import {
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 type Project = {
   id: number;
@@ -178,7 +186,24 @@ const ListProject = ({ project }: { project: Project }) => (
 
 const Projects = () => {
   const [view, setView] = useState<'grid' | 'list'>('grid');
+  const [currentPage, setCurrentPage] = useState(1);
+  const projectsPerPage = 6;
   const sectionRef = useRef<HTMLElement>(null);
+  
+  // Calculate pagination values
+  const totalPages = Math.ceil(projects.length / projectsPerPage);
+  const indexOfLastProject = currentPage * projectsPerPage;
+  const indexOfFirstProject = indexOfLastProject - projectsPerPage;
+  const currentProjects = projects.slice(indexOfFirstProject, indexOfLastProject);
+  
+  // Function to handle page changes
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    // Scroll to top of projects section
+    if (sectionRef.current) {
+      sectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
   
   // Function to initialize animations
   const initializeAnimations = () => {
@@ -209,7 +234,7 @@ const Projects = () => {
     initializeAnimations();
   }, []);
   
-  // Re-initialize animations when view changes
+  // Re-initialize animations when view changes or page changes
   useEffect(() => {
     // Force all project items to be visible immediately after view change
     const projectItems = document.querySelectorAll('.animate-on-scroll');
@@ -219,7 +244,73 @@ const Projects = () => {
     
     // Re-run initialization for any new elements
     initializeAnimations();
-  }, [view]);
+  }, [view, currentPage]);
+
+  // Generate pagination links
+  const renderPaginationLinks = () => {
+    const links = [];
+    
+    // Show the first page always
+    links.push(
+      <PaginationItem key="page-1">
+        <PaginationLink 
+          isActive={currentPage === 1} 
+          onClick={() => handlePageChange(1)}
+        >
+          1
+        </PaginationLink>
+      </PaginationItem>
+    );
+    
+    // Add ellipsis if necessary
+    if (currentPage > 3) {
+      links.push(
+        <PaginationItem key="ellipsis-1">
+          <PaginationEllipsis />
+        </PaginationItem>
+      );
+    }
+    
+    // Show pages around current page
+    for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
+      if (i === 1 || i === totalPages) continue; // Skip first and last page (handled separately)
+      links.push(
+        <PaginationItem key={`page-${i}`}>
+          <PaginationLink 
+            isActive={currentPage === i} 
+            onClick={() => handlePageChange(i)}
+          >
+            {i}
+          </PaginationLink>
+        </PaginationItem>
+      );
+    }
+    
+    // Add ellipsis if necessary
+    if (currentPage < totalPages - 2) {
+      links.push(
+        <PaginationItem key="ellipsis-2">
+          <PaginationEllipsis />
+        </PaginationItem>
+      );
+    }
+    
+    // Show the last page if there are multiple pages
+    if (totalPages > 1) {
+      links.push(
+        <PaginationItem key={`page-${totalPages}`}>
+          <PaginationLink 
+            isActive={currentPage === totalPages} 
+            onClick={() => handlePageChange(totalPages)}
+          >
+            {totalPages}
+          </PaginationLink>
+        </PaginationItem>
+      );
+    }
+    
+    return links;
+  };
 
   return (
     <section id="projects" ref={sectionRef} className="section-padding">
@@ -256,15 +347,38 @@ const Projects = () => {
 
         {view === 'grid' ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {projects.map(project => (
+            {currentProjects.map(project => (
               <GridProject key={project.id} project={project} />
             ))}
           </div>
         ) : (
           <div className="space-y-6">
-            {projects.map(project => (
+            {currentProjects.map(project => (
               <ListProject key={project.id} project={project} />
             ))}
+          </div>
+        )}
+        
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="mt-12">
+            <Pagination>
+              <PaginationContent>
+                {currentPage > 1 && (
+                  <PaginationItem>
+                    <PaginationPrevious onClick={() => handlePageChange(currentPage - 1)} />
+                  </PaginationItem>
+                )}
+                
+                {renderPaginationLinks()}
+                
+                {currentPage < totalPages && (
+                  <PaginationItem>
+                    <PaginationNext onClick={() => handlePageChange(currentPage + 1)} />
+                  </PaginationItem>
+                )}
+              </PaginationContent>
+            </Pagination>
           </div>
         )}
       </div>
