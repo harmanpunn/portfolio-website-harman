@@ -1,10 +1,13 @@
-
 import { useEffect, useRef, useState } from 'react';
 import { 
   ExternalLink, 
   Github, 
   LayoutGrid, 
-  List
+  List,
+  Database,
+  Docker,
+  Code,
+  Video
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -15,6 +18,7 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
+  PaginationEllipsis
 } from "@/components/ui/pagination";
 
 type Project = {
@@ -39,6 +43,15 @@ const projects: Project[] = [
   },
   {
     id: 2,
+    title: "Video Recommendation System",
+    description: "A containerized, microservice-based video recommendation system built using FastAPI, Redis, Docker, and Kubernetes with autoscaling, service orchestration, and caching.",
+    image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=600&h=400&fit=crop",
+    tags: ["FastAPI", "Redis", "Docker", "Kubernetes", "Microservices"],
+    demoUrl: "#",
+    repoUrl: "#"
+  },
+  {
+    id: 3,
     title: "Document Question Answering System",
     description: "A Document QA system using LangChain, HuggingFace Transformers, and FAISS for retrieval-augmented generation with efficient document retrieval.",
     image: "https://placehold.co/600x400/e2e8f0/1e293b?text=Document+QA",
@@ -47,7 +60,7 @@ const projects: Project[] = [
     repoUrl: "#"
   },
   {
-    id: 3,
+    id: 4,
     title: "Global Socioeconomic Patterns in Suicide Trends",
     description: "Analysis of the impact of GDP on suicide rates globally using R, revealing key economic correlations and age/gender factors through data visualizations.",
     image: "https://placehold.co/600x400/e2e8f0/1e293b?text=Socioeconomic+Analysis",
@@ -56,7 +69,7 @@ const projects: Project[] = [
     repoUrl: "#"
   },
   {
-    id: 4,
+    id: 5,
     title: "StyleGAN Implementation",
     description: "Implementation of StyleGAN from scratch on the FFHQ dataset with Few-Shot GDA via Domain Re-modulation (DoRM) to adapt across diverse datasets.",
     image: "https://placehold.co/600x400/e2e8f0/1e293b?text=StyleGAN",
@@ -65,7 +78,7 @@ const projects: Project[] = [
     repoUrl: "#"
   },
   {
-    id: 5,
+    id: 6,
     title: "Spiking Neural Network for Sign Language Recognition",
     description: "A spiking neural network (SNN) for sign language recognition using the ASL-Dynamic Vision Sensor dataset, achieving 96.7% test accuracy.",
     image: "https://placehold.co/600x400/e2e8f0/1e293b?text=SNN+ASL",
@@ -74,7 +87,7 @@ const projects: Project[] = [
     repoUrl: "#"
   },
   {
-    id: 6,
+    id: 7,
     title: "Alcohol Detection and Accident Prevention Technology",
     description: "Non-invasive technology to determine driver's alcohol level based on BAC standards using logistic regression, SVM algorithms and digital image processing.",
     image: "https://placehold.co/600x400/e2e8f0/1e293b?text=Alcohol+Detection",
@@ -84,74 +97,36 @@ const projects: Project[] = [
   }
 ];
 
-const GridProject = ({ project }: { project: Project }) => (
-  <div className="animate-on-scroll card-hover rounded-lg overflow-hidden border border-border bg-background shadow-sm">
-    <div className="relative h-48 overflow-hidden">
-      <img 
-        src={project.image} 
-        alt={project.title} 
-        className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
-      />
-    </div>
-    <div className="p-6">
-      <h3 className="text-xl font-medium mb-2">{project.title}</h3>
-      <p className="text-foreground/70 text-sm mb-4 line-clamp-3">
-        {project.description}
-      </p>
-      <div className="flex flex-wrap gap-2 mb-4">
-        {project.tags.map((tag, i) => (
-          <Badge key={i} variant="secondary" className="font-normal text-xs">
-            {tag}
-          </Badge>
-        ))}
-      </div>
-      <div className="flex space-x-3">
-        {project.demoUrl && (
-          <a 
-            href={project.demoUrl} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="inline-flex items-center text-sm text-accent1 hover:text-accent2 transition-colors"
-          >
-            <span className="mr-1">Live Demo</span>
-            <ExternalLink className="h-3 w-3" />
-          </a>
-        )}
-        {project.repoUrl && (
-          <a 
-            href={project.repoUrl} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="inline-flex items-center text-sm text-accent1 hover:text-accent2 transition-colors"
-          >
-            <span className="mr-1">Code</span>
-            <Github className="h-3 w-3" />
-          </a>
-        )}
-      </div>
-    </div>
-  </div>
-);
+const GridProject = ({ project }: { project: Project }) => {
+  // Get appropriate icon based on project tags
+  const getTechIcon = (tags: string[]) => {
+    const tagLower = tags.map(tag => tag.toLowerCase());
+    
+    if (tagLower.includes('redis')) return <Database className="h-3 w-3 text-accent1" />;
+    if (tagLower.includes('docker')) return <Docker className="h-3 w-3 text-accent1" />;
+    if (tagLower.includes('kubernetes')) return <Code className="h-3 w-3 text-accent1" />;
+    if (tagLower.includes('fastapi')) return <Video className="h-3 w-3 text-accent1" />;
+    return null;
+  };
 
-const ListProject = ({ project }: { project: Project }) => (
-  <div className="animate-on-scroll card-hover rounded-lg border border-border bg-background shadow-sm p-6">
-    <div className="flex flex-col md:flex-row md:items-center gap-6">
-      <div className="md:w-1/4 h-32 md:h-24 rounded overflow-hidden">
+  return (
+    <div className="animate-on-scroll card-hover rounded-lg overflow-hidden border border-border bg-background shadow-sm">
+      <div className="relative h-48 overflow-hidden">
         <img 
           src={project.image} 
           alt={project.title} 
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
         />
       </div>
-      <div className="md:w-3/4">
+      <div className="p-6">
         <h3 className="text-xl font-medium mb-2">{project.title}</h3>
-        <p className="text-foreground/70 text-sm mb-3">
+        <p className="text-foreground/70 text-sm mb-4 line-clamp-3">
           {project.description}
         </p>
-        <div className="flex flex-wrap gap-2 mb-3">
+        <div className="flex flex-wrap gap-2 mb-4">
           {project.tags.map((tag, i) => (
             <Badge key={i} variant="secondary" className="font-normal text-xs">
-              {tag}
+              {getTechIcon(project.tags)} {tag}
             </Badge>
           ))}
         </div>
@@ -181,8 +156,72 @@ const ListProject = ({ project }: { project: Project }) => (
         </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
+
+const ListProject = ({ project }: { project: Project }) => {
+  // Get appropriate icon based on project tags
+  const getTechIcon = (tags: string[]) => {
+    const tagLower = tags.map(tag => tag.toLowerCase());
+    
+    if (tagLower.includes('redis')) return <Database className="h-3 w-3 text-accent1" />;
+    if (tagLower.includes('docker')) return <Docker className="h-3 w-3 text-accent1" />;
+    if (tagLower.includes('kubernetes')) return <Code className="h-3 w-3 text-accent1" />;
+    if (tagLower.includes('fastapi')) return <Video className="h-3 w-3 text-accent1" />;
+    return null;
+  };
+
+  return (
+    <div className="animate-on-scroll card-hover rounded-lg border border-border bg-background shadow-sm p-6">
+      <div className="flex flex-col md:flex-row md:items-center gap-6">
+        <div className="md:w-1/4 h-32 md:h-24 rounded overflow-hidden">
+          <img 
+            src={project.image} 
+            alt={project.title} 
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="md:w-3/4">
+          <h3 className="text-xl font-medium mb-2">{project.title}</h3>
+          <p className="text-foreground/70 text-sm mb-3">
+            {project.description}
+          </p>
+          <div className="flex flex-wrap gap-2 mb-3">
+            {project.tags.map((tag, i) => (
+              <Badge key={i} variant="secondary" className="font-normal text-xs">
+                {getTechIcon(project.tags)} {tag}
+              </Badge>
+            ))}
+          </div>
+          <div className="flex space-x-3">
+            {project.demoUrl && (
+              <a 
+                href={project.demoUrl} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center text-sm text-accent1 hover:text-accent2 transition-colors"
+              >
+                <span className="mr-1">Live Demo</span>
+                <ExternalLink className="h-3 w-3" />
+              </a>
+            )}
+            {project.repoUrl && (
+              <a 
+                href={project.repoUrl} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center text-sm text-accent1 hover:text-accent2 transition-colors"
+              >
+                <span className="mr-1">Code</span>
+                <Github className="h-3 w-3" />
+              </a>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const Projects = () => {
   const [view, setView] = useState<'grid' | 'list'>('grid');
