@@ -1,73 +1,106 @@
-# Welcome to your Lovable project
 
-## Project info
+# Harman Punn - Portfolio Website
 
-**URL**: https://lovable.dev/projects/0e0346d3-3b10-47c1-8f93-5286fdcf65d9
+Welcome to my portfolio website repository! This project showcases my skills, experience, and projects in a clean, responsive interface.
 
-## How can I edit this code?
+## 📋 Project Overview
 
-There are several ways of editing your application.
+This portfolio website is built with modern web technologies to create a seamless and responsive user experience. It includes sections for:
 
-**Use Lovable**
+- Introduction
+- About Me
+- Skills & Expertise
+- Work Experience
+- Education
+- Projects
+- Contact Information
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/0e0346d3-3b10-47c1-8f93-5286fdcf65d9) and start prompting.
+## 🚀 Live Demo
 
-Changes made via Lovable will be committed automatically to this repo.
+Visit the live website at: [harmanpunn.com](https://harmanpunn.com) (replace with your actual domain when deployed)
 
-**Use your preferred IDE**
+## 🛠️ Technologies Used
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- **React**: Frontend library for building user interfaces
+- **TypeScript**: Type-safe JavaScript
+- **Vite**: Next-generation frontend tooling
+- **Tailwind CSS**: Utility-first CSS framework
+- **shadcn/ui**: Accessible UI components
+- **React Router**: Client-side routing
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## 🧰 Setup and Development
 
-Follow these steps:
+### Prerequisites
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+- Node.js (v16 or higher)
+- npm or yarn or bun (package manager)
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### Local Development
 
-# Step 3: Install the necessary dependencies.
-npm i
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/portfolio-website.git
+cd portfolio-website
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Install dependencies
+npm install
+# or
+yarn install
+# or
+bun install
+
+# Start the development server
 npm run dev
+# or
+yarn dev
+# or
+bun dev
 ```
 
-**Edit a file directly in GitHub**
+The application will be available at http://localhost:5173 (or your configured port).
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Building for Production
 
-**Use GitHub Codespaces**
+```bash
+# Build the application
+npm run build
+# or
+yarn build
+# or
+bun build
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+# Preview the production build locally
+npm run preview
+# or
+yarn preview
+# or
+bun preview
+```
 
-## What technologies are used for this project?
+## 📁 Project Structure
 
-This project is built with:
+```
+portfolio-website/
+├── public/              # Static assets
+├── src/
+│   ├── components/      # React components
+│   ├── hooks/           # Custom React hooks
+│   ├── lib/             # Utility functions
+│   ├── pages/           # Page components
+│   ├── App.tsx          # Main application component
+│   └── main.tsx         # Application entry point
+├── index.html           # HTML template
+├── tsconfig.json        # TypeScript configuration
+└── vite.config.ts       # Vite configuration
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 📄 License
 
-## How can I deploy this project?
+MIT License - feel free to use this code for inspiration for your own portfolio!
 
-Simply open [Lovable](https://lovable.dev/projects/0e0346d3-3b10-47c1-8f93-5286fdcf65d9) and click on Share -> Publish.
+## 🙏 Acknowledgements
 
-## Can I connect a custom domain to my Lovable project?
-
-Yes it is!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+- [React Documentation](https://react.dev/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [shadcn/ui](https://ui.shadcn.com/)
+- [Vite](https://vitejs.dev/)
