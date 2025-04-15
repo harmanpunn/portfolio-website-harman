@@ -5,7 +5,7 @@ import {
   LayoutGrid, 
   List,
   Database,
-  Server,  // Replacing Docker with Server
+  Server,
   Code,
   Video
 } from 'lucide-react';
@@ -98,17 +98,6 @@ const projects: Project[] = [
 ];
 
 const GridProject = ({ project }: { project: Project }) => {
-  // Get appropriate icon based on project tags
-  const getTechIcon = (tags: string[]) => {
-    const tagLower = tags.map(tag => tag.toLowerCase());
-    
-    if (tagLower.includes('redis')) return <Database className="h-3 w-3 text-accent1" />;
-    if (tagLower.includes('docker')) return <Server className="h-3 w-3 text-accent1" />; // Updated icon
-    if (tagLower.includes('kubernetes')) return <Code className="h-3 w-3 text-accent1" />;
-    if (tagLower.includes('fastapi')) return <Video className="h-3 w-3 text-accent1" />;
-    return null;
-  };
-
   return (
     <div className="animate-on-scroll card-hover rounded-lg overflow-hidden border border-border bg-background shadow-sm">
       <div className="relative h-48 overflow-hidden">
@@ -126,7 +115,7 @@ const GridProject = ({ project }: { project: Project }) => {
         <div className="flex flex-wrap gap-2 mb-4">
           {project.tags.map((tag, i) => (
             <Badge key={i} variant="secondary" className="font-normal text-xs">
-              {getTechIcon(project.tags)} {tag}
+              {tag}
             </Badge>
           ))}
         </div>
@@ -160,17 +149,6 @@ const GridProject = ({ project }: { project: Project }) => {
 };
 
 const ListProject = ({ project }: { project: Project }) => {
-  // Get appropriate icon based on project tags
-  const getTechIcon = (tags: string[]) => {
-    const tagLower = tags.map(tag => tag.toLowerCase());
-    
-    if (tagLower.includes('redis')) return <Database className="h-3 w-3 text-accent1" />;
-    if (tagLower.includes('docker')) return <Server className="h-3 w-3 text-accent1" />; // Updated icon
-    if (tagLower.includes('kubernetes')) return <Code className="h-3 w-3 text-accent1" />;
-    if (tagLower.includes('fastapi')) return <Video className="h-3 w-3 text-accent1" />;
-    return null;
-  };
-
   return (
     <div className="animate-on-scroll card-hover rounded-lg border border-border bg-background shadow-sm p-6">
       <div className="flex flex-col md:flex-row md:items-center gap-6">
@@ -189,7 +167,7 @@ const ListProject = ({ project }: { project: Project }) => {
           <div className="flex flex-wrap gap-2 mb-3">
             {project.tags.map((tag, i) => (
               <Badge key={i} variant="secondary" className="font-normal text-xs">
-                {getTechIcon(project.tags)} {tag}
+                {tag}
               </Badge>
             ))}
           </div>
