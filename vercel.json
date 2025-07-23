@@ -1,6 +1,6 @@
 {
   "functions": {
-    "api/notion.ts": {
+    "api/notion.js": {
       "maxDuration": 10
     }
   },

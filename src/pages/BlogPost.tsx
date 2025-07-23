@@ -118,7 +118,17 @@ const BlogPost = () => {
           </header>
 
           {/* Post content */}
-          <div className="prose prose-lg max-w-none dark:prose-invert prose-headings:gradient-text prose-a:text-accent1 hover:prose-a:text-accent2 prose-code:bg-accent1/10 prose-code:text-accent1 prose-code:px-1 prose-code:rounded">
+          <div className="prose prose-lg max-w-none dark:prose-invert 
+                         prose-headings:font-serif prose-headings:gradient-text 
+                         prose-h1:text-4xl prose-h2:text-3xl prose-h3:text-2xl
+                         prose-a:text-accent1 prose-a:no-underline hover:prose-a:text-accent2 hover:prose-a:underline
+                         prose-code:bg-accent1/10 prose-code:text-accent1 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:font-mono prose-code:text-sm
+                         prose-pre:bg-gray-900 prose-pre:text-gray-100 dark:prose-pre:bg-gray-800
+                         prose-blockquote:border-l-accent1 prose-blockquote:bg-accent1/5 prose-blockquote:pl-6 prose-blockquote:py-3 prose-blockquote:rounded-r
+                         prose-ul:space-y-1 prose-ol:space-y-1
+                         prose-li:marker:text-accent1
+                         prose-strong:text-foreground prose-strong:font-semibold
+                         prose-p:leading-relaxed prose-p:mb-6">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>
               {post.content}
             </ReactMarkdown>
