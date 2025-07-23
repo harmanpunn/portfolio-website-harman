@@ -157,12 +157,12 @@ const Experience = () => {
             style={{ animationDelay: `${index * 0.2}s` }}
           >
             {/* Circle marker with year */}
-            <div className="absolute left-0 top-0 w-14 h-14 bg-white border-4 border-accent1 rounded-full flex items-center justify-center z-10 transition-all duration-300 group-hover:scale-110 group-hover:border-accent2 shadow-md">
-              <span className="text-sm font-bold">{exp.year}</span>
+            <div className="absolute left-0 top-0 w-14 h-14 bg-white dark:bg-gray-900 border-4 border-accent1 rounded-full flex items-center justify-center z-10 transition-all duration-300 group-hover:scale-110 group-hover:border-accent2 shadow-md">
+              <span className="text-sm font-bold text-gray-900 dark:text-white">{exp.year}</span>
             </div>
             
             {/* Content card */}
-            <div className="bg-background/80 backdrop-blur-sm rounded-lg border border-border/30 shadow-sm transition-all duration-300 ml-20 w-full overflow-hidden group-hover:shadow-md group-hover:border-accent1/30 group-hover:-translate-y-1">
+            <div className="bg-background/80 dark:bg-card/80 backdrop-blur-sm rounded-lg border border-border/30 dark:border-border/50 shadow-sm transition-all duration-300 ml-20 w-full overflow-hidden group-hover:shadow-md group-hover:border-accent1/30 dark:group-hover:border-accent1/40 group-hover:-translate-y-1">
               {/* Header */}
               <div className="bg-background p-5 border-b border-border/10">
                 <h3 className="text-xl font-medium">{exp.title}</h3>

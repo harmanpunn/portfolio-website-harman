@@ -128,11 +128,11 @@ const Education = () => {
             className="group animate-on-scroll relative flex items-start"
             style={{ animationDelay: `${index * 0.2}s` }}
           >
-            <div className="absolute left-0 top-0 w-14 h-14 bg-white border-4 border-accent2 rounded-full flex items-center justify-center z-10 transition-all duration-300 group-hover:scale-110 group-hover:border-accent1 shadow-md">
-              <span className="text-sm font-bold">{edu.year}</span>
+            <div className="absolute left-0 top-0 w-14 h-14 bg-white dark:bg-gray-900 border-4 border-accent2 rounded-full flex items-center justify-center z-10 transition-all duration-300 group-hover:scale-110 group-hover:border-accent1 shadow-md">
+              <span className="text-sm font-bold text-gray-900 dark:text-white">{edu.year}</span>
             </div>
             
-            <div className="bg-background/80 backdrop-blur-sm rounded-lg border border-border/30 shadow-sm transition-all duration-300 ml-20 w-full overflow-hidden group-hover:shadow-md group-hover:border-accent2/30 group-hover:-translate-y-1">
+            <div className="bg-background/80 dark:bg-card/80 backdrop-blur-sm rounded-lg border border-border/30 dark:border-border/50 shadow-sm transition-all duration-300 ml-20 w-full overflow-hidden group-hover:shadow-md group-hover:border-accent2/30 dark:group-hover:border-accent2/40 group-hover:-translate-y-1">
               <div className="bg-background p-5 border-b border-border/10">
                 <h3 className="text-xl font-medium">{edu.degree}</h3>
                 <p className="font-medium">{edu.institution}</p>
@@ -172,33 +172,33 @@ const Education = () => {
 
   const MobileAchievements = () => (
     <div className="mt-8 px-4 animate-on-scroll">
-      <Card className="overflow-hidden border-blue-100 bg-blue-50/80 shadow-sm">
+      <Card className="overflow-hidden border-blue-100 dark:border-blue-900 bg-blue-50/80 dark:bg-blue-950/40 shadow-sm">
         <CardContent className="p-5">
           <div className="flex flex-col">
             <div className="flex items-center justify-center mb-3">
-              <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center mb-2">
-                <Award className="h-6 w-6 text-blue-500" />
+              <div className="h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center mb-2">
+                <Award className="h-6 w-6 text-blue-500 dark:text-blue-400" />
               </div>
             </div>
             
-            <h3 className="text-center text-lg font-medium mb-4">Additional Achievements & Recognitions</h3>
+            <h3 className="text-center text-lg font-medium mb-4 text-gray-900 dark:text-white">Additional Achievements & Recognitions</h3>
             
             <ul className="space-y-4">
               <li className="flex items-start">
-                <span className="text-blue-500 mr-2 text-sm rounded-full flex-shrink-0 mt-1.5">•</span>
-                <span className="text-foreground/80 text-sm">Published a Medium article on Joi – Form validation made simple</span>
+                <span className="text-blue-500 dark:text-blue-400 mr-2 text-sm rounded-full flex-shrink-0 mt-1.5">•</span>
+                <span className="text-gray-700 dark:text-gray-300 text-sm">Published a Medium article on Joi – Form validation made simple</span>
               </li>
               <li className="flex items-start">
-                <span className="text-blue-500 mr-2 text-sm rounded-full flex-shrink-0 mt-1.5">•</span>
-                <span className="text-foreground/80 text-sm">Received "Rookie Award" for exceptional performance</span>
+                <span className="text-blue-500 dark:text-blue-400 mr-2 text-sm rounded-full flex-shrink-0 mt-1.5">•</span>
+                <span className="text-gray-700 dark:text-gray-300 text-sm">Received "Rookie Award" for exceptional performance</span>
               </li>
               <li className="flex items-start">
-                <span className="text-blue-500 mr-2 text-sm rounded-full flex-shrink-0 mt-1.5">•</span>
-                <span className="text-foreground/80 text-sm">Received "Made a difference" award for amazing client impact</span>
+                <span className="text-blue-500 dark:text-blue-400 mr-2 text-sm rounded-full flex-shrink-0 mt-1.5">•</span>
+                <span className="text-gray-700 dark:text-gray-300 text-sm">Received "Made a difference" award for amazing client impact</span>
               </li>
               <li className="flex items-start">
-                <span className="text-blue-500 mr-2 text-sm rounded-full flex-shrink-0 mt-1.5">•</span>
-                <span className="text-foreground/80 text-sm">Research Assistant in multiple academic studies at Rutgers University</span>
+                <span className="text-blue-500 dark:text-blue-400 mr-2 text-sm rounded-full flex-shrink-0 mt-1.5">•</span>
+                <span className="text-gray-700 dark:text-gray-300 text-sm">Research Assistant in multiple academic studies at Rutgers University</span>
               </li>
             </ul>
           </div>
@@ -209,27 +209,27 @@ const Education = () => {
 
   const DesktopAchievements = () => (
     <div className="mt-16 max-w-4xl mx-auto px-4">
-      <div className="bg-blue-50 rounded-lg border border-blue-100 p-8 animate-on-scroll shadow-sm transition-all duration-300 hover:shadow-md">
+      <div className="bg-blue-50 dark:bg-blue-950/40 rounded-lg border border-blue-100 dark:border-blue-900 p-8 animate-on-scroll shadow-sm transition-all duration-300 hover:shadow-md">
         <div className="flex items-start">
-          <Award className="h-10 w-10 text-blue-500 mr-4 flex-shrink-0 mt-1" />
+          <Award className="h-10 w-10 text-blue-500 dark:text-blue-400 mr-4 flex-shrink-0 mt-1" />
           <div>
-            <h3 className="text-xl font-medium mb-4">Additional Achievements & Recognitions</h3>
+            <h3 className="text-xl font-medium mb-4 text-gray-900 dark:text-white">Additional Achievements & Recognitions</h3>
             <ul className="space-y-3">
               <li className="flex items-start group">
-                <span className="text-blue-500 mr-2 text-lg">•</span>
-                <span className="text-foreground/80">Published a Medium article on Joi – Form validation made simple</span>
+                <span className="text-blue-500 dark:text-blue-400 mr-2 text-lg">•</span>
+                <span className="text-gray-700 dark:text-gray-300">Published a Medium article on Joi – Form validation made simple</span>
               </li>
               <li className="flex items-start group">
-                <span className="text-blue-500 mr-2 text-lg">•</span>
-                <span className="text-foreground/80">Received "Rookie Award" for exceptional performance</span>
+                <span className="text-blue-500 dark:text-blue-400 mr-2 text-lg">•</span>
+                <span className="text-gray-700 dark:text-gray-300">Received "Rookie Award" for exceptional performance</span>
               </li>
               <li className="flex items-start group">
-                <span className="text-blue-500 mr-2 text-lg">•</span>
-                <span className="text-foreground/80">Received "Made a difference" award for amazing client impact</span>
+                <span className="text-blue-500 dark:text-blue-400 mr-2 text-lg">•</span>
+                <span className="text-gray-700 dark:text-gray-300">Received "Made a difference" award for amazing client impact</span>
               </li>
               <li className="flex items-start group">
-                <span className="text-blue-500 mr-2 text-lg">•</span>
-                <span className="text-foreground/80">Research Assistant in multiple academic studies at Rutgers University</span>
+                <span className="text-blue-500 dark:text-blue-400 mr-2 text-lg">•</span>
+                <span className="text-gray-700 dark:text-gray-300">Research Assistant in multiple academic studies at Rutgers University</span>
               </li>
             </ul>
           </div>

@@ -28,12 +28,12 @@ const About = () => {
   }, []);
 
   return (
-    <section id="about" ref={sectionRef} className="section-padding bg-gradient-to-r from-background to-accent/5">
+    <section id="about" ref={sectionRef} className="section-padding bg-gradient-to-r from-background to-accent/5 dark:from-background dark:to-accent/10">
       <div className="container mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           {/* Left side - Profile Image with round frame */}
           <div className="animate-on-scroll flex justify-center items-center">
-            <div className="rounded-full overflow-hidden border-4 border-accent1/30 shadow-lg h-72 w-72 md:h-80 md:w-80">
+            <div className="rounded-full overflow-hidden border-4 border-accent1/30 dark:border-accent1/40 shadow-lg h-72 w-72 md:h-80 md:w-80">
               <img 
                 src="/lovable-uploads/f83a212b-f5e0-4b48-8a12-55e39d05ce12.png" 
                 alt="Profile Photo" 
@@ -65,21 +65,21 @@ const About = () => {
               
               <div className="flex space-x-4 items-center sm:ml-4">
                 <a href="https://github.com/harmanpunn" target="_blank" rel="noopener noreferrer" 
-                   className="text-foreground/70 hover:text-accent1 transition-colors"
+                   className="text-foreground/70 hover:text-accent1 dark:hover:text-accent1 transition-colors"
                    aria-label="GitHub Profile">
                   <Github className="h-5 w-5" />
                 </a>
                 <a href="https://linkedin.com/in/harmanpunn" target="_blank" rel="noopener noreferrer" 
-                   className="text-foreground/70 hover:text-accent1 transition-colors"
+                   className="text-foreground/70 hover:text-accent1 dark:hover:text-accent1 transition-colors"
                    aria-label="LinkedIn Profile">
                   <Linkedin className="h-5 w-5" />
                 </a>
                 <a href="https://www.instagram.com/harmanpunn/" target="_blank" rel="noopener noreferrer" 
-                   className="text-foreground/70 hover:text-accent1 transition-colors"
+                   className="text-foreground/70 hover:text-accent1 dark:hover:text-accent1 transition-colors"
                    aria-label="Instagram Profile">
                   <Instagram className="h-5 w-5" />
                 </a>
-                <a href="mailto:harmanpunn@gmail.com" className="text-foreground/70 hover:text-accent1 transition-colors"
+                <a href="mailto:harmanpunn@gmail.com" className="text-foreground/70 hover:text-accent1 dark:hover:text-accent1 transition-colors"
                    aria-label="Email Me">
                   <Mail className="h-5 w-5" />
                 </a>
