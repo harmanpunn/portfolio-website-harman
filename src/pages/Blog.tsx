@@ -19,7 +19,7 @@ const Blog = () => {
       <main className="pt-20">
         <div className="container mx-auto px-4 py-16">
           <div className="text-center mb-16">
-            <h1 className="text-5xl font-serif font-bold mb-6 gradient-text">
+            <h1 className="text-5xl font-serif font-bold mb-6 gradient-text leading-tight pb-2">
               Blog
             </h1>
             <p className="text-xl text-foreground/70 max-w-2xl mx-auto">

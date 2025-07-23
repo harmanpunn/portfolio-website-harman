@@ -85,7 +85,7 @@ const BlogPost = () => {
 
           {/* Post header */}
           <header className="mb-12">
-            <h1 className="text-4xl md:text-5xl font-serif font-bold mb-6 gradient-text">
+            <h1 className="text-4xl md:text-5xl font-serif font-bold mb-6 gradient-text leading-tight pb-2">
               {post.title}
             </h1>
             
