@@ -58,20 +58,77 @@ async function getPageContent(notion, pageId) {
   return content;
 }
 
-// Format post data
+// Format post data - more flexible with property names
 function formatPost(page, content) {
   const properties = page.properties;
   
+  // Helper function to get property value safely
+  const getPropertyValue = (propName, type) => {
+    const prop = properties[propName];
+    if (!prop) return null;
+    
+    switch (type) {
+      case 'title':
+        return getPlainText(prop.title || []);
+      case 'rich_text':
+        return getPlainText(prop.rich_text || []);
+      case 'select':
+        return prop.select?.name || '';
+      case 'multi_select':
+        return prop.multi_select?.map(item => item.name) || [];
+      case 'date':
+        return prop.date?.start || '';
+      case 'files':
+        return prop.files?.[0]?.external?.url || prop.files?.[0]?.file?.url || '';
+      default:
+        return '';
+    }
+  };
+  
+  // Try different possible property names
+  const title = getPropertyValue('Title', 'title') || 
+                getPropertyValue('Name', 'title') || 
+                getPropertyValue('title', 'title') ||
+                'Untitled';
+                
+  const slug = getPropertyValue('Slug', 'rich_text') || 
+               getPropertyValue('slug', 'rich_text') ||
+               page.id;
+               
+  const excerpt = getPropertyValue('Excerpt', 'rich_text') || 
+                  getPropertyValue('excerpt', 'rich_text') ||
+                  content.substring(0, 200) + '...';
+                  
+  const publishedDate = getPropertyValue('Published Date', 'date') ||
+                       getPropertyValue('Published', 'date') ||
+                       getPropertyValue('Date', 'date') ||
+                       getPropertyValue('Created', 'date') ||
+                       new Date().toISOString();
+                       
+  const tags = getPropertyValue('Tags', 'multi_select') ||
+               getPropertyValue('tags', 'multi_select') ||
+               getPropertyValue('Categories', 'multi_select') ||
+               [];
+               
+  const status = getPropertyValue('Status', 'select') ||
+                 getPropertyValue('status', 'select') ||
+                 'Published';
+                 
+  const coverImage = getPropertyValue('Cover Image', 'files') ||
+                     getPropertyValue('Cover', 'files') ||
+                     getPropertyValue('Image', 'files') ||
+                     '';
+  
   return {
     id: page.id,
-    title: getPlainText(properties.Title?.title || properties.Name?.title || []),
-    slug: getPlainText(properties.Slug?.rich_text || []) || page.id,
-    excerpt: getPlainText(properties.Excerpt?.rich_text || []) || content.substring(0, 200) + '...',
+    title,
+    slug,
+    excerpt,
     content,
-    publishedDate: properties['Published Date']?.date?.start || properties['Published']?.date?.start || new Date().toISOString(),
-    tags: properties.Tags?.multi_select?.map((tag) => tag.name) || [],
-    status: properties.Status?.select?.name || 'Published',
-    coverImage: properties['Cover Image']?.files?.[0]?.external?.url || properties['Cover Image']?.files?.[0]?.file?.url || ''
+    publishedDate,
+    tags,
+    status,
+    coverImage
   };
 }
 
@@ -117,56 +174,36 @@ export default async function handler(req, res) {
     if (slug && typeof slug === 'string') {
       console.log('Fetching single post with slug:', slug);
       
-      // Get a single post by slug
+      // Get a single post by slug - simplified query
       const response = await notion.databases.query({
-        database_id: databaseId,
-        filter: {
-          and: [
-            {
-              property: 'Status',
-              select: {
-                equals: 'Published'
-              }
-            },
-            {
-              property: 'Slug',
-              rich_text: {
-                equals: slug
-              }
-            }
-          ]
-        }
+        database_id: databaseId
+        // We'll search through all posts and find by slug in the results
       });
 
-      if (response.results.length === 0) {
+      // Find the post with matching slug
+      const allPosts = await Promise.all(
+        response.results.map(async (page) => {
+          const content = await getPageContent(notion, page.id);
+          return formatPost(page, content);
+        })
+      );
+      
+      const post = allPosts.find(p => p.slug === slug);
+      
+      if (!post) {
         console.log('No post found with slug:', slug);
         return res.status(404).json({ error: 'Post not found' });
       }
-
-      const page = response.results[0];
-      const content = await getPageContent(notion, page.id);
-      const post = formatPost(page, content);
 
       console.log('Successfully fetched post:', post.title);
       return res.status(200).json(post);
     } else {
       console.log('Fetching all posts');
       
-      // Get all posts
+      // Get all posts - remove filters for now to see what we get
       const response = await notion.databases.query({
-        database_id: databaseId,
-        filter: {
-          property: 'Status',
-          select: {
-            equals: 'Published'
-          }
-        },
-        sorts: [
-          {
-            property: 'Published Date',
-            direction: 'descending'
-          }
-        ]
+        database_id: databaseId
+        // Remove filters and sorting for now - we'll handle filtering on the client side
       });
 
       console.log('Found', response.results.length, 'posts');
