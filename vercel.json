@@ -1,6 +1,7 @@
 {
   "functions": {
     "api/notion.ts": {
+      "runtime": "@vercel/node",
       "maxDuration": 10
     }
   },
