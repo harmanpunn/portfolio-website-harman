@@ -1,19 +1,18 @@
 import { Client } from '@notionhq/client';
-import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 const notion = new Client({
   auth: process.env.NOTION_TOKEN,
 });
 
-const databaseId = process.env.NOTION_DATABASE_ID!;
+const databaseId = process.env.NOTION_DATABASE_ID;
 
 // Helper function to extract text from Notion rich text
-function getPlainText(richText: any[]): string {
+function getPlainText(richText) {
   return richText?.map(t => t.plain_text).join('') || '';
 }
 
 // Helper function to convert Notion blocks to markdown
-function blockToMarkdown(block: any): string {
+function blockToMarkdown(block) {
   const { type } = block;
   
   switch (type) {
@@ -43,7 +42,7 @@ function blockToMarkdown(block: any): string {
 }
 
 // Get page content
-async function getPageContent(pageId: string): Promise<string> {
+async function getPageContent(pageId) {
   const response = await notion.blocks.children.list({
     block_id: pageId,
     page_size: 100,
@@ -58,7 +57,7 @@ async function getPageContent(pageId: string): Promise<string> {
 }
 
 // Format post data
-function formatPost(page: any, content: string) {
+function formatPost(page, content) {
   const properties = page.properties;
   
   return {
@@ -68,13 +67,13 @@ function formatPost(page: any, content: string) {
     excerpt: getPlainText(properties.Excerpt?.rich_text || []) || content.substring(0, 200) + '...',
     content,
     publishedDate: properties['Published Date']?.date?.start || properties['Published']?.date?.start || new Date().toISOString(),
-    tags: properties.Tags?.multi_select?.map((tag: any) => tag.name) || [],
+    tags: properties.Tags?.multi_select?.map((tag) => tag.name) || [],
     status: properties.Status?.select?.name || 'Published',
     coverImage: properties['Cover Image']?.files?.[0]?.external?.url || properties['Cover Image']?.files?.[0]?.file?.url || ''
   };
 }
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(req, res) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
@@ -154,7 +153,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
 
       const posts = await Promise.all(
-        response.results.map(async (page: any) => {
+        response.results.map(async (page) => {
           const content = await getPageContent(page.id);
           return formatPost(page, content);
         })
@@ -162,7 +161,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
       return res.status(200).json(posts);
     }
-  } catch (error: any) {
+  } catch (error) {
     console.error('Notion API error:', error);
     
     // Return more specific error information
@@ -185,4 +184,4 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       details: error.message || 'Unknown error occurred'
     });
   }
-} 
+}
