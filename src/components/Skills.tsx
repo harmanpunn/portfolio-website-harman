@@ -41,8 +41,8 @@ const SkillCard = ({
   title: string; 
   description: string 
 }) => (
-  <div className="bg-background rounded-lg shadow-sm border border-border p-6 transition-all duration-300 hover:shadow-md hover:border-accent1/20 animate-on-scroll">
-    <div className="text-accent1 mb-4">
+  <div className="bg-background dark:bg-card rounded-lg shadow-sm border border-border p-6 transition-all duration-300 hover:shadow-md hover:border-accent1/20 dark:hover:border-accent1/30 animate-on-scroll">
+    <div className="text-accent1 dark:text-accent1 mb-4">
       <Icon className="h-10 w-10" />
     </div>
     <h3 className="text-lg font-medium mb-2">{title}</h3>

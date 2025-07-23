@@ -5,10 +5,10 @@ import { Button } from '@/components/ui/button';
 const Hero = () => {
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-secondary/30 -z-10"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-accent1/5 to-accent2/10 dark:from-accent1/10 dark:to-accent2/20 -z-10"></div>
       <div className="container mx-auto px-6 relative z-10">
         <div className="flex flex-col items-center text-center max-w-3xl mx-auto">
-          <p className="text-accent1 font-medium mb-4 animate-fade-in opacity-0" style={{ animationDelay: '0.2s' }}>
+          <p className="text-accent1 dark:text-accent1 font-medium mb-4 animate-fade-in opacity-0" style={{ animationDelay: '0.2s' }}>
             Hello, I'm
           </p>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-6 animate-fade-in opacity-0" style={{ animationDelay: '0.4s' }}>
@@ -22,7 +22,7 @@ const Hero = () => {
             Dedicated to delivering exceptional results through innovation, data-driven insights, and creative problem-solving.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 animate-fade-in opacity-0" style={{ animationDelay: '1s' }}>
-            <Button asChild className="bg-gradient-to-r from-accent1 to-accent2 hover:opacity-90 transition-opacity">
+            <Button asChild className="bg-gradient-to-r from-accent1 to-accent2 hover:opacity-90 transition-opacity text-white">
               <a href="#projects">View My Work</a>
             </Button>
             <Button variant="outline" asChild>

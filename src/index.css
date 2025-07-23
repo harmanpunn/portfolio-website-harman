@@ -41,6 +41,40 @@
     --accent2: 240 60% 50%;
   }
 
+  .dark {
+    --background: 220 20% 10%;
+    --foreground: 210 40% 98%;
+
+    --card: 220 20% 13%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 220 20% 13%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 220 20% 10%;
+
+    --secondary: 217 20% 18%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217 20% 18%;
+    --muted-foreground: 215 20% 65.1%;
+
+    --accent: 217 20% 18%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217 20% 18%;
+    --input: 217 20% 18%;
+    --ring: 212.7 26.8% 83.9%;
+    
+    /* Custom colors for dark mode */
+    --accent1: 205 90% 60%;
+    --accent2: 240 70% 65%;
+  }
+
   * {
     @apply border-border;
     scroll-behavior: smooth;
