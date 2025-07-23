@@ -1,0 +1,11 @@
+{
+  "functions": {
+    "api/notion.ts": {
+      "maxDuration": 10
+    }
+  },
+  "env": {
+    "NOTION_TOKEN": "@notion-token",
+    "NOTION_DATABASE_ID": "@notion-database-id"
+  }
+} 
