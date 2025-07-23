@@ -113,6 +113,13 @@
   .timeline-item {
     @apply relative pl-8 pb-8 border-l border-muted last:border-l-0 before:content-[''] before:absolute before:w-4 before:h-4 before:bg-accent1 before:rounded-full before:left-[-8px] before:top-0;
   }
+
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
 }
 
 /* Animation for scroll reveal */
