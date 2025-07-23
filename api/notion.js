@@ -80,44 +80,37 @@ function formatPost(page, content) {
         return prop.date?.start || '';
       case 'files':
         return prop.files?.[0]?.external?.url || prop.files?.[0]?.file?.url || '';
+      case 'checkbox':
+        return prop.checkbox || false;
       default:
         return '';
     }
   };
   
-  // Try different possible property names
-  const title = getPropertyValue('Title', 'title') || 
-                getPropertyValue('Name', 'title') || 
-                getPropertyValue('title', 'title') ||
-                'Untitled';
-                
-  const slug = getPropertyValue('Slug', 'rich_text') || 
-               getPropertyValue('slug', 'rich_text') ||
-               page.id;
-               
-  const excerpt = getPropertyValue('Excerpt', 'rich_text') || 
-                  getPropertyValue('excerpt', 'rich_text') ||
+  // Use your actual database property names
+  const title = getPropertyValue('Title', 'title') || 'Untitled';
+  
+  // Generate slug from title if not available
+  const slug = title.toLowerCase()
+                   .replace(/[^a-z0-9\s-]/g, '') // Remove special characters
+                   .replace(/\s+/g, '-') // Replace spaces with hyphens
+                   .trim() || page.id;
+                   
+  const excerpt = getPropertyValue('Description', 'rich_text') || 
+                  getPropertyValue('Body', 'rich_text') ||
                   content.substring(0, 200) + '...';
                   
-  const publishedDate = getPropertyValue('Published Date', 'date') ||
-                       getPropertyValue('Published', 'date') ||
-                       getPropertyValue('Date', 'date') ||
-                       getPropertyValue('Created', 'date') ||
+  const publishedDate = getPropertyValue('Publish Date', 'date') || 
                        new Date().toISOString();
                        
-  const tags = getPropertyValue('Tags', 'multi_select') ||
-               getPropertyValue('tags', 'multi_select') ||
-               getPropertyValue('Categories', 'multi_select') ||
-               [];
-               
-  const status = getPropertyValue('Status', 'select') ||
-                 getPropertyValue('status', 'select') ||
-                 'Published';
-                 
-  const coverImage = getPropertyValue('Cover Image', 'files') ||
-                     getPropertyValue('Cover', 'files') ||
-                     getPropertyValue('Image', 'files') ||
-                     '';
+  const tags = getPropertyValue('Categories', 'multi_select') || [];
+  
+  const status = getPropertyValue('Status', 'select') || 'Draft';
+  
+  const isPublic = getPropertyValue('Public', 'checkbox');
+  
+  // No cover image property in your schema
+  const coverImage = '';
   
   return {
     id: page.id,
@@ -128,6 +121,7 @@ function formatPost(page, content) {
     publishedDate,
     tags,
     status,
+    isPublic,
     coverImage
   };
 }
@@ -188,10 +182,15 @@ export default async function handler(req, res) {
         })
       );
       
-      const post = allPosts.find(p => p.slug === slug);
+      // Filter for published and public posts, then find by slug
+      const publishedPosts = allPosts.filter(post => 
+        post.status === 'Published' && post.isPublic === true
+      );
+      
+      const post = publishedPosts.find(p => p.slug === slug);
       
       if (!post) {
-        console.log('No post found with slug:', slug);
+        console.log('No published post found with slug:', slug);
         return res.status(404).json({ error: 'Post not found' });
       }
 
@@ -208,15 +207,20 @@ export default async function handler(req, res) {
 
       console.log('Found', response.results.length, 'posts');
 
-      const posts = await Promise.all(
+      const allPosts = await Promise.all(
         response.results.map(async (page) => {
           const content = await getPageContent(notion, page.id);
           return formatPost(page, content);
         })
       );
 
-      console.log('Successfully processed all posts');
-      return res.status(200).json(posts);
+      // Filter for published and public posts
+      const publishedPosts = allPosts.filter(post => 
+        post.status === 'Published' && post.isPublic === true
+      );
+
+      console.log('Successfully processed', publishedPosts.length, 'published posts');
+      return res.status(200).json(publishedPosts);
     }
   } catch (error) {
     console.error('Notion API error:', error);
