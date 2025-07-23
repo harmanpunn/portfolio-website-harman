@@ -84,6 +84,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(200).end();
   }
 
+  // Check if environment variables are set
+  if (!process.env.NOTION_TOKEN) {
+    console.error('NOTION_TOKEN environment variable is not set');
+    return res.status(500).json({ 
+      error: 'Server configuration error: NOTION_TOKEN not found',
+      details: 'Please check environment variables in Vercel dashboard'
+    });
+  }
+
+  if (!process.env.NOTION_DATABASE_ID) {
+    console.error('NOTION_DATABASE_ID environment variable is not set');
+    return res.status(500).json({ 
+      error: 'Server configuration error: NOTION_DATABASE_ID not found',
+      details: 'Please check environment variables in Vercel dashboard'
+    });
+  }
+
   try {
     const { slug } = req.query;
 
@@ -145,8 +162,27 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
       return res.status(200).json(posts);
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error('Notion API error:', error);
-    return res.status(500).json({ error: 'Failed to fetch from Notion' });
+    
+    // Return more specific error information
+    if (error.code === 'unauthorized') {
+      return res.status(401).json({ 
+        error: 'Notion API authentication failed',
+        details: 'Check if your NOTION_TOKEN is valid and has access to the database'
+      });
+    }
+    
+    if (error.code === 'object_not_found') {
+      return res.status(404).json({ 
+        error: 'Notion database not found',
+        details: 'Check if your NOTION_DATABASE_ID is correct and the database is shared with your integration'
+      });
+    }
+
+    return res.status(500).json({ 
+      error: 'Failed to fetch from Notion',
+      details: error.message || 'Unknown error occurred'
+    });
   }
 } 

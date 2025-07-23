@@ -25,13 +25,21 @@ class NotionService {
 
   async getPosts(): Promise<BlogPost[]> {
     try {
+      console.log('Fetching posts from:', this.apiUrl);
       const response = await fetch(this.apiUrl);
       
       if (!response.ok) {
-        throw new Error(`Failed to fetch posts: ${response.statusText}`);
+        const errorData = await response.json().catch(() => ({}));
+        console.error('API Error Response:', {
+          status: response.status,
+          statusText: response.statusText,
+          errorData
+        });
+        throw new Error(`Failed to fetch posts: ${response.status} ${response.statusText}`);
       }
       
       const posts = await response.json();
+      console.log('Successfully fetched posts:', posts.length);
       return posts;
     } catch (error) {
       console.error('Error fetching posts:', error);
@@ -42,22 +50,32 @@ class NotionService {
         return this.getMockPosts();
       }
       
-      return [];
+      // In production, still return mock data if API fails so the site doesn't break
+      console.warn('API failed in production, falling back to mock data');
+      return this.getMockPosts();
     }
   }
 
   async getPostBySlug(slug: string): Promise<BlogPost | null> {
     try {
+      console.log('Fetching post by slug:', slug, 'from:', this.apiUrl);
       const response = await fetch(`${this.apiUrl}?slug=${slug}`);
       
       if (!response.ok) {
         if (response.status === 404) {
           return null;
         }
-        throw new Error(`Failed to fetch post: ${response.statusText}`);
+        const errorData = await response.json().catch(() => ({}));
+        console.error('API Error Response:', {
+          status: response.status,
+          statusText: response.statusText,
+          errorData
+        });
+        throw new Error(`Failed to fetch post: ${response.status} ${response.statusText}`);
       }
       
       const post = await response.json();
+      console.log('Successfully fetched post:', post.title);
       return post;
     } catch (error) {
       console.error('Error fetching post by slug:', error);
@@ -68,7 +86,9 @@ class NotionService {
         return mockPosts.find(post => post.slug === slug) || null;
       }
       
-      return null;
+      // In production, still try to return mock data
+      const mockPosts = this.getMockPosts();
+      return mockPosts.find(post => post.slug === slug) || null;
     }
   }
 
