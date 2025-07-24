@@ -4,7 +4,8 @@ let nodemailer;
 async function initializeNodemailer() {
   if (!nodemailer) {
     const nodemailerModule = await import('nodemailer');
-    nodemailer = nodemailerModule.default;
+    // Nodemailer exports are different, need to handle both default and named exports
+    nodemailer = nodemailerModule.default || nodemailerModule;
   }
 }
 
@@ -57,7 +58,7 @@ export default async function handler(req, res) {
     console.log('Creating email transporter...');
 
     // Create transporter
-    const transporter = nodemailer.createTransporter({
+    const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
         user: process.env.GMAIL_USER,
