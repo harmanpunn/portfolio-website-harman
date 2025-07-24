@@ -16,7 +16,7 @@
       "permanent": true
     },
     {
-      "source": "/:path*",
+      "source": "/",
       "destination": "https://www.linkedin.com/in/harmanpunn/",
       "has": [
         {
@@ -27,7 +27,7 @@
       "permanent": true
     },
     {
-      "source": "/:path*",
+      "source": "/",
       "destination": "https://github.com/harmanpunn",
       "has": [
         {
