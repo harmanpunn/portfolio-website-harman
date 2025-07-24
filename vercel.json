@@ -14,6 +14,28 @@
       "source": "/github",
       "destination": "https://github.com/harmanpunn",
       "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "destination": "https://www.linkedin.com/in/harmanpunn/",
+      "has": [
+        {
+          "type": "host",
+          "value": "linkedin.harmanpunn.me"
+        }
+      ],
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "destination": "https://github.com/harmanpunn",
+      "has": [
+        {
+          "type": "host",
+          "value": "github.harmanpunn.me"
+        }
+      ],
+      "permanent": true
     }
   ],
   "rewrites": [
