@@ -32,31 +32,52 @@ const Contact = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSubmitted(true);
-      setFormState({
-        name: '',
-        email: '',
-        subject: '',
-        message: ''
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formState),
       });
-      
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setIsSubmitted(true);
+        setFormState({
+          name: '',
+          email: '',
+          subject: '',
+          message: ''
+        });
+        
+        toast({
+          title: "Message sent successfully!",
+          description: data.message || "I'll get back to you as soon as possible.",
+        });
+        
+        // Reset submission status after 5 seconds
+        setTimeout(() => {
+          setIsSubmitted(false);
+        }, 5000);
+      } else {
+        throw new Error(data.details || data.error || 'Failed to send message');
+      }
+    } catch (error) {
+      console.error('Error sending message:', error);
       toast({
-        title: "Message sent successfully!",
-        description: "I'll get back to you as soon as possible.",
+        title: "Failed to send message",
+        description: error instanceof Error ? error.message : "Please try again later or contact me directly.",
+        variant: "destructive",
       });
-      
-      // Reset submission status after 5 seconds
-      setTimeout(() => {
-        setIsSubmitted(false);
-      }, 5000);
-    }, 1500);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   useEffect(() => {
