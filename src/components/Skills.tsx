@@ -111,8 +111,8 @@ const Skills = () => {
           />
           <SkillCard 
             icon={Bot} 
-            title="LLMs & RAG" 
-            description="Experience with GPT, LangChain, and building Retrieval Augmented Generation systems."
+            title="LLMs, RAG & Agentic AI" 
+            description="Experience with GPT, LangChain, LangGraph, OpenAI Agents SDK, CrewAI, and building RAG systems."
           />
           <SkillCard 
             icon={Database} 
@@ -122,7 +122,7 @@ const Skills = () => {
           <SkillCard 
             icon={Cloud} 
             title="Cloud & AWS" 
-            description="AWS (S3, SageMaker, Redshift, Quicksight, EC2, Lambda) for scalable deployments."
+            description="AWS (S3, SageMaker, Bedrock Redshift, Quicksight, EC2, Lambda) for scalable deployments."
           />
           <SkillCard 
             icon={Server} 

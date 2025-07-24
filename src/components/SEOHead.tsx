@@ -12,7 +12,7 @@ interface SEOHeadProps {
 
 export const SEOHead = ({ 
   title = "Harmanpreet Singh | Portfolio",
-  description = "Professional portfolio of Harmanpreet Singh - Data Scientist specializing in Machine Learning, AI, Web Development, and Data Analysis with expertise in Python, React, and JavaScript.",
+  description = "Data Scientist & ML Engineer in NYC metro area building intelligent systems. Expertise in machine learning, LLMs, MLOps, and AI applications with Python, PyTorch, and AWS.",
   image = "https://harmanpunn.me/og-image.jpg",
   url = "https://harmanpunn.me",
   type = "website",
