@@ -3,6 +3,7 @@ import { notionService } from '@/lib/notion';
 import { Navbar } from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { BlogCard } from '@/components/BlogCard';
+import { SEOHead } from '@/components/SEOHead';
 import { Loader2 } from 'lucide-react';
 
 const Blog = () => {
@@ -14,6 +15,11 @@ const Blog = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <SEOHead 
+        title="Blog | Harmanpreet Singh"
+        description="Thoughts, learnings, and insights about data science, machine learning, and technology by Harmanpreet Singh"
+        url="https://harmanpunn.me/blog"
+      />
       <Navbar />
       
       <main className="pt-20">
