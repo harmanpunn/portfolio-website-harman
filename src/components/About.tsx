@@ -45,14 +45,14 @@ const About = () => {
           {/* Right side - About Content */}
           <div className="animate-on-scroll">
             <h2 className="text-4xl font-serif font-bold mb-6 gradient-text">About Me</h2>
-            <p className="text-foreground/80 mb-4">
-              I'm a Data Scientist specializing in machine learning, LLMs, and cloud technologies. With expertise in 
-              building MLOps pipelines, forecasting models, and AI-driven applications, I deliver data-driven solutions 
-              that create tangible business impact.
+            <p className="text-foreground/80 mb-4 text-justify">
+              I've always enjoyed building things—from scribbling logic in notebooks to shipping code that powers real products. Somewhere along the way, I got curious about the patterns behind the data. That curiosity led me into machine learning, and eventually into designing systems that don't just run, but learn.
             </p>
-            <p className="text-foreground/80 mb-8">
-              My journey began with a passion for leveraging data to solve complex problems, and has evolved into a career 
-              where I combine technical expertise with creative problem-solving to achieve outstanding outcomes.
+            <p className="text-foreground/80 mb-4 text-justify">
+              These days, I work at the intersection of software engineering and intelligence. I build backend services, train models, and wire them together into thoughtful ML-powered applications. I'm especially into LLMs, cloud-native workflows, and anything that turns raw data into real insights.
+            </p>
+            <p className="text-foreground/80 mb-8 text-justify">
+              I'm currently based in the NYC metro area, working on projects that blend practical engineering with a bit of AI magic. Outside of work, you'll usually find me hacking on side ideas or chasing good light with my camera. If you're curious or want to collaborate, feel free to reach out.
             </p>
             
             <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4 mt-4">
