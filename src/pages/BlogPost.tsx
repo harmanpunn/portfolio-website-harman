@@ -5,6 +5,7 @@ import remarkGfm from 'remark-gfm';
 import { notionService } from '@/lib/notion';
 import { Navbar } from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { SEOHead } from '@/components/SEOHead';
 import { ArrowLeft, Calendar, Tag, Loader2 } from 'lucide-react';
 
 const BlogPost = () => {
@@ -20,6 +21,7 @@ const BlogPost = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background text-foreground">
+        <SEOHead />
         <Navbar />
         <main className="pt-20">
           <div className="container mx-auto px-4 py-16">
@@ -36,6 +38,10 @@ const BlogPost = () => {
   if (error || !post) {
     return (
       <div className="min-h-screen bg-background text-foreground">
+        <SEOHead 
+          title="Post Not Found | Harmanpreet Singh"
+          description="The blog post you're looking for doesn't exist."
+        />
         <Navbar />
         <main className="pt-20">
           <div className="container mx-auto px-4 py-16">
@@ -59,6 +65,15 @@ const BlogPost = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <SEOHead 
+        title={`${post.title} | Harmanpreet Singh`}
+        description={post.excerpt}
+        type="article"
+        url={`https://harmanpunn.me/blog/${post.slug}`}
+        publishedDate={post.publishedDate}
+        tags={post.tags}
+        image={post.coverImage || "https://harmanpunn.me/og-image.jpg"}
+      />
       <Navbar />
       
       <main className="pt-20">

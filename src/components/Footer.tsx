@@ -23,10 +23,6 @@ const Footer = () => {
           <p className="text-center text-muted-foreground">
             © {new Date().getFullYear()} Harmanpreet Singh. All rights reserved.
           </p>
-          
-          <p className="text-sm text-muted-foreground">
-            Built with React, TypeScript, and Tailwind CSS
-          </p>
         </div>
       </div>
     </footer>

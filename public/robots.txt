@@ -4,7 +4,7 @@ User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://yourwebsite.com/sitemap.xml
+Sitemap: https://harmanpunn.me/sitemap.xml
 
 # Specific directives for major crawlers
 User-agent: Googlebot
