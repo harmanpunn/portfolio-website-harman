@@ -1,5 +1,9 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { useEffect } from "react";
+import { Home, ArrowLeft, Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 const NotFound = () => {
   const location = useLocation();
@@ -12,14 +16,97 @@ const NotFound = () => {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">404</h1>
-        <p className="text-xl text-gray-600 mb-4">Oops! Page not found</p>
-        <a href="/" className="text-blue-500 hover:text-blue-700 underline">
-          Return to Home
-        </a>
-      </div>
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+      
+      <main className="flex-1 flex items-center justify-center pt-20 pb-12">
+        <div className="absolute inset-0 bg-gradient-to-br from-accent1/5 to-accent2/10 dark:from-accent1/10 dark:to-accent2/20 -z-10"></div>
+        
+        <div className="container mx-auto px-6 text-center max-w-2xl">
+          <div className="animate-fade-in opacity-0" style={{ animationDelay: '0.2s' }}>
+            <div className="text-8xl md:text-9xl font-serif font-bold mb-6">
+              <span className="gradient-text">404</span>
+            </div>
+          </div>
+          
+          <div className="animate-fade-in opacity-0" style={{ animationDelay: '0.4s' }}>
+            <h1 className="text-2xl md:text-3xl font-serif font-semibold mb-4 text-foreground">
+              Page Not Found
+            </h1>
+          </div>
+          
+          <div className="animate-fade-in opacity-0" style={{ animationDelay: '0.6s' }}>
+            <div className="flex flex-col items-center mb-8">
+              {/* Ghost Container - exact same structure as inspiration */}
+              <div className="ghost-container">
+                {/* Ghost Copy (background layer) */}
+                <div className="ghost-copy">
+                  <div className="ghost-tail one"></div>
+                  <div className="ghost-tail two"></div>
+                  <div className="ghost-tail three"></div>
+                  <div className="ghost-tail four"></div>
+                </div>
+                
+                {/* Main Ghost */}
+                <div className="ghost">
+                  <div className="face">
+                    <div className="eye"></div>
+                    <div className="eye-right"></div>
+                    <div className="mouth"></div>
+                  </div>
+                </div>
+                
+                {/* Ghost Shadow */}
+                <div className="shadow"></div>
+              </div>
+              
+              <div>
+                <p className="text-accent1 dark:text-accent1 font-medium text-xs uppercase tracking-wide">
+                  Boo! Looks like this page got spooked away
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="animate-fade-in opacity-0" style={{ animationDelay: '0.8s' }}>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Button asChild className="bg-gradient-to-r from-accent1 to-accent2 hover:opacity-90 transition-opacity text-white">
+                <Link to="/">
+                  <Home className="w-4 h-4 mr-2" />
+                  Back to Home
+                </Link>
+              </Button>
+              
+              {/* <Button variant="outline" asChild>
+                <Link to="/blog">
+                  <Search className="w-4 h-4 mr-2" />
+                  Browse Blog
+                </Link>
+              </Button> */}
+              
+              <Button variant="ghost" onClick={() => window.history.back()}>
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Go Back
+              </Button>
+            </div>
+          </div>
+          
+          <div className="animate-fade-in opacity-0 mt-12" style={{ animationDelay: '1s' }}>
+            <p className="text-sm text-muted-foreground">
+              Looking for something specific? Try visiting the{" "}
+              <Link to="/" className="text-accent1 hover:text-accent2 underline transition-colors">
+                homepage
+              </Link>{" "}
+              or check out my{" "}
+              <Link to="/blog" className="text-accent1 hover:text-accent2 underline transition-colors">
+                latest blog posts
+              </Link>.
+            </p>
+          </div>
+        </div>
+      </main>
+      
+      <Footer />
     </div>
   );
 };
