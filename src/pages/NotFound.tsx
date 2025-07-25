@@ -36,9 +36,36 @@ const NotFound = () => {
           </div>
           
           <div className="animate-fade-in opacity-0" style={{ animationDelay: '0.6s' }}>
-            <p className="text-muted-foreground mb-8 text-lg">
-              Sorry, the page you're looking for doesn't exist. It might have been moved, deleted, or you entered the wrong URL.
-            </p>
+            <div className="flex flex-col items-center mb-8">
+              {/* Ghost Container - exact same structure as inspiration */}
+              <div className="ghost-container">
+                {/* Ghost Copy (background layer) */}
+                <div className="ghost-copy">
+                  <div className="ghost-tail one"></div>
+                  <div className="ghost-tail two"></div>
+                  <div className="ghost-tail three"></div>
+                  <div className="ghost-tail four"></div>
+                </div>
+                
+                {/* Main Ghost */}
+                <div className="ghost">
+                  <div className="face">
+                    <div className="eye"></div>
+                    <div className="eye-right"></div>
+                    <div className="mouth"></div>
+                  </div>
+                </div>
+                
+                {/* Ghost Shadow */}
+                <div className="shadow"></div>
+              </div>
+              
+              <div>
+                <p className="text-accent1 dark:text-accent1 font-medium text-xs uppercase tracking-wide">
+                  Boo! Looks like this page got spooked away
+                </p>
+              </div>
+            </div>
           </div>
           
           <div className="animate-fade-in opacity-0" style={{ animationDelay: '0.8s' }}>
@@ -50,12 +77,12 @@ const NotFound = () => {
                 </Link>
               </Button>
               
-              <Button variant="outline" asChild>
+              {/* <Button variant="outline" asChild>
                 <Link to="/blog">
                   <Search className="w-4 h-4 mr-2" />
                   Browse Blog
                 </Link>
-              </Button>
+              </Button> */}
               
               <Button variant="ghost" onClick={() => window.history.back()}>
                 <ArrowLeft className="w-4 h-4 mr-2" />
