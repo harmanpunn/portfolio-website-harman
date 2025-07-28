@@ -13,10 +13,57 @@ function getPlainText(richText) {
   return richText?.map(t => t.plain_text).join('') || '';
 }
 
-// Removed blockToMarkdown function since we're using Body property for content
+// Convert Notion blocks to Markdown
+function blockToMarkdown(block) {
+  const { type } = block;
+  
+  switch (type) {
+    case 'paragraph':
+      return getPlainText(block.paragraph.rich_text) + '\n\n';
+    case 'heading_1':
+      return `# ${getPlainText(block.heading_1.rich_text)}\n\n`;
+    case 'heading_2':
+      return `## ${getPlainText(block.heading_2.rich_text)}\n\n`;
+    case 'heading_3':
+      return `### ${getPlainText(block.heading_3.rich_text)}\n\n`;
+    case 'bulleted_list_item':
+      return `- ${getPlainText(block.bulleted_list_item.rich_text)}\n`;
+    case 'numbered_list_item':
+      return `1. ${getPlainText(block.numbered_list_item.rich_text)}\n`;
+    case 'code':
+      const language = block.code.language || '';
+      const code = getPlainText(block.code.rich_text);
+      return `\`\`\`${language}\n${code}\n\`\`\`\n\n`;
+    case 'quote':
+      return `> ${getPlainText(block.quote.rich_text)}\n\n`;
+    case 'divider':
+      return '---\n\n';
+    case 'image':
+      const imageUrl = block.image.external?.url || block.image.file?.url;
+      const caption = getPlainText(block.image.caption || []);
+      return `![${caption}](${imageUrl})\n\n`;
+    default:
+      return '';
+  }
+}
 
-// Format post data - using Body property for content
-function formatPost(page) {
+// Get page content from blocks
+async function getPageContent(notion, pageId) {
+  const response = await notion.blocks.children.list({
+    block_id: pageId,
+    page_size: 100,
+  });
+
+  let content = '';
+  for (const block of response.results) {
+    content += blockToMarkdown(block);
+  }
+
+  return content;
+}
+
+// Format post data - using blocks for content
+function formatPost(page, content) {
   const properties = page.properties;
   
   // Helper function to get property value safely
@@ -53,11 +100,8 @@ function formatPost(page) {
                    .replace(/\s+/g, '-') // Replace spaces with hyphens
                    .trim() || page.id;
                    
-  // Get the actual body content from the Body property
-  const bodyContent = getPropertyValue('Body', 'rich_text') || '';
-  
   const excerpt = getPropertyValue('Description', 'rich_text') || 
-                  bodyContent.substring(0, 200) + '...';
+                  content.substring(0, 200) + '...';
                   
   const publishedDate = getPropertyValue('Publish Date', 'date') || 
                        new Date().toISOString();
@@ -76,7 +120,7 @@ function formatPost(page) {
     title,
     slug,
     excerpt,
-    content: bodyContent, // Use the Body property content instead of page blocks
+    content, // Use the blocks content
     publishedDate,
     tags,
     status,
@@ -134,9 +178,12 @@ export default async function handler(req, res) {
       });
 
       // Find the post with matching slug
-      const allPosts = response.results.map((page) => {
-        return formatPost(page);
-      });
+      const allPosts = await Promise.all(
+        response.results.map(async (page) => {
+          const content = await getPageContent(notion, page.id);
+          return formatPost(page, content);
+        })
+      );
       
       // Filter for published and public posts, then find by slug
       const publishedPosts = allPosts.filter(post => 
@@ -163,9 +210,12 @@ export default async function handler(req, res) {
 
       console.log('Found', response.results.length, 'posts');
 
-      const allPosts = response.results.map((page) => {
-        return formatPost(page);
-      });
+      const allPosts = await Promise.all(
+        response.results.map(async (page) => {
+          const content = await getPageContent(notion, page.id);
+          return formatPost(page, content);
+        })
+      );
 
       // Filter for published and public posts
       const publishedPosts = allPosts.filter(post => 
