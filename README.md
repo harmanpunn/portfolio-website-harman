@@ -3,7 +3,7 @@
 
 Welcome to my portfolio website repository! This project showcases my skills, experience, and projects in a clean, responsive interface.
 
-## 📋 Project Overview
+## Project Overview
 
 This portfolio website is built with modern web technologies to create a seamless and responsive user experience. It includes sections for:
 
@@ -13,13 +13,14 @@ This portfolio website is built with modern web technologies to create a seamles
 - Work Experience
 - Education
 - Projects
+- Blog (powered by Notion CMS)
 - Contact Information
 
-## 🚀 Live Demo
+## Live Demo
 
 Visit the live website at: [harmanpunn.me](https://harmanpunn.me)
 
-## 🛠️ Technologies Used
+## Technologies Used
 
 - **React**: Frontend library for building user interfaces
 - **TypeScript**: Type-safe JavaScript
@@ -27,8 +28,11 @@ Visit the live website at: [harmanpunn.me](https://harmanpunn.me)
 - **Tailwind CSS**: Utility-first CSS framework
 - **shadcn/ui**: Accessible UI components
 - **React Router**: Client-side routing
+- **Notion API**: CMS for blog content management
+- **React Query**: Data fetching and caching
+- **Vercel**: Hosting and serverless functions
 
-## 🧰 Setup and Development
+## Setup and Development
 
 ### Prerequisites
 
@@ -39,8 +43,8 @@ Visit the live website at: [harmanpunn.me](https://harmanpunn.me)
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/portfolio-website.git
-cd portfolio-website
+git clone https://github.com/harmanpunn/portfolio-website-harman.git
+cd portfolio-website-harman
 
 # Install dependencies
 npm install
@@ -77,30 +81,36 @@ yarn preview
 bun preview
 ```
 
-## 📁 Project Structure
+### Environment Variables
+
+For the blog functionality to work, you need to set up Notion integration:
+
+1. Create a `.env` file in the root directory
+2. Add your Notion credentials:
+
+```env
+NOTION_TOKEN=your_notion_integration_token
+NOTION_DATABASE_ID=your_notion_database_id
+```
+
+Refer to `NOTION_SETUP_GUIDE.md` for detailed setup instructions.
+
+## Project Structure
 
 ```
-portfolio-website/
+portfolio-website-harman/
 ├── public/              # Static assets
 ├── src/
 │   ├── components/      # React components
 │   ├── hooks/           # Custom React hooks
-│   ├── lib/             # Utility functions
-│   ├── pages/           # Page components
+│   ├── lib/             # Utility functions and Notion service
+│   ├── pages/           # Page components (Index, Blog, BlogPost, NotFound)
 │   ├── App.tsx          # Main application component
 │   └── main.tsx         # Application entry point
+├── api/                 # Vercel serverless functions
 ├── index.html           # HTML template
 ├── tsconfig.json        # TypeScript configuration
 └── vite.config.ts       # Vite configuration
 ```
 
-## 📄 License
 
-MIT License - feel free to use this code for inspiration for your own portfolio!
-
-## 🙏 Acknowledgements
-
-- [React Documentation](https://react.dev/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [shadcn/ui](https://ui.shadcn.com/)
-- [Vite](https://vitejs.dev/)
