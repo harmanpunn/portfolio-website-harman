@@ -1,8 +1,8 @@
-import { useQuery } from '@tanstack/react-query';
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { notionService } from '@/lib/notion';
+import { BlogPost as BlogPostType } from '@/lib/notion';
 import { Navbar } from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { SEOHead } from '@/components/SEOHead';
@@ -11,13 +11,36 @@ import { ArrowLeft, Calendar, Tag, Loader2 } from 'lucide-react';
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
-  
-  const { data: post, isLoading, error } = useQuery({
-    queryKey: ['blog-post', slug],
-    queryFn: () => notionService.getPostBySlug(slug!),
-    enabled: !!slug,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-  });
+  const [post, setPost] = useState<BlogPostType | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    if (!slug) return;
+
+    const loadPost = async () => {
+      try {
+        // Try to load from static data first
+        const response = await fetch(`/static-data/${slug}.json`);
+        if (response.ok) {
+          const staticPost = await response.json();
+          setPost(staticPost);
+        } else {
+          // Fallback to API if static data not available
+          const { notionService } = await import('@/lib/notion');
+          const apiPost = await notionService.getPostBySlug(slug);
+          setPost(apiPost);
+        }
+      } catch (err) {
+        console.error('Error loading post:', err);
+        setError(err as Error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadPost();
+  }, [slug]);
 
   if (isLoading) {
     return (

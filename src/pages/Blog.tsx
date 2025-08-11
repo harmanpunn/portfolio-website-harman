@@ -1,17 +1,40 @@
-import { useQuery } from '@tanstack/react-query';
-import { notionService } from '@/lib/notion';
+import { useState, useEffect } from 'react';
 import { Navbar } from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { BlogCard } from '@/components/BlogCard';
 import { SEOHead } from '@/components/SEOHead';
 import { Loader2 } from 'lucide-react';
+import { BlogPost } from '@/lib/notion';
 
 const Blog = () => {
-  const { data: posts, isLoading, error } = useQuery({
-    queryKey: ['blog-posts'],
-    queryFn: () => notionService.getPosts(),
-    staleTime: 5 * 60 * 1000, // 5 minutes
-  });
+  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    const loadPosts = async () => {
+      try {
+        // Try to load from static data first
+        const response = await fetch('/static-data/posts.json');
+        if (response.ok) {
+          const staticPosts = await response.json();
+          setPosts(staticPosts);
+        } else {
+          // Fallback to API if static data not available
+          const { notionService } = await import('@/lib/notion');
+          const apiPosts = await notionService.getPosts();
+          setPosts(apiPosts);
+        }
+      } catch (err) {
+        console.error('Error loading posts:', err);
+        setError(err as Error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadPosts();
+  }, []);
 
   return (
     <div className="min-h-screen bg-background text-foreground">

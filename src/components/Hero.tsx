@@ -7,10 +7,18 @@ const Hero = () => {
   const [displayedText, setDisplayedText] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isClient, setIsClient] = useState(false);
   
   const roles = ['Software Engineer', 'Data Scientist'];
   
+  // Ensure this only runs on client to avoid hydration issues
   useEffect(() => {
+    setIsClient(true);
+  }, []);
+  
+  useEffect(() => {
+    if (!isClient) return;
+    
     const currentRole = roles[currentIndex];
     const shouldDelete = isDeleting;
     
@@ -36,7 +44,7 @@ const Hero = () => {
     }, shouldDelete ? 50 : 100); // Faster deletion than typing
     
     return () => clearTimeout(timeout);
-  }, [displayedText, currentIndex, isDeleting, roles]);
+  }, [displayedText, currentIndex, isDeleting, roles, isClient]);
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-accent1/5 to-accent2/10 dark:from-accent1/10 dark:to-accent2/20 -z-10"></div>
@@ -50,8 +58,8 @@ const Hero = () => {
           </h1>
           <h2 className="text-xl md:text-2xl text-muted-foreground mb-8 animate-fade-in opacity-0" style={{ animationDelay: '0.6s' }}>
             <span className="gradient-text font-medium">
-              {displayedText}
-              <span className="animate-pulse">|</span>
+              {isClient ? displayedText : 'Software Engineer'}
+              {isClient && <span className="animate-pulse">|</span>}
             </span>
             <span> - Specialized in Machine Learning & AI</span>
           </h2>

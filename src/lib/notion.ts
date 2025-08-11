@@ -65,16 +65,39 @@ class NotionService {
   }
 
   async getPosts(): Promise<BlogPost[]> {
+    console.log('📡 getPosts called, trying static data first...');
+    
     // First, try to load from static data (generated at build time)
     try {
-      const response = await fetch('/static-data/posts.json');
+      const staticUrl = '/static-data/posts.json';
+      console.log('📁 Attempting to fetch:', staticUrl);
+      
+      const response = await fetch(staticUrl);
+      console.log('📁 Static data response:', {
+        ok: response.ok,
+        status: response.status,
+        statusText: response.statusText,
+        headers: Object.fromEntries(response.headers.entries())
+      });
+      
       if (response.ok) {
+        const contentType = response.headers.get('content-type');
+        console.log('📁 Content-Type:', contentType);
+        
+        if (!contentType || !contentType.includes('application/json')) {
+          console.warn('📁 Static data returned non-JSON content type:', contentType);
+          throw new Error('Non-JSON response from static data');
+        }
+        
         const posts = await response.json();
-        console.log('📁 Loaded posts from static data');
+        console.log('📁 Successfully loaded posts from static data:', posts.length);
         return posts;
+      } else {
+        console.log('📁 Static data not available, status:', response.status);
       }
     } catch (error) {
-      console.log('📡 Static data not available, trying cache and API...');
+      console.log('📡 Static data failed, error:', error);
+      console.log('📡 Trying cache and API fallback...');
     }
 
     // Fallback to cache checking and API
@@ -190,31 +213,61 @@ class NotionService {
   }
 
   async getPostBySlug(slug: string): Promise<BlogPost | null> {
+    console.log('📡 getPostBySlug called for:', slug);
+    
     // First, try to load from static data (individual post files)
     try {
-      const response = await fetch(`/static-data/post-${slug}.json`);
+      const staticUrl = `/static-data/post-${slug}.json`;
+      console.log('📁 Attempting to fetch individual post:', staticUrl);
+      
+      const response = await fetch(staticUrl);
+      console.log('📁 Individual post response:', {
+        ok: response.ok,
+        status: response.status,
+        statusText: response.statusText
+      });
+      
       if (response.ok) {
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          console.warn('📁 Individual post returned non-JSON:', contentType);
+          throw new Error('Non-JSON response from individual post');
+        }
+        
         const post = await response.json();
-        console.log('📁 Loaded post from static data:', slug);
+        console.log('📁 Successfully loaded individual post from static data:', slug);
         return post;
       }
     } catch (error) {
-      console.log('📡 Static data not available for post, trying other methods...', slug);
+      console.log('📡 Individual post static data failed:', error);
     }
 
     // Try to find in static posts.json
     try {
+      console.log('📁 Trying to find post in posts.json...');
       const postsResponse = await fetch('/static-data/posts.json');
+      console.log('📁 Posts.json response:', {
+        ok: postsResponse.ok,
+        status: postsResponse.status
+      });
+      
       if (postsResponse.ok) {
+        const contentType = postsResponse.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          console.warn('📁 Posts.json returned non-JSON:', contentType);
+          throw new Error('Non-JSON response from posts.json');
+        }
+        
         const posts = await postsResponse.json();
         const post = posts.find((p: BlogPost) => p.slug === slug);
         if (post) {
           console.log('📁 Found post in static posts data:', slug);
           return post;
         }
+        console.log('📁 Post not found in static posts data:', slug);
       }
     } catch (error) {
-      console.log('📡 Could not load static posts data');
+      console.log('📡 Could not load static posts data:', error);
     }
 
     // Fallback to original API logic
