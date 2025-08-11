@@ -34,6 +34,15 @@ type Project = {
 const projects: Project[] = [
   {
     id: 1,
+    title: "Vygil - Autonomous Activity Tracking & Anomaly Detection",
+    description: "Autonomous AI agent platform for activity tracking, using computer vision, LLMs, persistent memory, and adaptive real-time decision-making.",
+    image: "https://placehold.co/600x400/e2e8f0/1e293b?text=VygilAI",
+    tags: ["LLM", "Agentic AI", "MCP", "Activity Tracking", "Computer Vision", "FastAPI"],
+    demoUrl: "https://vygil-ai-production.up.railway.app/",
+    repoUrl: "https://railway.com/deploy/vygil-ai?referralCode=meIjQ1"
+  },
+  {
+    id: 2,
     title: "InsightWing: AI-Driven Web Content Summarizer",
     description: "A Chrome extension utilizing FalconLLM and LangChain for efficient 60-word web content summarization with a user-friendly interface and interactive chat feature.",
     image: "https://placehold.co/600x400/e2e8f0/1e293b?text=InsightWing",
@@ -42,7 +51,7 @@ const projects: Project[] = [
     repoUrl: "https://github.com/harmanpunn/page-summarizer"
   },
   {
-    id: 2,
+    id: 3,
     title: "Video Recommendation System",
     description: "A containerized, microservice-based video recommendation system built using FastAPI, Redis, Docker, and Kubernetes with autoscaling, service orchestration, and caching.",
     image: "https://placehold.co/600x400/e2e8f0/1e293b?text=Video+Recommendation",
@@ -51,7 +60,7 @@ const projects: Project[] = [
     repoUrl: "https://github.com/harmanpunn/video-recommendation-system"
   },
   {
-    id: 3,
+    id: 4,
     title: "Document Question Answering System",
     description: "A Document QA system using LangChain, HuggingFace Transformers, and FAISS for retrieval-augmented generation with efficient document retrieval.",
     image: "https://placehold.co/600x400/e2e8f0/1e293b?text=Document+QA",
@@ -60,7 +69,7 @@ const projects: Project[] = [
     repoUrl: "#"
   },
   {
-    id: 4,
+    id: 5,
     title: "Global Socioeconomic Patterns in Suicide Trends",
     description: "Analysis of the impact of GDP on suicide rates globally using R, revealing key economic correlations and age/gender factors through data visualizations.",
     image: "https://placehold.co/600x400/e2e8f0/1e293b?text=Socioeconomic+Analysis",
@@ -69,7 +78,7 @@ const projects: Project[] = [
     repoUrl: "#"
   },
   {
-    id: 5,
+    id: 6,
     title: "StyleGAN Implementation",
     description: "Implementation of StyleGAN from scratch on the FFHQ dataset with Few-Shot GDA via Domain Re-modulation (DoRM) to adapt across diverse datasets.",
     image: "https://placehold.co/600x400/e2e8f0/1e293b?text=StyleGAN",
@@ -78,7 +87,7 @@ const projects: Project[] = [
     repoUrl: "#"
   },
   {
-    id: 6,
+    id: 7,
     title: "Spiking Neural Network for Sign Language Recognition",
     description: "A spiking neural network (SNN) for sign language recognition using the ASL-Dynamic Vision Sensor dataset, achieving 96.7% test accuracy.",
     image: "https://placehold.co/600x400/e2e8f0/1e293b?text=SNN+ASL",
@@ -87,7 +96,7 @@ const projects: Project[] = [
     repoUrl: "#"
   },
   {
-    id: 7,
+    id: 8,
     title: "Alcohol Detection and Accident Prevention Technology",
     description: "Non-invasive technology to determine driver's alcohol level based on BAC standards using logistic regression, SVM algorithms and digital image processing.",
     image: "https://placehold.co/600x400/e2e8f0/1e293b?text=Alcohol+Detection",

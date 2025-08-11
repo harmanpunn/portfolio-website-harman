@@ -46,7 +46,7 @@ const About = () => {
           <div className="animate-on-scroll">
             <h2 className="text-4xl font-serif font-bold mb-6 gradient-text">About Me</h2>
             <p className="text-foreground/80 mb-4 text-justify">
-              I've always enjoyed building things—from scribbling logic in notebooks to shipping code that powers real products. Somewhere along the way, I got curious about the patterns behind the data. That curiosity led me into machine learning, and eventually into designing systems that don't just run, but learn.
+              I've always enjoyed building things — from scribbling logic in notebooks to shipping code that powers real products. Somewhere along the way, I got curious about the patterns behind the data. That curiosity led me into machine learning, and eventually into designing systems that don't just run, but learn.
             </p>
             <p className="text-foreground/80 mb-4 text-justify">
               These days, I work at the intersection of software engineering and intelligence. I build backend services, train models, and wire them together into thoughtful ML-powered applications. I'm especially into LLMs, cloud-native workflows, and anything that turns raw data into real insights.
