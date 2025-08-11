@@ -4,10 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite-react-ssg dev",
-    "build": "npm run fetch-content && vite-react-ssg build",
-    "build:dev": "npm run fetch-content && vite-react-ssg build --mode development",
-    "build:ssg": "npm run fetch-content && vite-react-ssg build",
+    "dev": "vite",
+    "build": "npm run fetch-content && tsc && vite build",
+    "build:dev": "npm run fetch-content && tsc && vite build --mode development",
+    "build:ssg": "npm run fetch-content && tsc && vite build",
     "fetch-content": "node scripts/fetch-content.mjs",
     "lint": "eslint .",
     "preview": "vite preview"

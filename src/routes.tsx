@@ -25,17 +25,17 @@ function Layout({ children }: { children: React.ReactNode }) {
 export const routes: RouteRecord[] = [
   {
     path: '/',
-    element: <Layout><Index /></Layout>,
+    Component: () => <Layout><Index /></Layout>,
     entry: 'src/pages/Index.tsx',
   },
   {
     path: '/blog',
-    element: <Layout><Blog /></Layout>,
+    Component: () => <Layout><Blog /></Layout>,
     entry: 'src/pages/Blog.tsx',
   },
   {
     path: '/blog/:slug',
-    element: <Layout><BlogPost /></Layout>,
+    Component: () => <Layout><BlogPost /></Layout>,
     entry: 'src/pages/BlogPost.tsx',
     // We'll add dynamic path generation here
     getStaticPaths: async () => {
@@ -94,7 +94,7 @@ export const routes: RouteRecord[] = [
   },
   {
     path: '*',
-    element: <Layout><NotFound /></Layout>,
+    Component: () => <Layout><NotFound /></Layout>,
     entry: 'src/pages/NotFound.tsx',
   },
 ];
