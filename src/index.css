@@ -279,6 +279,48 @@
     margin-top: 0.5rem !important;
     margin-bottom: 0.5rem !important;
   }
+
+  /* Enhanced nested list indentation */
+  .prose ul,
+  .prose ol {
+    padding-left: 0 !important;
+    margin-left: 1.5rem !important;
+  }
+
+  .prose ul ul,
+  .prose ol ol,
+  .prose ul ol,
+  .prose ol ul {
+    padding-left: 0 !important;
+    margin-left: 1.5rem !important;
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  /* Ensure proper bullet/number positioning */
+  .prose ul > li {
+    position: relative;
+    padding-left: 0 !important;
+  }
+
+  .prose ol > li {
+    position: relative;
+    padding-left: 0 !important;
+  }
+
+  /* Nested list visual hierarchy */
+  .prose ul ul > li::marker {
+    content: "◦" !important; /* Hollow bullet for second level */
+  }
+
+  .prose ul ul ul > li::marker {
+    content: "▪" !important; /* Square bullet for third level */
+  }
+
+  /* Adjust line height for better spacing */
+  .prose li {
+    line-height: 1.6 !important;
+  }
 }
 
 /* Animation for scroll reveal */

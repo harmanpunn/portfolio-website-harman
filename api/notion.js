@@ -49,8 +49,9 @@ function richTextToMarkdown(richText) {
 }
 
 // Convert Notion blocks to Markdown
-function blockToMarkdown(block) {
+function blockToMarkdown(block, depth = 0) {
   const { type } = block;
+  const indent = '  '.repeat(depth); // 2 spaces per depth level
   
   switch (type) {
     case 'paragraph':
@@ -62,9 +63,13 @@ function blockToMarkdown(block) {
     case 'heading_3':
       return `### ${richTextToMarkdown(block.heading_3.rich_text)}\n\n`;
     case 'bulleted_list_item':
-      return `- ${richTextToMarkdown(block.bulleted_list_item.rich_text)}\n`;
+      return `${indent}- ${richTextToMarkdown(block.bulleted_list_item.rich_text)}\n`;
     case 'numbered_list_item':
-      return `1. ${richTextToMarkdown(block.numbered_list_item.rich_text)}\n`;
+      // For nested numbered items, use bullet points to avoid numbering conflicts
+      if (depth > 0) {
+        return `${indent}- ${richTextToMarkdown(block.numbered_list_item.rich_text)}\n`;
+      }
+      return `${indent}1. ${richTextToMarkdown(block.numbered_list_item.rich_text)}\n`;
     case 'code':
       const language = block.code.language || '';
       const code = getPlainText(block.code.rich_text); // Code blocks don't need rich formatting
@@ -92,9 +97,32 @@ async function getPageContent(notion, pageId) {
 
   let content = '';
   for (const block of response.results) {
-    content += blockToMarkdown(block);
+    content += await blockToMarkdownWithChildren(notion, block);
   }
 
+  return content;
+}
+
+// Convert block to markdown and handle children recursively
+async function blockToMarkdownWithChildren(notion, block, depth = 0) {
+  let content = blockToMarkdown(block, depth);
+  
+  // If the block has children, fetch and process them
+  if (block.has_children) {
+    try {
+      const childrenResponse = await notion.blocks.children.list({
+        block_id: block.id,
+        page_size: 100,
+      });
+      
+      for (const childBlock of childrenResponse.results) {
+        content += await blockToMarkdownWithChildren(notion, childBlock, depth + 1);
+      }
+    } catch (error) {
+      console.error('Error fetching child blocks:', error);
+    }
+  }
+  
   return content;
 }
 
