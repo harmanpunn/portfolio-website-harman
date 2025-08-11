@@ -6,6 +6,7 @@ import { notionService } from '@/lib/notion';
 import { Navbar } from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { SEOHead } from '@/components/SEOHead';
+import { ClickableImage } from '@/components/ClickableImage';
 import { ArrowLeft, Calendar, Tag, Loader2 } from 'lucide-react';
 
 const BlogPost = () => {
@@ -100,7 +101,7 @@ const BlogPost = () => {
 
           {/* Post header */}
           <header className="mb-12">
-            <h1 className="text-4xl md:text-5xl font-serif font-bold mb-6 gradient-text leading-tight pb-2">
+            <h1 className="text-4xl md:text-5xl font-serif font-bold mb-6 text-gray-800 dark:text-gray-200 leading-tight pb-2">
               {post.title}
             </h1>
             
@@ -134,17 +135,30 @@ const BlogPost = () => {
 
           {/* Post content */}
           <div className="prose prose-lg max-w-none dark:prose-invert 
-                         prose-headings:font-serif prose-headings:gradient-text 
+                         prose-headings:font-serif prose-headings:text-gray-800 dark:prose-headings:text-gray-200
                          prose-h1:text-4xl prose-h2:text-3xl prose-h3:text-2xl
                          prose-a:text-accent1 prose-a:no-underline hover:prose-a:text-accent2 hover:prose-a:underline
                          prose-code:bg-accent1/10 prose-code:text-accent1 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:font-mono prose-code:text-sm
-                         prose-pre:bg-gray-900 prose-pre:text-gray-100 dark:prose-pre:bg-gray-800
-                         prose-blockquote:border-l-accent1 prose-blockquote:bg-accent1/5 prose-blockquote:pl-6 prose-blockquote:py-3 prose-blockquote:rounded-r
+                         prose-pre:bg-gray-900 prose-pre:text-gray-100 prose-pre:border-0 prose-pre:rounded-lg prose-pre:p-0 prose-pre:m-0 prose-pre:overflow-hidden
+                         prose-pre:shadow-lg prose-pre:ring-1 prose-pre:ring-gray-200 dark:prose-pre:ring-gray-700
+                         dark:prose-pre:bg-gray-900 dark:prose-pre:text-gray-100
+                         prose-blockquote:border-l-accent1 prose-blockquote:bg-accent1/5 prose-blockquote:pl-6 prose-blockquote:pr-6 prose-blockquote:py-3 prose-blockquote:rounded-r
                          prose-ul:space-y-1 prose-ol:space-y-1
-                         prose-li:marker:text-accent1
+                         prose-li:marker:text-gray-600 dark:prose-li:marker:text-gray-400
                          prose-strong:text-foreground prose-strong:font-semibold
-                         prose-p:leading-relaxed prose-p:mb-6">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                         prose-p:leading-relaxed prose-p:mb-6 prose-p:text-justify">
+            <ReactMarkdown 
+              remarkPlugins={[remarkGfm]}
+              components={{
+                img: ({ src, alt, ...props }) => (
+                  <ClickableImage
+                    src={src || ''}
+                    alt={alt || ''}
+                    className="rounded-lg"
+                  />
+                ),
+              }}
+            >
               {post.content}
             </ReactMarkdown>
           </div>
