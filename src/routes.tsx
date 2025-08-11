@@ -1,24 +1,41 @@
 import type { RouteRecord } from 'vite-react-ssg'
 import React from 'react'
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import Index from './pages/Index'
 import Blog from './pages/Blog'
 import BlogPost from './pages/BlogPost'
 import NotFound from './pages/NotFound'
 
+// Layout component that wraps all routes
+function Layout({ children }: { children: React.ReactNode }) {
+  return (
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        {children}
+      </TooltipProvider>
+    </ThemeProvider>
+  );
+}
+
 export const routes: RouteRecord[] = [
   {
     path: '/',
-    Component: Index,
+    element: <Layout><Index /></Layout>,
     entry: 'src/pages/Index.tsx',
   },
   {
     path: '/blog',
-    Component: Blog,
+    element: <Layout><Blog /></Layout>,
     entry: 'src/pages/Blog.tsx',
   },
   {
     path: '/blog/:slug',
-    Component: BlogPost,
+    element: <Layout><BlogPost /></Layout>,
     entry: 'src/pages/BlogPost.tsx',
     // We'll add dynamic path generation here
     getStaticPaths: async () => {
@@ -77,7 +94,7 @@ export const routes: RouteRecord[] = [
   },
   {
     path: '*',
-    Component: NotFound,
+    element: <Layout><NotFound /></Layout>,
     entry: 'src/pages/NotFound.tsx',
   },
 ];
