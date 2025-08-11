@@ -65,8 +65,21 @@ class NotionService {
   }
 
   async getPosts(): Promise<BlogPost[]> {
+    // First, try to load from static data (generated at build time)
     try {
-      // First, check if we have recent posts and get metadata to see if anything changed
+      const response = await fetch('/static-data/posts.json');
+      if (response.ok) {
+        const posts = await response.json();
+        console.log('📁 Loaded posts from static data');
+        return posts;
+      }
+    } catch (error) {
+      console.log('📡 Static data not available, trying cache and API...');
+    }
+
+    // Fallback to cache checking and API
+    try {
+      // Check if we have recent posts and get metadata to see if anything changed
       if (this.postsCache) {
         console.log('Checking for post updates...');
         
@@ -177,11 +190,39 @@ class NotionService {
   }
 
   async getPostBySlug(slug: string): Promise<BlogPost | null> {
+    // First, try to load from static data (individual post files)
+    try {
+      const response = await fetch(`/static-data/post-${slug}.json`);
+      if (response.ok) {
+        const post = await response.json();
+        console.log('📁 Loaded post from static data:', slug);
+        return post;
+      }
+    } catch (error) {
+      console.log('📡 Static data not available for post, trying other methods...', slug);
+    }
+
+    // Try to find in static posts.json
+    try {
+      const postsResponse = await fetch('/static-data/posts.json');
+      if (postsResponse.ok) {
+        const posts = await postsResponse.json();
+        const post = posts.find((p: BlogPost) => p.slug === slug);
+        if (post) {
+          console.log('📁 Found post in static posts data:', slug);
+          return post;
+        }
+      }
+    } catch (error) {
+      console.log('📡 Could not load static posts data');
+    }
+
+    // Fallback to original API logic
     try {
       return await this.tryStaticFirst(
-        // Try static data first
+        // Try static data first (this is now redundant but kept for compatibility)
         async () => {
-          console.log('Loading post from static data:', slug);
+          console.log('Loading post from static data (fallback):', slug);
           const response = await fetch(`/static-data/post-${slug}.json`);
           if (!response.ok) throw new Error('Static post not available');
           const post = await response.json();
@@ -270,13 +311,7 @@ class NotionService {
         return cachedEntry.post;
       }
       
-      // Return mock data as fallback for development
-      if (import.meta.env.DEV) {
-        const mockPosts = this.getMockPosts();
-        return mockPosts.find(post => post.slug === slug) || null;
-      }
-      
-      // In production, still try to return mock data
+      // Return mock data as fallback
       const mockPosts = this.getMockPosts();
       return mockPosts.find(post => post.slug === slug) || null;
     }
