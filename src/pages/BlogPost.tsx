@@ -11,28 +11,39 @@ import { ArrowLeft, Calendar, Tag, Loader2 } from 'lucide-react';
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
-  const [post, setPost] = useState<BlogPostType | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-
-  // Try to get pre-loaded data from SSG loader
-  let loaderData: { post?: BlogPostType | null } = {};
+  
+  // Get pre-loaded data from SSG loader first
+  let loaderPost: BlogPostType | null = null;
+  let hasLoaderData = false;
+  
   try {
-    loaderData = (useLoaderData() as { post?: BlogPostType | null }) || {};
+    const data = useLoaderData() as { post?: BlogPostType | null };
+    loaderPost = data?.post || null;
+    hasLoaderData = true;
+    console.log('SSG loader data available:', !!loaderPost);
   } catch (err) {
-    // Loader data not available (direct navigation)
-    loaderData = {};
+    // No loader data available - this is normal for client-side navigation
+    hasLoaderData = false;
+    console.log('No SSG loader data, will fetch client-side');
   }
+  
+  // Initialize state with loader data to prevent hydration mismatch
+  const [post, setPost] = useState<BlogPostType | null>(loaderPost);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(hasLoaderData && !loaderPost ? new Error('Post not found') : null);
 
   useEffect(() => {
-    // If we have loader data and it contains a valid post, use it
-    if (loaderData.post && loaderData.post !== null) {
-      console.log('Using SSG loader data:', loaderData.post.title);
-      setPost(loaderData.post);
+    // If we already have loader data, we're done
+    if (hasLoaderData) {
+      if (loaderPost) {
+        console.log('Using SSG loader data:', loaderPost.title);
+      } else {
+        console.log('SSG data indicates post not found');
+      }
       return;
     }
 
-    // If no loader data and no slug, we can't load anything
+    // If no slug, we can't load anything
     if (!slug) {
       setError(new Error('No post slug provided'));
       return;
@@ -44,17 +55,21 @@ const BlogPost = () => {
       setError(null);
       
       try {
-        // Try static data first
-        const response = await fetch(`/static-data/post-${slug}.json`);
+        // Try static data first - load all posts and find the specific one
+        const response = await fetch(`/static-data/posts.json`);
         if (response.ok) {
-          const staticPost = await response.json();
-          setPost(staticPost);
-        } else {
-          // Fallback to API if static data not available
-          const { notionService } = await import('@/lib/notion');
-          const apiPost = await notionService.getPostBySlug(slug);
-          setPost(apiPost);
+          const posts = await response.json();
+          const staticPost = posts.find((p: any) => p.slug === slug);
+          if (staticPost) {
+            setPost(staticPost);
+            return;
+          }
         }
+        
+        // Fallback to API if static data not available or post not found
+        const { notionService } = await import('@/lib/notion');
+        const apiPost = await notionService.getPostBySlug(slug);
+        setPost(apiPost);
       } catch (err) {
         console.error('Error loading post:', err);
         setError(err as Error);
@@ -64,7 +79,7 @@ const BlogPost = () => {
     };
 
     loadPost();
-  }, [slug, loaderData.post]);
+  }, [slug, hasLoaderData, loaderPost]);
 
   // Show loading state when fetching data client-side
   if (isLoading) {
@@ -199,7 +214,7 @@ const BlogPost = () => {
             <ReactMarkdown 
               remarkPlugins={[remarkGfm]}
               components={{
-                img: ({ src, alt, ...props }) => (
+                img: ({ src, alt }) => (
                   <ClickableImage
                     src={src || ''}
                     alt={alt || ''}
