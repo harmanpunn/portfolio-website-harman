@@ -1,5 +1,5 @@
+import { useLoaderData, Link, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { BlogPost as BlogPostType } from '@/lib/notion';
@@ -12,16 +12,40 @@ import { ArrowLeft, Calendar, Tag, Loader2 } from 'lucide-react';
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
   const [post, setPost] = useState<BlogPostType | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
-  useEffect(() => {
-    if (!slug) return;
+  // Try to get pre-loaded data from SSG loader
+  let loaderData: { post?: BlogPostType | null } = {};
+  try {
+    loaderData = (useLoaderData() as { post?: BlogPostType | null }) || {};
+  } catch (err) {
+    // Loader data not available (direct navigation)
+    loaderData = {};
+  }
 
+  useEffect(() => {
+    // If we have loader data and it contains a valid post, use it
+    if (loaderData.post && loaderData.post !== null) {
+      console.log('Using SSG loader data:', loaderData.post.title);
+      setPost(loaderData.post);
+      return;
+    }
+
+    // If no loader data and no slug, we can't load anything
+    if (!slug) {
+      setError(new Error('No post slug provided'));
+      return;
+    }
+
+    // Fallback: Load post data client-side for direct navigation
     const loadPost = async () => {
+      setIsLoading(true);
+      setError(null);
+      
       try {
-        // Try to load from static data first
-        const response = await fetch(`/static-data/${slug}.json`);
+        // Try static data first
+        const response = await fetch(`/static-data/post-${slug}.json`);
         if (response.ok) {
           const staticPost = await response.json();
           setPost(staticPost);
@@ -40,8 +64,9 @@ const BlogPost = () => {
     };
 
     loadPost();
-  }, [slug]);
+  }, [slug, loaderData.post]);
 
+  // Show loading state when fetching data client-side
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background text-foreground">
@@ -59,6 +84,7 @@ const BlogPost = () => {
     );
   }
 
+  // Handle post not found or error
   if (error || !post) {
     return (
       <div className="min-h-screen bg-background text-foreground">

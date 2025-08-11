@@ -1,40 +1,28 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { ThemeProvider } from "@/components/ThemeProvider";
-import Index from './pages/Index'
-import Blog from './pages/Blog'
-import BlogPost from './pages/BlogPost'
-import NotFound from './pages/NotFound'
+import { ViteReactSSG } from 'vite-react-ssg'
+import { routes } from './routes'
 import './index.css'
 
-// Layout component that wraps all routes
-function Layout({ children }: { children: React.ReactNode }) {
-  return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        {children}
-      </TooltipProvider>
-    </ThemeProvider>
-  );
-}
-
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <Layout>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/blog/:slug" element={<BlogPost />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </Layout>
-  </StrictMode>,
-)
+export const createRoot = ViteReactSSG(
+  { routes },
+  ({ routes, isClient, initialState }) => {
+    // App setup that runs on both server and client
+    console.log('ViteReactSSG setup:', { 
+      isClient, 
+      routesCount: routes.length,
+      initialState: !!initialState 
+    });
+    
+    // Client-side hydration setup
+    if (isClient) {
+      // Mark that the initial load is complete for SEO component
+      setTimeout(() => {
+        (window as any).__INITIAL_LOAD_COMPLETE__ = true;
+      }, 100);
+      
+      // Restore any client-side state if needed
+      if (initialState && (window as any).__INITIAL_STATE__) {
+        console.log('Restoring initial state...');
+      }
+    }
+  }
+);

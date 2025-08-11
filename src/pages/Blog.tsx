@@ -1,20 +1,40 @@
+import { useLoaderData } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { Navbar } from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { BlogCard } from '@/components/BlogCard';
 import { SEOHead } from '@/components/SEOHead';
-import { Loader2 } from 'lucide-react';
 import { BlogPost } from '@/lib/notion';
+import { Loader2 } from 'lucide-react';
 
 const Blog = () => {
   const [posts, setPosts] = useState<BlogPost[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
+  // Try to get pre-loaded data from SSG loader
+  let loaderData: { posts?: BlogPost[] } = {};
+  try {
+    loaderData = (useLoaderData() as { posts?: BlogPost[] }) || {};
+  } catch (err) {
+    // Loader data not available (direct navigation)
+    loaderData = {};
+  }
+
   useEffect(() => {
+    // If we have loader data, use it
+    if (loaderData.posts) {
+      setPosts(loaderData.posts);
+      return;
+    }
+
+    // Fallback: Load posts client-side for direct navigation
     const loadPosts = async () => {
+      setIsLoading(true);
+      setError(null);
+      
       try {
-        // Try to load from static data first
+        // Try static data first
         const response = await fetch('/static-data/posts.json');
         if (response.ok) {
           const staticPosts = await response.json();
@@ -34,7 +54,7 @@ const Blog = () => {
     };
 
     loadPosts();
-  }, []);
+  }, [loaderData.posts]);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -56,25 +76,26 @@ const Blog = () => {
             </p>
           </div>
 
+          {/* Handle loading state */}
           {isLoading && (
             <div className="flex justify-center items-center py-16">
               <Loader2 className="h-8 w-8 animate-spin" />
             </div>
           )}
 
+          {/* Handle error state */}
           {error && (
             <div className="text-center py-16">
               <p className="text-red-500">Failed to load blog posts. Please try again later.</p>
             </div>
           )}
 
-          {posts && posts.length === 0 && (
+          {/* Handle empty state */}
+          {!isLoading && !error && posts.length === 0 ? (
             <div className="text-center py-16">
               <p className="text-foreground/70">No blog posts yet. Check back soon!</p>
             </div>
-          )}
-
-          {posts && posts.length > 0 && (
+          ) : !isLoading && !error && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {posts.map((post) => (
                 <BlogCard key={post.id} post={post} />

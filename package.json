@@ -4,13 +4,16 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "npm run fetch-content && tsc && vite build",
-    "build:dev": "npm run fetch-content && tsc && vite build --mode development",
-    "build:ssg": "npm run fetch-content && tsc && vite build",
+    "dev": "vite-react-ssg dev",
+    "dev:spa": "vite",
+    "build": "npm run fetch-content && vite-react-ssg build && npm run inject-seo",
+    "build:dev": "npm run fetch-content && vite-react-ssg build --mode development",
+    "build:spa": "npm run fetch-content && tsc && vite build",
     "fetch-content": "node scripts/fetch-content.mjs",
+    "inject-seo": "node scripts/inject-seo-tags.mjs",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite-react-ssg preview",
+    "verify-ssg": "node scripts/verify-ssg.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
@@ -55,6 +58,7 @@
     "react": "^18.3.1",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18.3.1",
+    "react-helmet-async": "^2.0.5",
     "react-hook-form": "^7.53.0",
     "react-markdown": "^10.1.0",
     "react-resizable-panels": "^2.1.3",
