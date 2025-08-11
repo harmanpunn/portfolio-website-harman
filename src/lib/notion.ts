@@ -29,18 +29,39 @@ class NotionService {
   private metadataUrl: string;
   private cache = new Map<string, CachedPost>();
   private postsCache: PostsCache | null = null;
+  private staticMode: boolean;
 
   constructor() {
-    // Use environment variable if available, otherwise determine based on current URL
-    this.apiUrl = import.meta.env.VITE_API_URL || 
-                  (window.location.hostname === 'localhost' 
-                    ? 'http://localhost:3000/api/notion'
-                    : '/api/notion');
+    // Detect if we're in static mode (static data available)
+    this.staticMode = false;
     
-    this.metadataUrl = import.meta.env.VITE_API_URL || 
-                       (window.location.hostname === 'localhost' 
-                         ? 'http://localhost:3000/api/metadata'
-                         : '/api/metadata');
+    // Use environment variable if available, otherwise determine based on current environment
+    if (import.meta.env.VITE_API_URL) {
+      this.apiUrl = import.meta.env.VITE_API_URL;
+      this.metadataUrl = import.meta.env.VITE_API_URL;
+    } else if (typeof window !== 'undefined') {
+      // Client-side: use window.location
+      this.apiUrl = window.location.hostname === 'localhost' 
+        ? 'http://localhost:3000/api/notion'
+        : '/api/notion';
+      this.metadataUrl = window.location.hostname === 'localhost' 
+        ? 'http://localhost:3000/api/metadata'
+        : '/api/metadata';
+    } else {
+      // Server-side: use production URLs
+      this.apiUrl = '/api/notion';
+      this.metadataUrl = '/api/metadata';
+    }
+  }
+
+  // Try to load static data first, fall back to API
+  async tryStaticFirst(loader: () => Promise<any>, fallback: () => Promise<any>) {
+    try {
+      return await loader();
+    } catch (error) {
+      console.log('Static data not available, falling back to API');
+      return await fallback();
+    }
   }
 
   async getPosts(): Promise<BlogPost[]> {
@@ -76,37 +97,64 @@ class NotionService {
         }
       }
 
-      console.log('Fetching fresh posts from:', this.apiUrl);
-      const response = await fetch(this.apiUrl);
-      
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        console.error('API Error Response:', {
-          status: response.status,
-          statusText: response.statusText,
-          errorData
-        });
-        throw new Error(`Failed to fetch posts: ${response.status} ${response.statusText}`);
-      }
-      
-      const posts = await response.json();
-      console.log('Successfully fetched posts:', posts.length);
-      
-      // Update cache
-      this.postsCache = { posts, lastFetch: Date.now() };
-      
-      // Update individual post cache
-      posts.forEach((post: BlogPost) => {
-        if (post.last_edited_time) {
-          this.cache.set(post.id, {
-            post,
-            lastEditedTime: post.last_edited_time,
-            cachedAt: Date.now()
+      return await this.tryStaticFirst(
+        // Try static data first
+        async () => {
+          console.log('Loading posts from static data...');
+          const response = await fetch('/static-data/posts.json');
+          if (!response.ok) throw new Error('Static data not available');
+          const posts = await response.json();
+          console.log('Successfully loaded', posts.length, 'posts from static data');
+          
+          // Update cache
+          this.postsCache = { posts, lastFetch: Date.now() };
+          posts.forEach((post: BlogPost) => {
+            if (post.last_edited_time) {
+              this.cache.set(post.id, {
+                post,
+                lastEditedTime: post.last_edited_time,
+                cachedAt: Date.now()
+              });
+            }
           });
+          
+          return posts;
+        },
+        // Fallback to API
+        async () => {
+          console.log('Fetching fresh posts from:', this.apiUrl);
+          const response = await fetch(this.apiUrl);
+          
+          if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            console.error('API Error Response:', {
+              status: response.status,
+              statusText: response.statusText,
+              errorData
+            });
+            throw new Error(`Failed to fetch posts: ${response.status} ${response.statusText}`);
+          }
+          
+          const posts = await response.json();
+          console.log('Successfully fetched posts:', posts.length);
+          
+          // Update cache
+          this.postsCache = { posts, lastFetch: Date.now() };
+          
+          // Update individual post cache
+          posts.forEach((post: BlogPost) => {
+            if (post.last_edited_time) {
+              this.cache.set(post.id, {
+                post,
+                lastEditedTime: post.last_edited_time,
+                cachedAt: Date.now()
+              });
+            }
+          });
+          
+          return posts;
         }
-      });
-      
-      return posts;
+      );
     } catch (error) {
       console.error('Error fetching posts:', error);
       
@@ -130,62 +178,86 @@ class NotionService {
 
   async getPostBySlug(slug: string): Promise<BlogPost | null> {
     try {
-      // First check if we have this post cached
-      const cachedEntry = Array.from(this.cache.values())
-        .find(entry => entry.post.slug === slug);
-
-      if (cachedEntry) {
-        console.log('Found cached post for slug:', slug);
-        
-        // Check if the cached post is still fresh by comparing last_edited_time
-        try {
-          const metadataResponse = await fetch(`${this.metadataUrl}?slug=${slug}`);
+      return await this.tryStaticFirst(
+        // Try static data first
+        async () => {
+          console.log('Loading post from static data:', slug);
+          const response = await fetch(`/static-data/post-${slug}.json`);
+          if (!response.ok) throw new Error('Static post not available');
+          const post = await response.json();
+          console.log('Successfully loaded post from static data:', post.title);
           
-          if (metadataResponse.ok) {
-            const metadata = await metadataResponse.json();
+          // Update cache
+          if (post.last_edited_time) {
+            this.cache.set(post.id, {
+              post,
+              lastEditedTime: post.last_edited_time,
+              cachedAt: Date.now()
+            });
+          }
+          
+          return post;
+        },
+        // Fallback to API with caching logic
+        async () => {
+          // First check if we have this post cached
+          const cachedEntry = Array.from(this.cache.values())
+            .find(entry => entry.post.slug === slug);
+
+          if (cachedEntry) {
+            console.log('Found cached post for slug:', slug);
             
-            if (metadata.last_edited_time === cachedEntry.lastEditedTime) {
-              console.log('Post up to date, using cache for:', slug);
+            // Check if the cached post is still fresh by comparing last_edited_time
+            try {
+              const metadataResponse = await fetch(`${this.metadataUrl}?slug=${slug}`);
+              
+              if (metadataResponse.ok) {
+                const metadata = await metadataResponse.json();
+                
+                if (metadata.last_edited_time === cachedEntry.lastEditedTime) {
+                  console.log('Post up to date, using cache for:', slug);
+                  return cachedEntry.post;
+                }
+                
+                console.log('Post has been updated, fetching fresh data for:', slug);
+              }
+            } catch (metadataError) {
+              console.warn('Failed to check metadata for:', slug, 'using cached version');
               return cachedEntry.post;
             }
-            
-            console.log('Post has been updated, fetching fresh data for:', slug);
           }
-        } catch (metadataError) {
-          console.warn('Failed to check metadata for:', slug, 'using cached version');
-          return cachedEntry.post;
-        }
-      }
 
-      console.log('Fetching fresh post by slug:', slug, 'from:', this.apiUrl);
-      const response = await fetch(`${this.apiUrl}?slug=${slug}`);
-      
-      if (!response.ok) {
-        if (response.status === 404) {
-          return null;
+          console.log('Fetching fresh post by slug:', slug, 'from:', this.apiUrl);
+          const response = await fetch(`${this.apiUrl}?slug=${slug}`);
+          
+          if (!response.ok) {
+            if (response.status === 404) {
+              return null;
+            }
+            const errorData = await response.json().catch(() => ({}));
+            console.error('API Error Response:', {
+              status: response.status,
+              statusText: response.statusText,
+              errorData
+            });
+            throw new Error(`Failed to fetch post: ${response.status} ${response.statusText}`);
+          }
+          
+          const post = await response.json();
+          console.log('Successfully fetched post:', post.title);
+          
+          // Update cache
+          if (post.last_edited_time) {
+            this.cache.set(post.id, {
+              post,
+              lastEditedTime: post.last_edited_time,
+              cachedAt: Date.now()
+            });
+          }
+          
+          return post;
         }
-        const errorData = await response.json().catch(() => ({}));
-        console.error('API Error Response:', {
-          status: response.status,
-          statusText: response.statusText,
-          errorData
-        });
-        throw new Error(`Failed to fetch post: ${response.status} ${response.statusText}`);
-      }
-      
-      const post = await response.json();
-      console.log('Successfully fetched post:', post.title);
-      
-      // Update cache
-      if (post.last_edited_time) {
-        this.cache.set(post.id, {
-          post,
-          lastEditedTime: post.last_edited_time,
-          cachedAt: Date.now()
-        });
-      }
-      
-      return post;
+      );
     } catch (error) {
       console.error('Error fetching post by slug:', error);
       

@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 
+# Build-time generated content (fetched from Notion during build)
+public/static-data/
+.vite-react-ssg-temp/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
