@@ -141,7 +141,7 @@ const BlogPost = () => {
                          prose-pre:bg-gray-900 prose-pre:text-gray-100 dark:prose-pre:bg-gray-800
                          prose-blockquote:border-l-accent1 prose-blockquote:bg-accent1/5 prose-blockquote:pl-6 prose-blockquote:py-3 prose-blockquote:rounded-r
                          prose-ul:space-y-1 prose-ol:space-y-1
-                         prose-li:marker:text-accent1
+                         prose-li:marker:text-gray-600 dark:prose-li:marker:text-gray-400
                          prose-strong:text-foreground prose-strong:font-semibold
                          prose-p:leading-relaxed prose-p:mb-6">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>

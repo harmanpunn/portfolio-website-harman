@@ -8,9 +8,44 @@ async function initializeNotion() {
   }
 }
 
-// Helper function to extract text from Notion rich text
+// Helper function to extract text from Notion rich text with formatting
 function getPlainText(richText) {
   return richText?.map(t => t.plain_text).join('') || '';
+}
+
+// Helper function to convert rich text with annotations to Markdown
+function richTextToMarkdown(richText) {
+  if (!richText || !Array.isArray(richText)) return '';
+  
+  return richText.map(textObj => {
+    let text = textObj.plain_text || '';
+    const annotations = textObj.annotations || {};
+    
+    // Apply formatting based on annotations
+    if (annotations.bold) {
+      text = `**${text}**`;
+    }
+    if (annotations.italic) {
+      text = `*${text}*`;
+    }
+    if (annotations.code) {
+      text = `\`${text}\``;
+    }
+    if (annotations.strikethrough) {
+      text = `~~${text}~~`;
+    }
+    if (annotations.underline) {
+      // Markdown doesn't have native underline, but we can use HTML
+      text = `<u>${text}</u>`;
+    }
+    
+    // Handle links
+    if (textObj.href) {
+      text = `[${text}](${textObj.href})`;
+    }
+    
+    return text;
+  }).join('');
 }
 
 // Convert Notion blocks to Markdown
@@ -19,28 +54,28 @@ function blockToMarkdown(block) {
   
   switch (type) {
     case 'paragraph':
-      return getPlainText(block.paragraph.rich_text) + '\n\n';
+      return richTextToMarkdown(block.paragraph.rich_text) + '\n\n';
     case 'heading_1':
-      return `# ${getPlainText(block.heading_1.rich_text)}\n\n`;
+      return `# ${richTextToMarkdown(block.heading_1.rich_text)}\n\n`;
     case 'heading_2':
-      return `## ${getPlainText(block.heading_2.rich_text)}\n\n`;
+      return `## ${richTextToMarkdown(block.heading_2.rich_text)}\n\n`;
     case 'heading_3':
-      return `### ${getPlainText(block.heading_3.rich_text)}\n\n`;
+      return `### ${richTextToMarkdown(block.heading_3.rich_text)}\n\n`;
     case 'bulleted_list_item':
-      return `- ${getPlainText(block.bulleted_list_item.rich_text)}\n`;
+      return `- ${richTextToMarkdown(block.bulleted_list_item.rich_text)}\n`;
     case 'numbered_list_item':
-      return `1. ${getPlainText(block.numbered_list_item.rich_text)}\n`;
+      return `1. ${richTextToMarkdown(block.numbered_list_item.rich_text)}\n`;
     case 'code':
       const language = block.code.language || '';
-      const code = getPlainText(block.code.rich_text);
+      const code = getPlainText(block.code.rich_text); // Code blocks don't need rich formatting
       return `\`\`\`${language}\n${code}\n\`\`\`\n\n`;
     case 'quote':
-      return `> ${getPlainText(block.quote.rich_text)}\n\n`;
+      return `> ${richTextToMarkdown(block.quote.rich_text)}\n\n`;
     case 'divider':
       return '---\n\n';
     case 'image':
       const imageUrl = block.image.external?.url || block.image.file?.url;
-      const caption = getPlainText(block.image.caption || []);
+      const caption = richTextToMarkdown(block.image.caption || []);
       return `![${caption}](${imageUrl})\n\n`;
     default:
       return '';
