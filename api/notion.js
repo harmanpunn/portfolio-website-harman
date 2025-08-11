@@ -68,6 +68,7 @@ function blockToMarkdown(block) {
     case 'code':
       const language = block.code.language || '';
       const code = getPlainText(block.code.rich_text); // Code blocks don't need rich formatting
+      const languageLabel = language.charAt(0).toUpperCase() + language.slice(1) || 'Code';
       return `\`\`\`${language}\n${code}\n\`\`\`\n\n`;
     case 'quote':
       return `> ${richTextToMarkdown(block.quote.rich_text)}\n\n`;
