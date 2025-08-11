@@ -189,7 +189,47 @@ function formatPost(page, content) {
     tags,
     status,
     isPublic,
-    coverImage
+    coverImage,
+    last_edited_time: page.last_edited_time
+  };
+}
+
+// Format post metadata only (for caching checks)
+function formatPostMetadata(page) {
+  const properties = page.properties;
+  
+  // Helper function to get property value safely
+  const getPropertyValue = (propName, type) => {
+    const prop = properties[propName];
+    if (!prop) return null;
+    
+    switch (type) {
+      case 'title':
+        return getPlainText(prop.title || []);
+      case 'select':
+        return prop.select?.name || '';
+      case 'checkbox':
+        return prop.checkbox || false;
+      default:
+        return '';
+    }
+  };
+  
+  const title = getPropertyValue('Title', 'title') || 'Untitled';
+  const slug = title.toLowerCase()
+                   .replace(/[^a-z0-9\s-]/g, '')
+                   .replace(/\s+/g, '-')
+                   .trim() || page.id;
+  const status = getPropertyValue('Status', 'select') || 'Draft';
+  const isPublic = getPropertyValue('Public', 'checkbox');
+  
+  return {
+    id: page.id,
+    slug,
+    title,
+    status,
+    isPublic,
+    last_edited_time: page.last_edited_time
   };
 }
 
@@ -198,6 +238,11 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  // Force cache headers - override Vercel defaults
+  res.setHeader('Cache-Control', 'public, s-maxage=300, max-age=300, stale-while-revalidate=600');
+  res.setHeader('CDN-Cache-Control', 's-maxage=300');
+  res.setHeader('Vercel-CDN-Cache-Control', 's-maxage=300');
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
