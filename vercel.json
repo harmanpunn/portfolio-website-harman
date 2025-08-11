@@ -3,10 +3,33 @@
     "api/notion.js": {
       "maxDuration": 10
     },
+    "api/metadata.js": {
+      "maxDuration": 5
+    },
     "api/contact.js": {
       "maxDuration": 10
     }
   },
+  "headers": [
+    {
+      "source": "/api/notion",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "s-maxage=300, stale-while-revalidate=600"
+        }
+      ]
+    },
+    {
+      "source": "/api/metadata",
+      "headers": [
+        {
+          "key": "Cache-Control", 
+          "value": "s-maxage=60, stale-while-revalidate=120"
+        }
+      ]
+    }
+  ],
   "redirects": [
     {
       "source": "/linkedin",
