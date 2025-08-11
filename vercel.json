@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm run build:ssg",
+  "buildCommand": "npm run build",
   "functions": {
     "api/notion.js": {
       "maxDuration": 10
@@ -87,6 +87,10 @@
     {
       "source": "/api/(.*)",
       "destination": "/api/$1"
+    },
+    {
+      "source": "/((?!api|_next/static|_next/image|favicon.ico|static-data).*)",
+      "destination": "/index.html"
     }
   ],
   "trailingSlash": false
