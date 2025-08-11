@@ -36,8 +36,8 @@ export const BlogCard = ({ post }: BlogCardProps) => {
         )}
 
         {/* Title */}
-        <h2 className="text-xl font-serif font-bold mb-3 text-gray-800 dark:text-gray-200 group-hover:text-accent1 transition-colors">
-          <Link to={`/blog/${post.slug}`} className="after:absolute after:inset-0">
+        <h2 className="text-xl font-serif font-bold mb-3 text-gray-800 dark:text-gray-200 hover:text-accent1 transition-colors">
+          <Link to={`/blog/${post.slug}`}>
             {post.title}
           </Link>
         </h2>
@@ -60,10 +60,10 @@ export const BlogCard = ({ post }: BlogCardProps) => {
             </span>
           </div>
           
-          <div className="flex items-center gap-1 text-accent1 group-hover:gap-2 transition-all">
+          <Link to={`/blog/${post.slug}`} className="flex items-center gap-1 text-accent1 group-hover:gap-2 transition-all hover:text-accent1/80">
             <span>Read more</span>
             <ArrowRight className="h-4 w-4" />
-          </div>
+          </Link>
         </div>
       </div>
     </article>
