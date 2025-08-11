@@ -36,7 +36,7 @@ export const BlogCard = ({ post }: BlogCardProps) => {
         )}
 
         {/* Title */}
-        <h2 className="text-xl font-serif font-bold mb-3 group-hover:text-accent1 transition-colors">
+        <h2 className="text-xl font-serif font-bold mb-3 text-gray-800 dark:text-gray-200 group-hover:text-accent1 transition-colors">
           <Link to={`/blog/${post.slug}`} className="after:absolute after:inset-0">
             {post.title}
           </Link>

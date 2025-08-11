@@ -100,7 +100,7 @@ const BlogPost = () => {
 
           {/* Post header */}
           <header className="mb-12">
-            <h1 className="text-4xl md:text-5xl font-serif font-bold mb-6 gradient-text leading-tight pb-2">
+            <h1 className="text-4xl md:text-5xl font-serif font-bold mb-6 text-gray-800 dark:text-gray-200 leading-tight pb-2">
               {post.title}
             </h1>
             
@@ -134,7 +134,7 @@ const BlogPost = () => {
 
           {/* Post content */}
           <div className="prose prose-lg max-w-none dark:prose-invert 
-                         prose-headings:font-serif prose-headings:gradient-text 
+                         prose-headings:font-serif prose-headings:text-gray-800 dark:prose-headings:text-gray-200
                          prose-h1:text-4xl prose-h2:text-3xl prose-h3:text-2xl
                          prose-a:text-accent1 prose-a:no-underline hover:prose-a:text-accent2 hover:prose-a:underline
                          prose-code:bg-accent1/10 prose-code:text-accent1 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:font-mono prose-code:text-sm
