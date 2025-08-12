@@ -26,7 +26,6 @@ interface PostsCache {
 
 class NotionService {
   private apiUrl: string;
-  private metadataUrl: string;
   private cache = new Map<string, CachedPost>();
   private postsCache: PostsCache | null = null;
 
@@ -36,52 +35,32 @@ class NotionService {
                   (window.location.hostname === 'localhost' 
                     ? 'http://localhost:3000/api/notion'
                     : '/api/notion');
-    
-    this.metadataUrl = import.meta.env.VITE_API_URL || 
-                       (window.location.hostname === 'localhost' 
-                         ? 'http://localhost:3000/api/metadata'
-                         : '/api/metadata');
   }
 
   async getPosts(): Promise<BlogPost[]> {
     try {
-      // First, check if we have recent posts and get metadata to see if anything changed
-      if (this.postsCache) {
-        console.log('Checking for post updates...');
-        
-        try {
-          const metadataResponse = await fetch(this.metadataUrl);
-          
-          if (metadataResponse.ok) {
-            const metadata = await metadataResponse.json();
-            
-            // Check if any post has been updated since our last cache
-            const needsUpdate = metadata.some((meta: any) => {
-              const cached = this.cache.get(meta.id);
-              return !cached || cached.lastEditedTime !== meta.last_edited_time;
-            });
-
-            if (!needsUpdate) {
-              console.log('All posts up to date, using cache');
-              return this.postsCache.posts;
-            }
-            
-            console.log('Some posts have been updated, fetching fresh data');
-          }
-        } catch (metadataError) {
-          console.warn('Failed to check metadata, using existing cache if available');
-          if (this.postsCache) {
-            return this.postsCache.posts;
-          }
-        }
+      // Check if we have recent cached posts (within 30 minutes to match server cache)
+      if (this.postsCache && (Date.now() - this.postsCache.lastFetch) < 30 * 60 * 1000) {
+        const cacheAge = Math.round((Date.now() - this.postsCache.lastFetch) / 1000 / 60);
+        console.log(`🎯 CACHE HIT: Using cached posts (${cacheAge} minutes old, ${this.postsCache.posts.length} posts)`);
+        return this.postsCache.posts;
       }
 
-      console.log('Fetching fresh posts from:', this.apiUrl);
+      if (this.postsCache) {
+        const cacheAge = Math.round((Date.now() - this.postsCache.lastFetch) / 1000 / 60);
+        console.log(`⏰ CACHE EXPIRED: Cache is ${cacheAge} minutes old, fetching fresh data`);
+      } else {
+        console.log('🆕 FRESH REQUEST: No cache found, fetching from API');
+      }
+
+      console.log('🌐 FETCHING: Fresh posts from:', this.apiUrl);
+      const startTime = performance.now();
       const response = await fetch(this.apiUrl);
+      const fetchTime = Math.round(performance.now() - startTime);
       
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        console.error('API Error Response:', {
+        console.error('❌ API ERROR:', {
           status: response.status,
           statusText: response.statusText,
           errorData
@@ -90,10 +69,11 @@ class NotionService {
       }
       
       const posts = await response.json();
-      console.log('Successfully fetched posts:', posts.length);
+      console.log(`✅ FETCH SUCCESS: ${posts.length} posts fetched in ${fetchTime}ms`);
       
       // Update cache
       this.postsCache = { posts, lastFetch: Date.now() };
+      console.log('💾 CACHE UPDATED: Posts stored in memory cache');
       
       // Update individual post cache
       posts.forEach((post: BlogPost) => {
@@ -105,67 +85,63 @@ class NotionService {
           });
         }
       });
+      console.log(`📝 INDIVIDUAL CACHE: ${posts.length} posts cached individually`);
       
       return posts;
     } catch (error) {
-      console.error('Error fetching posts:', error);
+      console.error('💥 FETCH ERROR:', error);
       
       // Return cached posts if available
       if (this.postsCache) {
-        console.warn('Using cached posts due to fetch error');
+        const cacheAge = Math.round((Date.now() - this.postsCache.lastFetch) / 1000 / 60);
+        console.warn(`🔄 FALLBACK: Using stale cache (${cacheAge} minutes old) due to fetch error`);
         return this.postsCache.posts;
       }
       
       // Return mock data as fallback for development
       if (import.meta.env.DEV) {
-        console.warn('Using mock data - Set up your API endpoint to fetch from Notion');
+        console.warn('🎭 DEV FALLBACK: Using mock data - Set up your API endpoint to fetch from Notion');
         return this.getMockPosts();
       }
       
       // In production, still return mock data if API fails so the site doesn't break
-      console.warn('API failed in production, falling back to mock data');
+      console.warn('🚨 PROD FALLBACK: API failed in production, falling back to mock data');
       return this.getMockPosts();
     }
   }
 
   async getPostBySlug(slug: string): Promise<BlogPost | null> {
     try {
-      // First check if we have this post cached
+      // First check if we have this post cached (within 30 minutes)
       const cachedEntry = Array.from(this.cache.values())
         .find(entry => entry.post.slug === slug);
 
-      if (cachedEntry) {
-        console.log('Found cached post for slug:', slug);
-        
-        // Check if the cached post is still fresh by comparing last_edited_time
-        try {
-          const metadataResponse = await fetch(`${this.metadataUrl}?slug=${slug}`);
-          
-          if (metadataResponse.ok) {
-            const metadata = await metadataResponse.json();
-            
-            if (metadata.last_edited_time === cachedEntry.lastEditedTime) {
-              console.log('Post up to date, using cache for:', slug);
-              return cachedEntry.post;
-            }
-            
-            console.log('Post has been updated, fetching fresh data for:', slug);
-          }
-        } catch (metadataError) {
-          console.warn('Failed to check metadata for:', slug, 'using cached version');
-          return cachedEntry.post;
-        }
+      if (cachedEntry && (Date.now() - cachedEntry.cachedAt) < 30 * 60 * 1000) {
+        const cacheAge = Math.round((Date.now() - cachedEntry.cachedAt) / 1000 / 60);
+        console.log(`🎯 POST CACHE HIT: Using cached post "${slug}" (${cacheAge} minutes old)`);
+        return cachedEntry.post;
       }
 
-      console.log('Fetching fresh post by slug:', slug, 'from:', this.apiUrl);
+      if (cachedEntry) {
+        const cacheAge = Math.round((Date.now() - cachedEntry.cachedAt) / 1000 / 60);
+        console.log(`⏰ POST CACHE EXPIRED: Post "${slug}" cache is ${cacheAge} minutes old`);
+      } else {
+        console.log(`🆕 POST FRESH REQUEST: No cache found for "${slug}"`);
+      }
+
+      console.log(`🌐 FETCHING POST: "${slug}" from:`, this.apiUrl);
+      const startTime = performance.now();
       const response = await fetch(`${this.apiUrl}?slug=${slug}`);
+      const fetchTime = Math.round(performance.now() - startTime);
       
       if (!response.ok) {
         if (response.status === 404) {
+          console.log(`❌ POST NOT FOUND: "${slug}" returned 404`);
           return null;
         }
         const errorData = await response.json().catch(() => ({}));
-        console.error('API Error Response:', {
+        console.error('❌ POST API ERROR:', {
+          slug,
           status: response.status,
           statusText: response.statusText,
           errorData
@@ -174,7 +150,7 @@ class NotionService {
       }
       
       const post = await response.json();
-      console.log('Successfully fetched post:', post.title);
+      console.log(`✅ POST FETCH SUCCESS: "${post.title}" fetched in ${fetchTime}ms`);
       
       // Update cache
       if (post.last_edited_time) {
@@ -183,28 +159,32 @@ class NotionService {
           lastEditedTime: post.last_edited_time,
           cachedAt: Date.now()
         });
+        console.log(`💾 POST CACHED: "${slug}" stored in individual cache`);
       }
       
       return post;
     } catch (error) {
-      console.error('Error fetching post by slug:', error);
+      console.error(`💥 POST FETCH ERROR for "${slug}":`, error);
       
       // Return cached version if available
       const cachedEntry = Array.from(this.cache.values())
         .find(entry => entry.post.slug === slug);
         
       if (cachedEntry) {
-        console.warn('Using cached post due to fetch error:', slug);
+        const cacheAge = Math.round((Date.now() - cachedEntry.cachedAt) / 1000 / 60);
+        console.warn(`🔄 POST FALLBACK: Using stale cache for "${slug}" (${cacheAge} minutes old)`);
         return cachedEntry.post;
       }
       
       // Return mock data as fallback for development
       if (import.meta.env.DEV) {
+        console.warn(`🎭 POST DEV FALLBACK: Using mock data for "${slug}"`);
         const mockPosts = this.getMockPosts();
         return mockPosts.find(post => post.slug === slug) || null;
       }
       
       // In production, still try to return mock data
+      console.warn(`🚨 POST PROD FALLBACK: Using mock data for "${slug}"`);
       const mockPosts = this.getMockPosts();
       return mockPosts.find(post => post.slug === slug) || null;
     }

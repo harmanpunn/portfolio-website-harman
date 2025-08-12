@@ -5,13 +5,25 @@ import Footer from '@/components/Footer';
 import { BlogCard } from '@/components/BlogCard';
 import { SEOHead } from '@/components/SEOHead';
 import { Loader2 } from 'lucide-react';
+import { useEffect } from 'react';
 
 const Blog = () => {
-  const { data: posts, isLoading, error } = useQuery({
+  const { data: posts, isLoading, error, isFetching, isStale } = useQuery({
     queryKey: ['blog-posts'],
-    queryFn: () => notionService.getPosts(),
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    queryFn: () => {
+      console.log('🔄 REACT QUERY: Executing queryFn (cache miss or stale)');
+      return notionService.getPosts();
+    },
+    staleTime: 30 * 60 * 1000, // 30 minutes - match server cache
+    gcTime: 2 * 60 * 60 * 1000, // Keep in cache for 2 hours
   });
+
+  // Log React Query cache status
+  useEffect(() => {
+    if (posts) {
+      console.log(`📊 REACT QUERY STATUS: ${posts.length} posts loaded | Loading: ${isLoading} | Fetching: ${isFetching} | Stale: ${isStale}`);
+    }
+  }, [posts, isLoading, isFetching, isStale]);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
