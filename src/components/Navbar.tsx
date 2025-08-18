@@ -12,9 +12,6 @@ const Navbar = () => {
   const isHomePage = location.pathname === '/';
 
   useEffect(() => {
-    // Only run on the client side
-    if (typeof window === 'undefined') return;
-    
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
     };
@@ -49,7 +46,7 @@ const Navbar = () => {
           )}
           <Link to="/blog" className="nav-link">Blog</Link>
           <a 
-            href="/harmanpreetresume.pdf"
+            href={`${window.location.origin}/harmanpreetresume.pdf`}
             target="_blank" 
             rel="noopener noreferrer"
             className="ml-4 px-5 py-2 rounded-full border border-accent1 text-accent1 font-medium transition-all hover:shadow-sm hover:scale-105"
@@ -86,7 +83,7 @@ const Navbar = () => {
             )}
             <Link to="/blog" className="nav-link" onClick={toggleMenu}>Blog</Link>
             <a 
-              href="/harmanpreetresume.pdf"
+              href={`${window.location.origin}/harmanpreetresume.pdf`}
               target="_blank" 
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center px-5 py-2 mt-2 rounded-full border border-accent1 text-accent1 font-medium transition-all hover:shadow-sm"
