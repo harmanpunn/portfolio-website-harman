@@ -58,18 +58,10 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  // Vercel Edge Cache optimization for metadata
-  res.setHeader('Cache-Control', 'public, s-maxage=300, max-age=60, stale-while-revalidate=1800');
-  res.setHeader('CDN-Cache-Control', 'public, s-maxage=300');
-  res.setHeader('Vercel-CDN-Cache-Control', 'public, s-maxage=300');
-  
-  // Add cache tags for metadata
-  const { slug } = req.query;
-  if (slug) {
-    res.setHeader('Cache-Tag', `notion-metadata-${slug}, notion-metadata`);
-  } else {
-    res.setHeader('Cache-Tag', 'notion-metadata');
-  }
+  // Force cache headers for metadata (shorter cache time)
+  res.setHeader('Cache-Control', 'public, s-maxage=60, max-age=60, stale-while-revalidate=120');
+  res.setHeader('CDN-Cache-Control', 's-maxage=60');
+  res.setHeader('Vercel-CDN-Cache-Control', 's-maxage=60');
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();

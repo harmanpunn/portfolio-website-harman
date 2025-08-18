@@ -26,15 +26,42 @@ interface PostsCache {
 
 class NotionService {
   private apiUrl: string;
+  private metadataUrl: string;
   private cache = new Map<string, CachedPost>();
   private postsCache: PostsCache | null = null;
+  private staticMode: boolean;
 
   constructor() {
-    // Use environment variable if available, otherwise determine based on current URL
-    this.apiUrl = import.meta.env.VITE_API_URL || 
-                  (window.location.hostname === 'localhost' 
-                    ? 'http://localhost:3000/api/notion'
-                    : '/api/notion');
+    // Detect if we're in static mode (static data available)
+    this.staticMode = false;
+    
+    // Use environment variable if available, otherwise determine based on current environment
+    if (import.meta.env.VITE_API_URL) {
+      this.apiUrl = import.meta.env.VITE_API_URL;
+      this.metadataUrl = import.meta.env.VITE_API_URL;
+    } else if (typeof window !== 'undefined') {
+      // Client-side: use window.location
+      this.apiUrl = window.location.hostname === 'localhost' 
+        ? 'http://localhost:3000/api/notion'
+        : '/api/notion';
+      this.metadataUrl = window.location.hostname === 'localhost' 
+        ? 'http://localhost:3000/api/metadata'
+        : '/api/metadata';
+    } else {
+      // Server-side: use production URLs
+      this.apiUrl = '/api/notion';
+      this.metadataUrl = '/api/metadata';
+    }
+  }
+
+  // Try to load static data first, fall back to API
+  async tryStaticFirst(loader: () => Promise<any>, fallback: () => Promise<any>) {
+    try {
+      return await loader();
+    } catch (error) {
+      console.log('Static data not available, falling back to API');
+      return await fallback();
+    }
   }
 
   async getPosts(): Promise<BlogPost[]> {
@@ -75,73 +102,112 @@ class NotionService {
 
     // Fallback to cache checking and API
     try {
-      // Check if we have recent cached posts (within 30 minutes to match server cache)
-      if (this.postsCache && (Date.now() - this.postsCache.lastFetch) < 30 * 60 * 1000) {
-        const cacheAge = Math.round((Date.now() - this.postsCache.lastFetch) / 1000 / 60);
-        console.log(`🎯 CACHE HIT: Using cached posts (${cacheAge} minutes old, ${this.postsCache.posts.length} posts)`);
-        return this.postsCache.posts;
-      }
-
+      // Check if we have recent posts and get metadata to see if anything changed
       if (this.postsCache) {
-        const cacheAge = Math.round((Date.now() - this.postsCache.lastFetch) / 1000 / 60);
-        console.log(`⏰ CACHE EXPIRED: Cache is ${cacheAge} minutes old, fetching fresh data`);
-      } else {
-        console.log('🆕 FRESH REQUEST: No cache found, fetching from API');
+        console.log('Checking for post updates...');
+        
+        try {
+          const metadataResponse = await fetch(this.metadataUrl);
+          
+          if (metadataResponse.ok) {
+            const metadata = await metadataResponse.json();
+            
+            // Check if any post has been updated since our last cache
+            const needsUpdate = metadata.some((meta: any) => {
+              const cached = this.cache.get(meta.id);
+              return !cached || cached.lastEditedTime !== meta.last_edited_time;
+            });
+
+            if (!needsUpdate) {
+              console.log('All posts up to date, using cache');
+              return this.postsCache.posts;
+            }
+            
+            console.log('Some posts have been updated, fetching fresh data');
+          }
+        } catch (metadataError) {
+          console.warn('Failed to check metadata, using existing cache if available');
+          if (this.postsCache) {
+            return this.postsCache.posts;
+          }
+        }
       }
 
-      console.log('🌐 FETCHING: Fresh posts from:', this.apiUrl);
-      const startTime = performance.now();
-      const response = await fetch(this.apiUrl);
-      const fetchTime = Math.round(performance.now() - startTime);
-      
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        console.error('❌ API ERROR:', {
-          status: response.status,
-          statusText: response.statusText,
-          errorData
-        });
-        throw new Error(`Failed to fetch posts: ${response.status} ${response.statusText}`);
-      }
-      
-      const posts = await response.json();
-      console.log(`✅ FETCH SUCCESS: ${posts.length} posts fetched in ${fetchTime}ms`);
-      
-      // Update cache
-      this.postsCache = { posts, lastFetch: Date.now() };
-      console.log('💾 CACHE UPDATED: Posts stored in memory cache');
-      
-      // Update individual post cache
-      posts.forEach((post: BlogPost) => {
-        if (post.last_edited_time) {
-          this.cache.set(post.id, {
-            post,
-            lastEditedTime: post.last_edited_time,
-            cachedAt: Date.now()
+      return await this.tryStaticFirst(
+        // Try static data first
+        async () => {
+          console.log('Loading posts from static data...');
+          const response = await fetch('/static-data/posts.json');
+          if (!response.ok) throw new Error('Static data not available');
+          const posts = await response.json();
+          console.log('Successfully loaded', posts.length, 'posts from static data');
+          
+          // Update cache
+          this.postsCache = { posts, lastFetch: Date.now() };
+          posts.forEach((post: BlogPost) => {
+            if (post.last_edited_time) {
+              this.cache.set(post.id, {
+                post,
+                lastEditedTime: post.last_edited_time,
+                cachedAt: Date.now()
+              });
+            }
           });
+          
+          return posts;
+        },
+        // Fallback to API
+        async () => {
+          console.log('Fetching fresh posts from:', this.apiUrl);
+          const response = await fetch(this.apiUrl);
+          
+          if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            console.error('API Error Response:', {
+              status: response.status,
+              statusText: response.statusText,
+              errorData
+            });
+            throw new Error(`Failed to fetch posts: ${response.status} ${response.statusText}`);
+          }
+          
+          const posts = await response.json();
+          console.log('Successfully fetched posts:', posts.length);
+          
+          // Update cache
+          this.postsCache = { posts, lastFetch: Date.now() };
+          
+          // Update individual post cache
+          posts.forEach((post: BlogPost) => {
+            if (post.last_edited_time) {
+              this.cache.set(post.id, {
+                post,
+                lastEditedTime: post.last_edited_time,
+                cachedAt: Date.now()
+              });
+            }
+          });
+          
+          return posts;
         }
-      });
-      console.log(`📝 INDIVIDUAL CACHE: ${posts.length} posts cached individually`);
-      
-      return posts;
+      );
     } catch (error) {
-      console.error('💥 FETCH ERROR:', error);
+      console.error('Error fetching posts:', error);
       
       // Return cached posts if available
       if (this.postsCache) {
-        const cacheAge = Math.round((Date.now() - this.postsCache.lastFetch) / 1000 / 60);
-        console.warn(`🔄 FALLBACK: Using stale cache (${cacheAge} minutes old) due to fetch error`);
+        console.warn('Using cached posts due to fetch error');
         return this.postsCache.posts;
       }
       
       // Return mock data as fallback for development
       if (import.meta.env.DEV) {
-        console.warn('🎭 DEV FALLBACK: Using mock data - Set up your API endpoint to fetch from Notion');
+        console.warn('Using mock data - Set up your API endpoint to fetch from Notion');
         return this.getMockPosts();
       }
       
       // In production, still return mock data if API fails so the site doesn't break
-      console.warn('🚨 PROD FALLBACK: API failed in production, falling back to mock data');
+      console.warn('API failed in production, falling back to mock data');
       return this.getMockPosts();
     }
   }
@@ -206,79 +272,99 @@ class NotionService {
 
     // Fallback to original API logic
     try {
-      // First check if we have this post cached (within 30 minutes)
-      const cachedEntry = Array.from(this.cache.values())
-        .find(entry => entry.post.slug === slug);
+      return await this.tryStaticFirst(
+        // Try static data first (this is now redundant but kept for compatibility)
+        async () => {
+          console.log('Loading post from static data (fallback):', slug);
+          const response = await fetch(`/static-data/post-${slug}.json`);
+          if (!response.ok) throw new Error('Static post not available');
+          const post = await response.json();
+          console.log('Successfully loaded post from static data:', post.title);
+          
+          // Update cache
+          if (post.last_edited_time) {
+            this.cache.set(post.id, {
+              post,
+              lastEditedTime: post.last_edited_time,
+              cachedAt: Date.now()
+            });
+          }
+          
+          return post;
+        },
+        // Fallback to API with caching logic
+        async () => {
+          // First check if we have this post cached
+          const cachedEntry = Array.from(this.cache.values())
+            .find(entry => entry.post.slug === slug);
 
-      if (cachedEntry && (Date.now() - cachedEntry.cachedAt) < 30 * 60 * 1000) {
-        const cacheAge = Math.round((Date.now() - cachedEntry.cachedAt) / 1000 / 60);
-        console.log(`🎯 POST CACHE HIT: Using cached post "${slug}" (${cacheAge} minutes old)`);
-        return cachedEntry.post;
-      }
+          if (cachedEntry) {
+            console.log('Found cached post for slug:', slug);
+            
+            // Check if the cached post is still fresh by comparing last_edited_time
+            try {
+              const metadataResponse = await fetch(`${this.metadataUrl}?slug=${slug}`);
+              
+              if (metadataResponse.ok) {
+                const metadata = await metadataResponse.json();
+                
+                if (metadata.last_edited_time === cachedEntry.lastEditedTime) {
+                  console.log('Post up to date, using cache for:', slug);
+                  return cachedEntry.post;
+                }
+                
+                console.log('Post has been updated, fetching fresh data for:', slug);
+              }
+            } catch (metadataError) {
+              console.warn('Failed to check metadata for:', slug, 'using cached version');
+              return cachedEntry.post;
+            }
+          }
 
-      if (cachedEntry) {
-        const cacheAge = Math.round((Date.now() - cachedEntry.cachedAt) / 1000 / 60);
-        console.log(`⏰ POST CACHE EXPIRED: Post "${slug}" cache is ${cacheAge} minutes old`);
-      } else {
-        console.log(`🆕 POST FRESH REQUEST: No cache found for "${slug}"`);
-      }
-
-      console.log(`🌐 FETCHING POST: "${slug}" from:`, this.apiUrl);
-      const startTime = performance.now();
-      const response = await fetch(`${this.apiUrl}?slug=${slug}`);
-      const fetchTime = Math.round(performance.now() - startTime);
-      
-      if (!response.ok) {
-        if (response.status === 404) {
-          console.log(`❌ POST NOT FOUND: "${slug}" returned 404`);
-          return null;
+          console.log('Fetching fresh post by slug:', slug, 'from:', this.apiUrl);
+          const response = await fetch(`${this.apiUrl}?slug=${slug}`);
+          
+          if (!response.ok) {
+            if (response.status === 404) {
+              return null;
+            }
+            const errorData = await response.json().catch(() => ({}));
+            console.error('API Error Response:', {
+              status: response.status,
+              statusText: response.statusText,
+              errorData
+            });
+            throw new Error(`Failed to fetch post: ${response.status} ${response.statusText}`);
+          }
+          
+          const post = await response.json();
+          console.log('Successfully fetched post:', post.title);
+          
+          // Update cache
+          if (post.last_edited_time) {
+            this.cache.set(post.id, {
+              post,
+              lastEditedTime: post.last_edited_time,
+              cachedAt: Date.now()
+            });
+          }
+          
+          return post;
         }
-        const errorData = await response.json().catch(() => ({}));
-        console.error('❌ POST API ERROR:', {
-          slug,
-          status: response.status,
-          statusText: response.statusText,
-          errorData
-        });
-        throw new Error(`Failed to fetch post: ${response.status} ${response.statusText}`);
-      }
-      
-      const post = await response.json();
-      console.log(`✅ POST FETCH SUCCESS: "${post.title}" fetched in ${fetchTime}ms`);
-      
-      // Update cache
-      if (post.last_edited_time) {
-        this.cache.set(post.id, {
-          post,
-          lastEditedTime: post.last_edited_time,
-          cachedAt: Date.now()
-        });
-        console.log(`💾 POST CACHED: "${slug}" stored in individual cache`);
-      }
-      
-      return post;
+      );
     } catch (error) {
-      console.error(`💥 POST FETCH ERROR for "${slug}":`, error);
+      console.error('Error fetching post by slug:', error);
       
       // Return cached version if available
       const cachedEntry = Array.from(this.cache.values())
         .find(entry => entry.post.slug === slug);
         
       if (cachedEntry) {
-        const cacheAge = Math.round((Date.now() - cachedEntry.cachedAt) / 1000 / 60);
-        console.warn(`🔄 POST FALLBACK: Using stale cache for "${slug}" (${cacheAge} minutes old)`);
+        console.warn('Using cached post due to fetch error:', slug);
         return cachedEntry.post;
       }
       
-      // Return mock data as fallback for development
-      if (import.meta.env.DEV) {
-        console.warn(`🎭 POST DEV FALLBACK: Using mock data for "${slug}"`);
-        const mockPosts = this.getMockPosts();
-        return mockPosts.find(post => post.slug === slug) || null;
-      }
-      
-      // In production, still try to return mock data
-      console.warn(`🚨 POST PROD FALLBACK: Using mock data for "${slug}"`);
+      // Return mock data as fallback
       const mockPosts = this.getMockPosts();
       return mockPosts.find(post => post.slug === slug) || null;
     }

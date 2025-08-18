@@ -239,18 +239,10 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  // Vercel Edge Cache optimization
-  res.setHeader('Cache-Control', 'public, s-maxage=1800, max-age=60, stale-while-revalidate=86400');
-  res.setHeader('CDN-Cache-Control', 'public, s-maxage=1800');
-  res.setHeader('Vercel-CDN-Cache-Control', 'public, s-maxage=1800');
-  
-  // Add cache tags for better invalidation
-  const { slug } = req.query;
-  if (slug) {
-    res.setHeader('Cache-Tag', `notion-post-${slug}, notion-posts`);
-  } else {
-    res.setHeader('Cache-Tag', 'notion-posts');
-  }
+  // Force cache headers - override Vercel defaults
+  res.setHeader('Cache-Control', 'public, s-maxage=300, max-age=300, stale-while-revalidate=600');
+  res.setHeader('CDN-Cache-Control', 's-maxage=300');
+  res.setHeader('Vercel-CDN-Cache-Control', 's-maxage=300');
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
@@ -286,7 +278,7 @@ export default async function handler(req, res) {
     const { slug } = req.query;
 
     if (slug && typeof slug === 'string') {
-      console.log('🔍 API REQUEST: Single post with slug:', slug);
+      console.log('Fetching single post with slug:', slug);
       
       // Get a single post by slug - simplified query
       const response = await notion.databases.query({
@@ -310,14 +302,14 @@ export default async function handler(req, res) {
       const post = publishedPosts.find(p => p.slug === slug);
       
       if (!post) {
-        console.log('❌ API: No published post found with slug:', slug);
+        console.log('No published post found with slug:', slug);
         return res.status(404).json({ error: 'Post not found' });
       }
 
-      console.log('✅ API SUCCESS: Successfully fetched post:', post.title);
+      console.log('Successfully fetched post:', post.title);
       return res.status(200).json(post);
     } else {
-      console.log('📚 API REQUEST: Fetching all posts');
+      console.log('Fetching all posts');
       
       // Get all posts - remove filters for now to see what we get
       const response = await notion.databases.query({
@@ -325,7 +317,7 @@ export default async function handler(req, res) {
         // Remove filters and sorting for now - we'll handle filtering on the client side
       });
 
-      console.log('📊 API: Found', response.results.length, 'posts in database');
+      console.log('Found', response.results.length, 'posts');
 
       const allPosts = await Promise.all(
         response.results.map(async (page) => {
@@ -339,8 +331,7 @@ export default async function handler(req, res) {
         post.status === 'Published' && post.isPublic === true
       );
 
-      console.log('✅ API SUCCESS: Successfully processed', publishedPosts.length, 'published posts');
-      console.log('🚀 API CACHE: Response will be cached for 30 minutes');
+      console.log('Successfully processed', publishedPosts.length, 'published posts');
       return res.status(200).json(publishedPosts);
     }
   } catch (error) {
