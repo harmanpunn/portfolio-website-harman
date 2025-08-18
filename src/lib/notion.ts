@@ -139,6 +139,13 @@ class NotionService {
           console.log('Loading posts from static data...');
           const response = await fetch('/static-data/posts.json');
           if (!response.ok) throw new Error('Static data not available');
+          
+          // Check if response is actually JSON before parsing
+          const contentType = response.headers.get('content-type');
+          if (!contentType || !contentType.includes('application/json')) {
+            throw new Error('Static data returned non-JSON content');
+          }
+          
           const posts = await response.json();
           console.log('Successfully loaded', posts.length, 'posts from static data');
           
@@ -278,6 +285,13 @@ class NotionService {
           console.log('Loading post from static data (fallback):', slug);
           const response = await fetch(`/static-data/post-${slug}.json`);
           if (!response.ok) throw new Error('Static post not available');
+          
+          // Check if response is actually JSON before parsing
+          const contentType = response.headers.get('content-type');
+          if (!contentType || !contentType.includes('application/json')) {
+            throw new Error('Static post returned non-JSON content');
+          }
+          
           const post = await response.json();
           console.log('Successfully loaded post from static data:', post.title);
           

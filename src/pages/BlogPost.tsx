@@ -58,6 +58,13 @@ const BlogPost = () => {
         // Try static data first - load all posts and find the specific one
         const response = await fetch(`/static-data/posts.json`);
         if (response.ok) {
+          // Check if response is actually JSON before parsing
+          const contentType = response.headers.get('content-type');
+          if (!contentType || !contentType.includes('application/json')) {
+            console.warn('Static data returned non-JSON content, falling back to API');
+            throw new Error('Non-JSON response from static data');
+          }
+          
           const posts = await response.json();
           const staticPost = posts.find((p: any) => p.slug === slug);
           if (staticPost) {
