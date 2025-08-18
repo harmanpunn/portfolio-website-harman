@@ -182,7 +182,7 @@ const BlogPost = () => {
               {post.tags.length > 0 && (
                 <div className="flex items-center gap-2">
                   <Tag className="h-4 w-4" />
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2">
                     {post.tags.map((tag) => (
                       <span
                         key={tag}
