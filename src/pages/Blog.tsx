@@ -5,25 +5,61 @@ import Footer from '@/components/Footer';
 import { BlogCard } from '@/components/BlogCard';
 import { SEOHead } from '@/components/SEOHead';
 import { BlogPost } from '@/lib/notion';
+import { safeJsonFetch } from '@/lib/safeJsonFetch';
+import { Loader2 } from 'lucide-react';
 
 const Blog = () => {
   // Try to get pre-loaded data from SSG loader
   let loaderData: { posts?: BlogPost[] } = {};
+  let hasLoaderData = false;
+  
   try {
     loaderData = (useLoaderData() as { posts?: BlogPost[] }) || {};
+    hasLoaderData = !!loaderData.posts && loaderData.posts.length > 0;
+    console.log('Blog loader data:', loaderData, 'hasLoaderData:', hasLoaderData);
   } catch (err) {
     // Loader data not available (direct navigation)
     loaderData = {};
+    hasLoaderData = false;
+    console.log('No blog loader data available');
   }
 
-  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [posts, setPosts] = useState<BlogPost[]>(hasLoaderData ? loaderData.posts || [] : []);
+  const [isLoading, setIsLoading] = useState(!hasLoaderData);
+  const [error, setError] = useState<Error | null>(null);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
-    // Set posts data after hydration
-    if (loaderData.posts) {
-      setPosts(loaderData.posts);
-    }
-  }, [loaderData.posts]);
+    const initializePosts = async () => {
+      // Mark as hydrated after component mount
+      setIsHydrated(true);
+      
+      // If we have SSG loader data, use it immediately
+      if (hasLoaderData && loaderData.posts) {
+        console.log('Using SSG loader data for blog posts');
+        setPosts(loaderData.posts);
+        setIsLoading(false);
+        return;
+      }
+
+      // Fallback: Load posts client-side for direct navigation
+      setIsLoading(true);
+      setError(null);
+      
+      try {
+        // Try static data first
+        const staticPosts = await safeJsonFetch('/static-data/posts.json');
+        setPosts(staticPosts);
+      } catch (err) {
+        console.error('Error loading blog posts:', err);
+        setError(err as Error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    initializePosts();
+  }, [hasLoaderData, loaderData.posts]);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -46,7 +82,16 @@ const Blog = () => {
           </div>
 
           {/* Blog posts grid */}
-          {posts.length === 0 ? (
+          {isLoading || !isHydrated ? (
+            <div className="flex justify-center items-center py-16">
+              <Loader2 className="h-8 w-8 animate-spin" />
+            </div>
+          ) : error ? (
+            <div className="text-center py-16">
+              <p className="text-red-500 mb-4">Error loading blog posts</p>
+              <p className="text-foreground/70">{error.message}</p>
+            </div>
+          ) : posts.length === 0 ? (
             <div className="text-center py-16">
               <p className="text-foreground/70">No blog posts yet. Check back soon!</p>
             </div>

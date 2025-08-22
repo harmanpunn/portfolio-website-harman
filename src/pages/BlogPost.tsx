@@ -67,18 +67,24 @@ const BlogPost = () => {
       
       try {
         // Try static data first - load all posts and find the specific one
-        const posts = await safeJsonFetch('/static-data/posts.json');
-        const staticPost = posts.find((p: any) => p.slug === slug);
-        
-        if (staticPost) {
-          setPost(staticPost);
-          return;
+        try {
+          const posts = await safeJsonFetch('/static-data/posts.json');
+          const staticPost = posts.find((p: any) => p.slug === slug);
+          
+          if (staticPost) {
+            console.log('Found post in static data:', staticPost.title);
+            setPost(staticPost);
+            return;
+          }
+        } catch (staticErr) {
+          console.log('Static data not available, trying API fallback');
         }
         
         // Fallback to API if static data not available or post not found
         const { notionService } = await import('@/lib/notion');
         const apiPost = await notionService.getPostBySlug(slug);
         if (apiPost) {
+          console.log('Found post via API:', apiPost.title);
           setPost(apiPost);
         } else {
           throw new Error('Post not found');
