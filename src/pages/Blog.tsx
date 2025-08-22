@@ -16,10 +16,10 @@ const Blog = () => {
     loaderData = {};
   }
 
-  const [posts, setPosts] = useState<BlogPost[]>(loaderData.posts || []);
+  const [posts, setPosts] = useState<BlogPost[]>([]);
 
   useEffect(() => {
-    // Update if loader data changes
+    // Set posts data after hydration
     if (loaderData.posts) {
       setPosts(loaderData.posts);
     }

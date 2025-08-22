@@ -6,6 +6,8 @@ import fs from "fs";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
+  // Ensure consistent base path for SSG
+  base: '/',
   server: {
     host: "::",
     port: 8080,
@@ -50,6 +52,11 @@ export default defineConfig(({ mode }) => ({
     // Build-time optimizations
     dirStyle: 'nested', // Creates SEO-friendly URLs like /blog/post-title/
     script: 'async',
+    
+    // Fix for static loader data manifest filename
+    // Ensure consistent build ID generation
+    mock: false,
+    format: 'esm',
     
     // Critical CSS generation for faster loading
     beastiesOptions: {

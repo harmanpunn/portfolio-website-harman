@@ -27,56 +27,80 @@ const BlogPost = () => {
     console.log('No SSG loader data, will fetch client-side');
   }
   
-  // Initialize state with loader data to prevent hydration mismatch
-  const [post, setPost] = useState<BlogPostType | null>(loaderPost);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(hasLoaderData && !loaderPost ? new Error('Post not found') : null);
+  // Initialize state to prevent hydration mismatch - always start with null on client
+  const [post, setPost] = useState<BlogPostType | null>(null);
+  const [isLoading, setIsLoading] = useState(!hasLoaderData);
+  const [error, setError] = useState<Error | null>(null);
+  const [isHydrated, setIsHydrated] = useState(false);
 
+  // Handle hydration and data loading
   useEffect(() => {
-    // If we already have loader data, we're done
-    if (hasLoaderData) {
-      if (loaderPost) {
-        console.log('Using SSG loader data:', loaderPost.title);
-      } else {
-        console.log('SSG data indicates post not found');
+    const initializePost = async () => {
+      // Mark as hydrated after component mount
+      setIsHydrated(true);
+      
+      // If we have SSG loader data, use it immediately
+      if (hasLoaderData) {
+        if (loaderPost) {
+          console.log('Using SSG loader data:', loaderPost.title);
+          setPost(loaderPost);
+          setIsLoading(false);
+        } else {
+          console.log('SSG data indicates post not found');
+          setError(new Error('Post not found'));
+          setIsLoading(false);
+        }
+        return;
       }
-      return;
-    }
 
-    // If no slug, we can't load anything
-    if (!slug) {
-      setError(new Error('No post slug provided'));
-      return;
-    }
+      // If no slug, we can't load anything
+      if (!slug) {
+        setError(new Error('No post slug provided'));
+        setIsLoading(false);
+        return;
+      }
 
-    // Fallback: Load post data client-side for direct navigation
-    const loadPost = async () => {
+      // Fallback: Load post data client-side for direct navigation
       setIsLoading(true);
       setError(null);
       
       try {
+        // Wait for proper initialization to avoid race conditions
+        if (typeof window !== 'undefined') {
+          await new Promise(resolve => setTimeout(resolve, 100));
+        }
+        
         // Try static data first - load all posts and find the specific one
-        const response = await fetch(`/static-data/posts.json`);
+        const response = await fetch('/static-data/posts.json', {
+          headers: { 
+            'Accept': 'application/json',
+            'Cache-Control': 'no-cache'
+          }
+        });
+        
         if (response.ok) {
           // Check if response is actually JSON before parsing
           const contentType = response.headers.get('content-type');
-          if (!contentType || !contentType.includes('application/json')) {
+          if (contentType && contentType.includes('application/json')) {
+            const posts = await response.json();
+            const staticPost = posts.find((p: any) => p.slug === slug);
+            if (staticPost) {
+              setPost(staticPost);
+              return;
+            }
+          } else {
             console.warn('Static data returned non-JSON content, falling back to API');
-            throw new Error('Non-JSON response from static data');
-          }
-          
-          const posts = await response.json();
-          const staticPost = posts.find((p: any) => p.slug === slug);
-          if (staticPost) {
-            setPost(staticPost);
-            return;
           }
         }
         
         // Fallback to API if static data not available or post not found
         const { notionService } = await import('@/lib/notion');
         const apiPost = await notionService.getPostBySlug(slug);
-        setPost(apiPost);
+        if (apiPost) {
+          setPost(apiPost);
+        } else {
+          throw new Error('Post not found');
+        }
       } catch (err) {
         console.error('Error loading post:', err);
         setError(err as Error);
@@ -85,11 +109,11 @@ const BlogPost = () => {
       }
     };
 
-    loadPost();
+    initializePost();
   }, [slug, hasLoaderData, loaderPost]);
 
-  // Show loading state when fetching data client-side
-  if (isLoading) {
+  // Show loading state when fetching data client-side or during hydration
+  if (isLoading || !isHydrated) {
     return (
       <div className="min-h-screen bg-background text-foreground">
         <SEOHead />
