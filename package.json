@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite-react-ssg dev",
     "dev:spa": "vite",
-    "build": "npm run fetch-content && vite-react-ssg build && npm run inject-seo",
+    "build": "npm run fetch-content && vite-react-ssg build && npm run inject-seo && node scripts/generate-manifest-pointer.mjs",
     "build:dev": "npm run fetch-content && vite-react-ssg build --mode development",
     "build:spa": "npm run fetch-content && tsc && vite build",
     "fetch-content": "node scripts/fetch-content.mjs",

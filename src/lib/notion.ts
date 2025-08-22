@@ -1,4 +1,5 @@
 import { Client } from '@notionhq/client';
+import { safeJsonFetch } from './safeJsonFetch';
 
 export interface BlogPost {
   id: string;
@@ -137,16 +138,7 @@ class NotionService {
         // Try static data first
         async () => {
           console.log('Loading posts from static data...');
-          const response = await fetch('/static-data/posts.json');
-          if (!response.ok) throw new Error('Static data not available');
-          
-          // Check if response is actually JSON before parsing
-          const contentType = response.headers.get('content-type');
-          if (!contentType || !contentType.includes('application/json')) {
-            throw new Error('Static data returned non-JSON content');
-          }
-          
-          const posts = await response.json();
+          const posts = await safeJsonFetch('/static-data/posts.json');
           console.log('Successfully loaded', posts.length, 'posts from static data');
           
           // Update cache
@@ -252,27 +244,14 @@ class NotionService {
     // Try to find in static posts.json
     try {
       console.log('📁 Trying to find post in posts.json...');
-      const postsResponse = await fetch('/static-data/posts.json');
-      console.log('📁 Posts.json response:', {
-        ok: postsResponse.ok,
-        status: postsResponse.status
-      });
-      
-      if (postsResponse.ok) {
-        const contentType = postsResponse.headers.get('content-type');
-        if (!contentType || !contentType.includes('application/json')) {
-          console.warn('📁 Posts.json returned non-JSON:', contentType);
-          throw new Error('Non-JSON response from posts.json');
-        }
-        
-        const posts = await postsResponse.json();
-        const post = posts.find((p: BlogPost) => p.slug === slug);
-        if (post) {
-          console.log('📁 Found post in static posts data:', slug);
-          return post;
-        }
-        console.log('📁 Post not found in static posts data:', slug);
+      const posts = await safeJsonFetch('/static-data/posts.json');
+      console.log('📁 Successfully loaded posts from static data');
+      const post = posts.find((p: BlogPost) => p.slug === slug);
+      if (post) {
+        console.log('📁 Found post in static posts data:', slug);
+        return post;
       }
+      console.log('📁 Post not found in static posts data:', slug);
     } catch (error) {
       console.log('📡 Could not load static posts data:', error);
     }
@@ -283,16 +262,7 @@ class NotionService {
         // Try static data first (this is now redundant but kept for compatibility)
         async () => {
           console.log('Loading post from static data (fallback):', slug);
-          const response = await fetch(`/static-data/post-${slug}.json`);
-          if (!response.ok) throw new Error('Static post not available');
-          
-          // Check if response is actually JSON before parsing
-          const contentType = response.headers.get('content-type');
-          if (!contentType || !contentType.includes('application/json')) {
-            throw new Error('Static post returned non-JSON content');
-          }
-          
-          const post = await response.json();
+          const post = await safeJsonFetch(`/static-data/post-${slug}.json`);
           console.log('Successfully loaded post from static data:', post.title);
           
           // Update cache

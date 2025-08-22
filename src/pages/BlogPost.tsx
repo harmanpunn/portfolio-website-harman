@@ -7,6 +7,7 @@ import { Navbar } from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { SEOHead } from '@/components/SEOHead';
 import { ClickableImage } from '@/components/ClickableImage';
+import { safeJsonFetch } from '@/lib/safeJsonFetch';
 import { ArrowLeft, Calendar, Tag, Loader2 } from 'lucide-react';
 
 const BlogPost = () => {
@@ -65,32 +66,13 @@ const BlogPost = () => {
       setError(null);
       
       try {
-        // Wait for proper initialization to avoid race conditions
-        if (typeof window !== 'undefined') {
-          await new Promise(resolve => setTimeout(resolve, 100));
-        }
-        
         // Try static data first - load all posts and find the specific one
-        const response = await fetch('/static-data/posts.json', {
-          headers: { 
-            'Accept': 'application/json',
-            'Cache-Control': 'no-cache'
-          }
-        });
+        const posts = await safeJsonFetch('/static-data/posts.json');
+        const staticPost = posts.find((p: any) => p.slug === slug);
         
-        if (response.ok) {
-          // Check if response is actually JSON before parsing
-          const contentType = response.headers.get('content-type');
-          if (contentType && contentType.includes('application/json')) {
-            const posts = await response.json();
-            const staticPost = posts.find((p: any) => p.slug === slug);
-            if (staticPost) {
-              setPost(staticPost);
-              return;
-            }
-          } else {
-            console.warn('Static data returned non-JSON content, falling back to API');
-          }
+        if (staticPost) {
+          setPost(staticPost);
+          return;
         }
         
         // Fallback to API if static data not available or post not found
