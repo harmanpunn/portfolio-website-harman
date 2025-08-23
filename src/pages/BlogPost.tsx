@@ -7,6 +7,7 @@ import { Navbar } from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { SEOHead } from '@/components/SEOHead';
 import { ClickableImage } from '@/components/ClickableImage';
+import { safeJsonFetch } from '@/lib/safeJsonFetch';
 import { ArrowLeft, Calendar, Tag, Loader2 } from 'lucide-react';
 
 const BlogPost = () => {
@@ -27,49 +28,67 @@ const BlogPost = () => {
     console.log('No SSG loader data, will fetch client-side');
   }
   
-  // Initialize state with loader data to prevent hydration mismatch
-  const [post, setPost] = useState<BlogPostType | null>(loaderPost);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(hasLoaderData && !loaderPost ? new Error('Post not found') : null);
+  // Initialize state to prevent hydration mismatch - always start with null on client
+  const [post, setPost] = useState<BlogPostType | null>(null);
+  const [isLoading, setIsLoading] = useState(!hasLoaderData);
+  const [error, setError] = useState<Error | null>(null);
+  const [isHydrated, setIsHydrated] = useState(false);
 
+  // Handle hydration and data loading
   useEffect(() => {
-    // If we already have loader data, we're done
-    if (hasLoaderData) {
-      if (loaderPost) {
-        console.log('Using SSG loader data:', loaderPost.title);
-      } else {
-        console.log('SSG data indicates post not found');
+    const initializePost = async () => {
+      // Mark as hydrated after component mount
+      setIsHydrated(true);
+      
+      // If we have SSG loader data, use it immediately
+      if (hasLoaderData) {
+        if (loaderPost) {
+          console.log('Using SSG loader data:', loaderPost.title);
+          setPost(loaderPost);
+          setIsLoading(false);
+        } else {
+          console.log('SSG data indicates post not found');
+          setError(new Error('Post not found'));
+          setIsLoading(false);
+        }
+        return;
       }
-      return;
-    }
 
-    // If no slug, we can't load anything
-    if (!slug) {
-      setError(new Error('No post slug provided'));
-      return;
-    }
+      // If no slug, we can't load anything
+      if (!slug) {
+        setError(new Error('No post slug provided'));
+        setIsLoading(false);
+        return;
+      }
 
-    // Fallback: Load post data client-side for direct navigation
-    const loadPost = async () => {
+      // Fallback: Load post data client-side for direct navigation
       setIsLoading(true);
       setError(null);
       
       try {
         // Try static data first - load all posts and find the specific one
-        const response = await fetch(`/static-data/posts.json`);
-        if (response.ok) {
-          const posts = await response.json();
+        try {
+          const posts = await safeJsonFetch('/static-data/posts.json');
           const staticPost = posts.find((p: any) => p.slug === slug);
+          
           if (staticPost) {
+            console.log('Found post in static data:', staticPost.title);
             setPost(staticPost);
             return;
           }
+        } catch (staticErr) {
+          console.log('Static data not available, trying API fallback');
         }
         
         // Fallback to API if static data not available or post not found
         const { notionService } = await import('@/lib/notion');
         const apiPost = await notionService.getPostBySlug(slug);
-        setPost(apiPost);
+        if (apiPost) {
+          console.log('Found post via API:', apiPost.title);
+          setPost(apiPost);
+        } else {
+          throw new Error('Post not found');
+        }
       } catch (err) {
         console.error('Error loading post:', err);
         setError(err as Error);
@@ -78,11 +97,11 @@ const BlogPost = () => {
       }
     };
 
-    loadPost();
+    initializePost();
   }, [slug, hasLoaderData, loaderPost]);
 
-  // Show loading state when fetching data client-side
-  if (isLoading) {
+  // Show loading state when fetching data client-side or during hydration
+  if (isLoading || !isHydrated) {
     return (
       <div className="min-h-screen bg-background text-foreground">
         <SEOHead />
@@ -182,7 +201,7 @@ const BlogPost = () => {
               {post.tags.length > 0 && (
                 <div className="flex items-center gap-2">
                   <Tag className="h-4 w-4" />
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2">
                     {post.tags.map((tag) => (
                       <span
                         key={tag}

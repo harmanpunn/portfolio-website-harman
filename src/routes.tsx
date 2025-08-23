@@ -9,18 +9,21 @@ import Index from './pages/Index'
 import Blog from './pages/Blog'
 import BlogPost from './pages/BlogPost'
 import NotFound from './pages/NotFound'
+import { ErrorBoundary, HydrationErrorFallback } from './components/ErrorBoundary'
 import fs from 'fs'
 
-// Layout component that wraps all routes
+// Layout component that wraps all routes with error boundary
 function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        {children}
-      </TooltipProvider>
-    </ThemeProvider>
+    <ErrorBoundary fallback={HydrationErrorFallback}>
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          {children}
+        </TooltipProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 }
 
