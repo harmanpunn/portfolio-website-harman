@@ -20,20 +20,41 @@ function generateManifestPointer() {
     process.exit(1);
   }
   
-  // Find the manifest file
+  // Find the manifest files - prioritize valid ones and clean up undefined ones
   const files = fs.readdirSync(distPath);
-  const manifestFile = files.find(file => 
+  const manifestFiles = files.filter(file => 
     file.startsWith('static-loader-data-manifest-') && file.endsWith('.json')
   );
   
-  if (!manifestFile) {
-    console.warn('⚠️ No SSG manifest file found. Creating empty pointer.');
+  // Remove any undefined manifest files
+  const undefinedManifests = manifestFiles.filter(file => 
+    file.includes('undefined')
+  );
+  
+  undefinedManifests.forEach(undefinedFile => {
+    const filePath = path.join(distPath, undefinedFile);
+    try {
+      fs.unlinkSync(filePath);
+      console.log(`🗑️ Removed undefined manifest: ${undefinedFile}`);
+    } catch (err) {
+      console.warn(`⚠️ Could not remove ${undefinedFile}:`, err.message);
+    }
+  });
+  
+  // Find valid manifest files (excluding undefined ones)
+  const validManifestFiles = manifestFiles.filter(file => 
+    !file.includes('undefined') && !file.includes('null')
+  );
+  
+  if (validManifestFiles.length === 0) {
+    console.warn('⚠️ No valid SSG manifest file found. Creating empty pointer.');
     
     // Create empty pointer for non-SSG builds
     const manifestInfo = {
       id: null,
       path: null,
-      exists: false
+      exists: false,
+      message: 'No valid manifest found - SSG may not have generated properly'
     };
     
     fs.writeFileSync(
@@ -45,16 +66,26 @@ function generateManifestPointer() {
     return;
   }
   
+  // Use the first valid manifest file
+  const manifestFile = validManifestFiles[0];
+  console.log(`📄 Found valid manifests: ${validManifestFiles.length}, using: ${manifestFile}`);
+  
   // Extract ID from filename
   const idMatch = manifestFile.match(/static-loader-data-manifest-(.+)\.json$/);
   const manifestId = idMatch ? idMatch[1] : 'unknown';
+  
+  if (manifestId === 'unknown') {
+    console.error('❌ Could not extract manifest ID from filename:', manifestFile);
+  }
   
   // Create manifest info
   const manifestInfo = {
     id: manifestId,
     path: `/${manifestFile}`,
     exists: true,
-    generatedAt: new Date().toISOString()
+    generatedAt: new Date().toISOString(),
+    totalManifests: validManifestFiles.length,
+    cleanedUndefined: undefinedManifests.length
   };
   
   // Write manifest pointer
@@ -64,6 +95,7 @@ function generateManifestPointer() {
   console.log(`✅ Generated manifest pointer: ${manifestFile}`);
   console.log(`📝 Manifest ID: ${manifestId}`);
   console.log(`📄 Pointer saved to: manifestInfo.json`);
+  console.log(`🧹 Cleaned ${undefinedManifests.length} undefined manifest files`);
 }
 
 // Run if called directly

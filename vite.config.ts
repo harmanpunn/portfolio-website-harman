@@ -58,15 +58,34 @@ export default defineConfig(({ mode }) => ({
     mock: false,
     format: 'esm',
     
+    // Override build options to ensure stable manifest generation
+    build: {
+      rollupOptions: {
+        output: {
+          // Ensure deterministic chunk naming for consistent manifest IDs
+          chunkFileNames: 'assets/[name]-[hash].js',
+          entryFileNames: 'assets/[name]-[hash].js',
+          assetFileNames: 'assets/[name]-[hash].[ext]'
+        }
+      }
+    },
+    
     // Critical CSS generation for faster loading
     beastiesOptions: {
       preload: 'media',
       logLevel: 'info',
     },
     
-    // Custom route filtering
+    // Custom route filtering with enhanced error handling
     onRouteRendered(route: string) {
       console.log(`✅ Generated: ${route}`);
+    },
+    
+    // Enhanced error handling during SSG build
+    onError(error: any, route?: string) {
+      console.error(`❌ SSG Error ${route ? `on route ${route}` : ''}:`, error);
+      // Don't fail the build on individual route errors
+      return false;
     }
   }
 }));

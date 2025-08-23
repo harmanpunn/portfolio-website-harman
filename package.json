@@ -6,11 +6,12 @@
   "scripts": {
     "dev": "vite-react-ssg dev",
     "dev:spa": "vite",
-    "build": "npm run fetch-content && vite-react-ssg build && npm run inject-seo && node scripts/generate-manifest-pointer.mjs",
+    "build": "npm run fetch-content && vite-react-ssg build && npm run inject-seo && node scripts/generate-manifest-pointer.mjs && npm run generate-sitemap",
     "build:dev": "npm run fetch-content && vite-react-ssg build --mode development",
     "build:spa": "npm run fetch-content && tsc && vite build",
     "fetch-content": "node scripts/fetch-content.mjs",
     "inject-seo": "node scripts/inject-seo-tags.mjs",
+    "generate-sitemap": "node scripts/generate-sitemap.mjs",
     "lint": "eslint .",
     "preview": "vite-react-ssg preview",
     "verify-ssg": "node scripts/verify-ssg.mjs"
