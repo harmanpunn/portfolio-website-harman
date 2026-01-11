@@ -23,8 +23,8 @@ const experiences: Experience[] = [
     location: "Princeton, NJ",
     period: "June 2024 - Present",
     year: "2024",
-    description: "Leading data science initiatives focused on forecasting, optimization, and MLOps solutions. Built MLOps pipeline using AWS Sagemaker and API Gateway to deploy ML models as scalable, serverless endpoints.",
-    skills: ["Python", "Machine Learning", "Forecasting", "Analytics", "AWS", "REST APIs"]
+    description: "Leading data science initiatives focused on forecasting, optimization, and MLOps solutions. Built MLOps pipeline using AWS Sagemaker and API Gateway to deploy ML models as scalable, serverless endpoints. Currently building AI-powered semantic search systems for video content discovery and matching.",
+    skills: ["Python", "Machine Learning", "Semantic Search", "Computer Vision", "AWS", "MLOps", "Terraform", "Analytics"]
   },
   {
     id: 2,
