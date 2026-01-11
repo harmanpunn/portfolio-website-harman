@@ -29,3 +29,5 @@ public/static-data/
 
 /design
 .vercel
+
+.env.local

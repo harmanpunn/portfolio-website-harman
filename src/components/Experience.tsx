@@ -18,8 +18,8 @@ type Experience = {
 const experiences: Experience[] = [
   {
     id: 1,
-    title: "Data Scientist",
-    company: "Invidi Technologies",
+    title: "Data Science & ML",
+    company: "INVIDI Technologies",
     location: "Princeton, NJ",
     period: "June 2024 - Present",
     year: "2024",
@@ -39,7 +39,7 @@ const experiences: Experience[] = [
   {
     id: 3,
     title: "Backend Engineer",
-    company: "Netcentric, A Cognizant Digital Business",
+    company: "Cognizant Netcentric",
     location: "Pune, India",
     period: "November 2019 - July 2021",
     year: "2019",
@@ -59,7 +59,7 @@ const experiences: Experience[] = [
   {
     id: 5,
     title: "Software Developer Intern",
-    company: "Invidi Technologies",
+    company: "INVIDI Technologies",
     location: "Princeton, NJ",
     period: "May 2023 - May 2024",
     year: "2023",
