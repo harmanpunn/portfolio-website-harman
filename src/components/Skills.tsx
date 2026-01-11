@@ -94,7 +94,7 @@ const Skills = () => {
         <div className="max-w-3xl mx-auto text-center mb-16 animate-on-scroll">
           <h2 className="text-3xl font-serif font-bold mb-4">My Skills</h2>
           <p className="text-foreground/70">
-            A combination of technical expertise and soft skills that enable me to deliver exceptional results in data science and machine learning.
+            Technical expertise across data science, machine learning, and cloud infrastructure.
           </p>
         </div>
 
@@ -114,10 +114,10 @@ const Skills = () => {
             title="LLMs, RAG & Agentic AI" 
             description="Experience with GPT, LangChain, LangGraph, OpenAI Agents SDK, CrewAI, and building RAG systems."
           />
-          <SkillCard 
-            icon={Database} 
-            title="Data Engineering" 
-            description="Proficient in SQL, MongoDB, Vector Databases, and data pipeline development."
+          <SkillCard
+            icon={Database}
+            title="Data & Search"
+            description="SQL, MongoDB, semantic search, and vector databases (OpenSearch, Qdrant) for intelligent retrieval."
           />
           <SkillCard 
             icon={Cloud} 
@@ -141,6 +141,7 @@ const Skills = () => {
           />
         </div>
 
+        {/* Commented out: Percentage-based skill bars (outdated design pattern)
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mt-12">
           <div>
             <h3 className="text-xl font-medium mb-6 animate-on-scroll">Technical Skills</h3>
@@ -155,6 +156,7 @@ const Skills = () => {
             ))}
           </div>
         </div>
+        */}
       </div>
     </section>
   );
