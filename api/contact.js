@@ -9,6 +9,19 @@ async function initializeNodemailer() {
   }
 }
 
+// Sanitize user input to prevent XSS/HTML injection in emails
+function escapeHtml(text) {
+  if (!text) return '';
+  const htmlEntities = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  };
+  return String(text).replace(/[&<>"']/g, char => htmlEntities[char]);
+}
+
 export default async function handler(req, res) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -70,67 +83,73 @@ export default async function handler(req, res) {
     await transporter.verify();
     console.log('Email transporter verified successfully');
 
+    // Sanitize all user inputs before using in HTML
+    const safeName = escapeHtml(name);
+    const safeEmail = escapeHtml(email);
+    const safeSubject = escapeHtml(subject);
+    const safeMessage = escapeHtml(message).replace(/\n/g, '<br>');
+
     // Email to you (the website owner)
     const mailOptionsToOwner = {
       from: process.env.GMAIL_USER,
       to: process.env.GMAIL_USER, // Send to yourself
-      subject: `Portfolio Contact: ${subject}`,
+      subject: `Portfolio Contact: ${safeSubject}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #3b82f6; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px;">
             New Contact Form Submission
           </h2>
-          
+
           <div style="background-color: #f9fafb; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <p><strong>Name:</strong> ${name}</p>
-            <p><strong>Email:</strong> ${email}</p>
-            <p><strong>Subject:</strong> ${subject}</p>
+            <p><strong>Name:</strong> ${safeName}</p>
+            <p><strong>Email:</strong> ${safeEmail}</p>
+            <p><strong>Subject:</strong> ${safeSubject}</p>
           </div>
-          
+
           <div style="margin: 20px 0;">
             <h3 style="color: #374151;">Message:</h3>
             <div style="background-color: #ffffff; padding: 15px; border-left: 4px solid #3b82f6; border-radius: 4px;">
-              ${message.replace(/\n/g, '<br>')}
+              ${safeMessage}
             </div>
           </div>
-          
+
           <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb; font-size: 12px; color: #6b7280;">
             <p>This message was sent from your portfolio contact form.</p>
-            <p>Reply directly to this email to respond to ${name}.</p>
+            <p>Reply directly to this email to respond to ${safeName}.</p>
           </div>
         </div>
       `,
-      replyTo: email, // Allow direct reply to the sender
+      replyTo: email, // Allow direct reply to the sender (keep original for functionality)
     };
 
     // Auto-reply to the person who submitted the form
     const autoReplyOptions = {
       from: process.env.GMAIL_USER,
       to: email,
-      subject: `Thanks for reaching out! - ${subject}`,
+      subject: `Thanks for reaching out! - ${safeSubject}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #3b82f6; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px;">
             Thanks for your message!
           </h2>
-          
-          <p>Hi ${name},</p>
-          
+
+          <p>Hi ${safeName},</p>
+
           <p>Thank you for reaching out through my portfolio website. I've received your message and will get back to you as soon as possible.</p>
-          
+
           <div style="background-color: #f9fafb; padding: 15px; border-radius: 8px; margin: 20px 0;">
             <h3 style="margin-top: 0; color: #374151;">Your message:</h3>
-            <p><strong>Subject:</strong> ${subject}</p>
+            <p><strong>Subject:</strong> ${safeSubject}</p>
             <div style="background-color: #ffffff; padding: 10px; border-left: 3px solid #3b82f6;">
-              ${message.replace(/\n/g, '<br>')}
+              ${safeMessage}
             </div>
           </div>
-          
+
           <p>I typically respond within 24-48 hours. If your inquiry is urgent, feel free to connect with me on <a href="https://www.linkedin.com/in/harmanpunn/" style="color: #3b82f6;">LinkedIn</a>.</p>
-          
+
           <p>Best regards,<br>
           <strong>Harmanpreet Singh</strong></p>
-          
+
           <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb; font-size: 12px; color: #6b7280;">
             <p>This is an automated response from harmanpunn.me</p>
           </div>

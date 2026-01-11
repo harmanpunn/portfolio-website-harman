@@ -352,10 +352,9 @@ export default async function handler(req, res) {
       });
     }
 
-    return res.status(500).json({ 
+    return res.status(500).json({
       error: 'Failed to fetch from Notion',
-      details: error.message || 'Unknown error occurred',
-      stack: error.stack
+      details: error.message || 'Unknown error occurred'
     });
   }
 }

@@ -89,7 +89,11 @@
       "destination": "/api/$1"
     },
     {
-      "source": "/((?!api|_next/static|_next/image|favicon.ico|static-data).*)",
+      "source": "/:path*.json",
+      "destination": "/:path*.json"
+    },
+    {
+      "source": "/((?!api|_next|favicon.ico|static-data|assets|robots.txt|sitemap.xml|og-image.jpg|harmanpreetresume.pdf|placeholder.svg).*)",
       "destination": "/index.html"
     }
   ],

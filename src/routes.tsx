@@ -1,11 +1,9 @@
 import type { RouteRecord } from 'vite-react-ssg'
 import React from 'react'
-// Removed HelmetProvider for simpler SSG compatibility
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/ThemeProvider";
-import { PostHogProvider } from 'posthog-js/react'
 import Index from './pages/Index'
 import Blog from './pages/Blog'
 import BlogPost from './pages/BlogPost'
@@ -15,34 +13,13 @@ import fs from 'fs'
 
 // Layout component that wraps all routes with error boundary
 function Layout({ children }: { children: React.ReactNode }) {
-  // Only initialize PostHog on the client side
-  const isClient = typeof window !== 'undefined'
-
-  const posthogOptions = isClient ? {
-    api_host: import.meta.env.VITE_PUBLIC_POSTHOG_HOST,
-    person_profiles: 'identified_only' as const,
-  } : undefined
-
   return (
     <ErrorBoundary fallback={HydrationErrorFallback}>
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         <TooltipProvider>
-          {isClient && import.meta.env.VITE_PUBLIC_POSTHOG_KEY ? (
-            <PostHogProvider
-              apiKey={import.meta.env.VITE_PUBLIC_POSTHOG_KEY}
-              options={posthogOptions}
-            >
-              <Toaster />
-              <Sonner />
-              {children}
-            </PostHogProvider>
-          ) : (
-            <>
-              <Toaster />
-              <Sonner />
-              {children}
-            </>
-          )}
+          <Toaster />
+          <Sonner />
+          {children}
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>
