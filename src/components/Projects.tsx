@@ -115,7 +115,7 @@ const GridProject = ({ project }: { project: Project }) => {
           className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
         />
         {project.hackathonWinner && (
-          <div className="absolute top-3 right-3 flex items-center gap-1 bg-amber-500 text-white text-xs font-semibold px-2 py-1 rounded-full shadow-md">
+          <div className="absolute top-3 right-3 flex items-center gap-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs font-semibold px-2 py-1 rounded-full shadow-md">
             <Trophy className="h-3 w-3" />
             <span>Hackathon Winner</span>
           </div>
@@ -173,7 +173,7 @@ const ListProject = ({ project }: { project: Project }) => {
             className="w-full h-full object-cover"
           />
           {project.hackathonWinner && (
-            <div className="absolute top-2 right-2 flex items-center gap-1 bg-amber-500 text-white text-xs font-semibold px-2 py-1 rounded-full shadow-md">
+            <div className="absolute top-2 right-2 flex items-center gap-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs font-semibold px-2 py-1 rounded-full shadow-md">
               <Trophy className="h-3 w-3" />
             </div>
           )}
@@ -182,7 +182,7 @@ const ListProject = ({ project }: { project: Project }) => {
           <div className="flex items-center gap-2 mb-2">
             <h3 className="text-xl font-medium">{project.title}</h3>
             {project.hackathonWinner && (
-              <span className="hidden md:inline-flex items-center gap-1 bg-amber-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
+              <span className="hidden md:inline-flex items-center gap-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
                 <Trophy className="h-3 w-3" />
                 <span>Hackathon Winner</span>
               </span>
