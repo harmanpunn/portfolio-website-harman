@@ -1,5 +1,5 @@
 import { useLoaderData, Link, useParams } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { BlogPost as BlogPostType } from '@/lib/notion';
@@ -12,79 +12,59 @@ import { ArrowLeft, Calendar, Tag, Loader2 } from 'lucide-react';
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
-  
-  // Get pre-loaded data from SSG loader first
-  let loaderPost: BlogPostType | null = null;
-  let hasLoaderData = false;
-  
+
+  // Try to get pre-loaded data from SSG loader
+  let initialPost: BlogPostType | null = null;
+
   try {
-    const data = useLoaderData() as { post?: BlogPostType | null };
-    loaderPost = data?.post || null;
-    hasLoaderData = true;
-    console.log('SSG loader data available:', !!loaderPost);
-  } catch (err) {
-    // No loader data available - this is normal for client-side navigation
-    hasLoaderData = false;
-    console.log('No SSG loader data, will fetch client-side');
+    const loaderData = useLoaderData() as { post?: BlogPostType | null } | undefined;
+    if (loaderData?.post) {
+      initialPost = loaderData.post;
+    }
+  } catch {
+    // No loader data available - will fetch client-side
   }
-  
-  // Initialize state to prevent hydration mismatch - always start with null on client
-  const [post, setPost] = useState<BlogPostType | null>(null);
-  const [isLoading, setIsLoading] = useState(!hasLoaderData);
+
+  const [post, setPost] = useState<BlogPostType | null>(initialPost);
+  const [isLoading, setIsLoading] = useState(!initialPost);
   const [error, setError] = useState<Error | null>(null);
-  const [isHydrated, setIsHydrated] = useState(false);
+  const hasFetched = useRef(false);
 
-  // Handle hydration and data loading
   useEffect(() => {
-    const initializePost = async () => {
-      // Mark as hydrated after component mount
-      setIsHydrated(true);
-      
-      // If we have SSG loader data, use it immediately
-      if (hasLoaderData) {
-        if (loaderPost) {
-          console.log('Using SSG loader data:', loaderPost.title);
-          setPost(loaderPost);
-          setIsLoading(false);
-        } else {
-          console.log('SSG data indicates post not found');
-          setError(new Error('Post not found'));
-          setIsLoading(false);
-        }
-        return;
-      }
+    // Skip if we already have post from SSG or already fetched
+    if (post || hasFetched.current) {
+      setIsLoading(false);
+      return;
+    }
 
-      // If no slug, we can't load anything
-      if (!slug) {
-        setError(new Error('No post slug provided'));
-        setIsLoading(false);
-        return;
-      }
+    // If no slug, we can't load anything
+    if (!slug) {
+      setError(new Error('No post slug provided'));
+      setIsLoading(false);
+      return;
+    }
 
-      // Fallback: Load post data client-side for direct navigation
+    // Prevent duplicate fetches
+    hasFetched.current = true;
+
+    const fetchPost = async () => {
       setIsLoading(true);
       setError(null);
-      
+
       try {
-        // Try static data first - load all posts and find the specific one
-        try {
-          const posts = await safeJsonFetch('/static-data/posts.json');
-          const staticPost = posts.find((p: any) => p.slug === slug);
-          
-          if (staticPost) {
-            console.log('Found post in static data:', staticPost.title);
-            setPost(staticPost);
-            return;
-          }
-        } catch (staticErr) {
-          console.log('Static data not available, trying API fallback');
+        // Try static data first
+        const posts = await safeJsonFetch('/static-data/posts.json');
+        const staticPost = posts.find((p: any) => p.slug === slug);
+
+        if (staticPost) {
+          setPost(staticPost);
+          return;
         }
-        
-        // Fallback to API if static data not available or post not found
+
+        // Fallback to API
         const { notionService } = await import('@/lib/notion');
         const apiPost = await notionService.getPostBySlug(slug);
         if (apiPost) {
-          console.log('Found post via API:', apiPost.title);
           setPost(apiPost);
         } else {
           throw new Error('Post not found');
@@ -97,11 +77,10 @@ const BlogPost = () => {
       }
     };
 
-    initializePost();
-  }, [slug, hasLoaderData, loaderPost]);
+    fetchPost();
+  }, [slug, post]);
 
-  // Show loading state when fetching data client-side or during hydration
-  if (isLoading || !isHydrated) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-background text-foreground">
         <SEOHead />

@@ -1,5 +1,5 @@
 import { useLoaderData } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Navbar } from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { BlogCard } from '@/components/BlogCard';
@@ -10,44 +10,37 @@ import { Loader2 } from 'lucide-react';
 
 const Blog = () => {
   // Try to get pre-loaded data from SSG loader
-  let loaderData: { posts?: BlogPost[] } = {};
-  let hasLoaderData = false;
-  
+  let initialPosts: BlogPost[] = [];
+
   try {
-    loaderData = (useLoaderData() as { posts?: BlogPost[] }) || {};
-    hasLoaderData = !!loaderData.posts && loaderData.posts.length > 0;
-    console.log('Blog loader data:', loaderData, 'hasLoaderData:', hasLoaderData);
-  } catch (err) {
-    // Loader data not available (direct navigation)
-    loaderData = {};
-    hasLoaderData = false;
-    console.log('No blog loader data available');
+    const loaderData = useLoaderData() as { posts?: BlogPost[] } | undefined;
+    if (loaderData?.posts && loaderData.posts.length > 0) {
+      initialPosts = loaderData.posts;
+    }
+  } catch {
+    // No loader data available (direct navigation) - will fetch client-side
   }
 
-  const [posts, setPosts] = useState<BlogPost[]>(hasLoaderData ? loaderData.posts || [] : []);
-  const [isLoading, setIsLoading] = useState(!hasLoaderData);
+  const [posts, setPosts] = useState<BlogPost[]>(initialPosts);
+  const [isLoading, setIsLoading] = useState(initialPosts.length === 0);
   const [error, setError] = useState<Error | null>(null);
-  const [isHydrated, setIsHydrated] = useState(false);
+  const hasFetched = useRef(false);
 
   useEffect(() => {
-    const initializePosts = async () => {
-      // Mark as hydrated after component mount
-      setIsHydrated(true);
-      
-      // If we have SSG loader data, use it immediately
-      if (hasLoaderData && loaderData.posts) {
-        console.log('Using SSG loader data for blog posts');
-        setPosts(loaderData.posts);
-        setIsLoading(false);
-        return;
-      }
+    // Skip if we already have posts from SSG or already fetched
+    if (posts.length > 0 || hasFetched.current) {
+      setIsLoading(false);
+      return;
+    }
 
-      // Fallback: Load posts client-side for direct navigation
+    // Prevent duplicate fetches
+    hasFetched.current = true;
+
+    const fetchPosts = async () => {
       setIsLoading(true);
       setError(null);
-      
+
       try {
-        // Try static data first
         const staticPosts = await safeJsonFetch('/static-data/posts.json');
         setPosts(staticPosts);
       } catch (err) {
@@ -58,8 +51,8 @@ const Blog = () => {
       }
     };
 
-    initializePosts();
-  }, [hasLoaderData, loaderData.posts]);
+    fetchPosts();
+  }, [posts.length]);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -82,7 +75,7 @@ const Blog = () => {
           </div>
 
           {/* Blog posts grid */}
-          {isLoading || !isHydrated ? (
+          {isLoading ? (
             <div className="flex justify-center items-center py-16">
               <Loader2 className="h-8 w-8 animate-spin" />
             </div>
