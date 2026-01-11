@@ -4,9 +4,9 @@ import { useState, useEffect } from "react";
 const MOBILE_BREAKPOINT = 768;
 
 export function useIsMobile() {
-  // Use null initial state to indicate that we don't know yet
-  // This prevents incorrect initial rendering
-  const [isMobile, setIsMobile] = useState<boolean | null>(null);
+  // Default to false (desktop) for SSR - will update on client if needed
+  // This ensures content renders immediately without loading states
+  const [isMobile, setIsMobile] = useState<boolean>(false);
 
   useEffect(() => {
     const checkScreenSize = () => {

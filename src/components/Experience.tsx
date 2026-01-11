@@ -202,21 +202,6 @@ const Experience = () => {
     </div>
   );
 
-  // Show loading placeholder while we determine if it's mobile or not
-  if (isMobile === null) {
-    return (
-      <section id="experience" className="section-padding">
-        <div className="container mx-auto">
-          <div className="max-w-3xl mx-auto text-center mb-16">
-            <h2 className="text-3xl font-serif font-bold mb-4">Professional Experience</h2>
-          </div>
-          {/* Loading placeholder */}
-          <div className="opacity-0">Loading...</div>
-        </div>
-      </section>
-    );
-  }
-
   return (
     <section id="experience" ref={sectionRef} className="section-padding">
       <div className="container mx-auto">

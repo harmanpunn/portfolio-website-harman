@@ -238,19 +238,6 @@ const Education = () => {
     </div>
   );
 
-  if (isMobile === null) {
-    return (
-      <section id="education" className="section-padding bg-muted/30">
-        <div className="container mx-auto">
-          <div className="max-w-3xl mx-auto text-center mb-16">
-            <h2 className="text-3xl font-serif font-bold mb-4">Education & Certifications</h2>
-          </div>
-          <div className="opacity-0">Loading...</div>
-        </div>
-      </section>
-    );
-  }
-
   return (
     <section id="education" ref={sectionRef} className="section-padding bg-muted/30">
       <div className="container mx-auto">
