@@ -1,13 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { 
-  ExternalLink, 
-  Github, 
-  LayoutGrid, 
+import {
+  ExternalLink,
+  Github,
+  LayoutGrid,
   List,
-  Database,
-  Server,
-  Code,
-  Video
+  Trophy
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -29,6 +26,7 @@ type Project = {
   tags: string[];
   demoUrl?: string;
   repoUrl?: string;
+  hackathonWinner?: boolean;
 };
 
 const projects: Project[] = [
@@ -39,7 +37,8 @@ const projects: Project[] = [
     image: "https://placehold.co/600x400/e2e8f0/1e293b?text=VygilAI",
     tags: ["LLM", "Agentic AI", "MCP", "Activity Tracking", "Computer Vision", "FastAPI"],
     demoUrl: "https://vygil-ai-production.up.railway.app/",
-    repoUrl: "https://railway.com/deploy/vygil-ai?referralCode=meIjQ1"
+    repoUrl: "https://railway.com/deploy/vygil-ai?referralCode=meIjQ1",
+    hackathonWinner: true
   },
   {
     id: 2,
@@ -110,11 +109,17 @@ const GridProject = ({ project }: { project: Project }) => {
   return (
     <div className="animate-on-scroll card-hover rounded-lg overflow-hidden border border-border bg-background shadow-sm">
       <div className="relative h-48 overflow-hidden">
-        <img 
-          src={project.image} 
-          alt={project.title} 
+        <img
+          src={project.image}
+          alt={project.title}
           className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
         />
+        {project.hackathonWinner && (
+          <div className="absolute top-3 right-3 flex items-center gap-1 bg-amber-500 text-white text-xs font-semibold px-2 py-1 rounded-full shadow-md">
+            <Trophy className="h-3 w-3" />
+            <span>Hackathon Winner</span>
+          </div>
+        )}
       </div>
       <div className="p-6">
         <h3 className="text-xl font-medium mb-2">{project.title}</h3>
@@ -161,15 +166,28 @@ const ListProject = ({ project }: { project: Project }) => {
   return (
     <div className="animate-on-scroll card-hover rounded-lg border border-border bg-background shadow-sm p-6">
       <div className="flex flex-col md:flex-row md:items-center gap-6">
-        <div className="md:w-1/4 h-32 md:h-24 rounded overflow-hidden">
-          <img 
-            src={project.image} 
-            alt={project.title} 
+        <div className="md:w-1/4 h-32 md:h-24 rounded overflow-hidden relative">
+          <img
+            src={project.image}
+            alt={project.title}
             className="w-full h-full object-cover"
           />
+          {project.hackathonWinner && (
+            <div className="absolute top-2 right-2 flex items-center gap-1 bg-amber-500 text-white text-xs font-semibold px-2 py-1 rounded-full shadow-md">
+              <Trophy className="h-3 w-3" />
+            </div>
+          )}
         </div>
         <div className="md:w-3/4">
-          <h3 className="text-xl font-medium mb-2">{project.title}</h3>
+          <div className="flex items-center gap-2 mb-2">
+            <h3 className="text-xl font-medium">{project.title}</h3>
+            {project.hackathonWinner && (
+              <span className="hidden md:inline-flex items-center gap-1 bg-amber-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
+                <Trophy className="h-3 w-3" />
+                <span>Hackathon Winner</span>
+              </span>
+            )}
+          </div>
           <p className="text-foreground/70 text-sm mb-3">
             {project.description}
           </p>
