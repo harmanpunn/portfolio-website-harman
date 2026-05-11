@@ -9,6 +9,45 @@
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-5SP66H3R');</script>
     <!-- End Google Tag Manager -->
+
+    <!--
+      SSG manifest resilience shim.
+      Background: vite-react-ssg constructs `/static-loader-data-manifest-${HASH}.json`
+      from window.__VITE_REACT_SSG_HASH__, which is baked into the HTML at build time.
+      During CDN edge transitions between deploys, a user can load stale HTML pointing
+      at a hash whose manifest file no longer exists on the active deployment, producing
+      a 404 plaintext "The page could not be found." that crashes `.json()` parsing.
+      This interceptor catches that specific failure and transparently re-fetches the
+      pointer file (`/manifestInfo.json`, always current) to retry with the live hash.
+      Must run before the main bundle so the patched `fetch` is in effect when the
+      bundle reads it.
+    -->
+    <script>
+      (function () {
+        if (typeof window === 'undefined' || !window.fetch) return;
+        var originalFetch = window.fetch.bind(window);
+        var manifestRegex = /\/static-loader-data-manifest-[A-Za-z0-9_-]+\.json(\?|$)/;
+        window.fetch = function (input, init) {
+          var url = typeof input === 'string' ? input : (input && input.url) || '';
+          if (!manifestRegex.test(url)) return originalFetch(input, init);
+          return originalFetch(input, init).then(function (resp) {
+            if (resp && resp.ok) return resp;
+            // Manifest is missing — likely stale HTML pointing to a retired hash.
+            // Recover by reading the always-current pointer file and retrying.
+            return originalFetch('/manifestInfo.json?ts=' + Date.now(), { cache: 'no-store' })
+              .then(function (pointerResp) {
+                if (!pointerResp || !pointerResp.ok) return resp;
+                return pointerResp.json().then(function (pointer) {
+                  if (!pointer || !pointer.path) return resp;
+                  return originalFetch(pointer.path, init);
+                });
+              })
+              .catch(function () { return resp; });
+          });
+        };
+      })();
+    </script>
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Harmanpreet Singh | Portfolio</title>
