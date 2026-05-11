@@ -23,28 +23,79 @@
       bundle reads it.
     -->
     <script>
+      // 1) Fetch shim: when the bundle asks for /static-loader-data-manifest-X.json
+      //    and that hash is gone (deploy rotated it), recover by reading the
+      //    always-current pointer (/manifestInfo.json) and retrying with the live hash.
       (function () {
         if (typeof window === 'undefined' || !window.fetch) return;
         var originalFetch = window.fetch.bind(window);
         var manifestRegex = /\/static-loader-data-manifest-[A-Za-z0-9_-]+\.json(\?|$)/;
+        function retryViaPointer(originalResp, init) {
+          return originalFetch('/manifestInfo.json?ts=' + Date.now(), { cache: 'no-store' })
+            .then(function (pointerResp) {
+              if (!pointerResp || !pointerResp.ok) {
+                return originalResp || new Response('{}', { status: 200, headers: { 'Content-Type': 'application/json' } });
+              }
+              return pointerResp.json().then(function (pointer) {
+                if (!pointer || !pointer.path) {
+                  return originalResp || new Response('{}', { status: 200, headers: { 'Content-Type': 'application/json' } });
+                }
+                return originalFetch(pointer.path, init);
+              });
+            })
+            .catch(function () {
+              return originalResp || new Response('{}', { status: 200, headers: { 'Content-Type': 'application/json' } });
+            });
+        }
         window.fetch = function (input, init) {
           var url = typeof input === 'string' ? input : (input && input.url) || '';
           if (!manifestRegex.test(url)) return originalFetch(input, init);
-          return originalFetch(input, init).then(function (resp) {
-            if (resp && resp.ok) return resp;
-            // Manifest is missing — likely stale HTML pointing to a retired hash.
-            // Recover by reading the always-current pointer file and retrying.
-            return originalFetch('/manifestInfo.json?ts=' + Date.now(), { cache: 'no-store' })
-              .then(function (pointerResp) {
-                if (!pointerResp || !pointerResp.ok) return resp;
-                return pointerResp.json().then(function (pointer) {
-                  if (!pointer || !pointer.path) return resp;
-                  return originalFetch(pointer.path, init);
-                });
-              })
-              .catch(function () { return resp; });
-          });
+          return originalFetch(input, init)
+            .then(function (resp) {
+              if (resp && resp.ok) return resp;
+              return retryViaPointer(resp, init);
+            })
+            .catch(function () {
+              // Network error on the initial fetch — pointer fallback
+              return retryViaPointer(null, init);
+            });
         };
+      })();
+
+      // 2) Self-healing safety net: if a JSON parse error still escapes
+      //    (anything we missed in the shim), do one auto-reload to fetch
+      //    a fresh deploy. Tracked in sessionStorage to avoid infinite loops.
+      (function () {
+        if (typeof window === 'undefined') return;
+        var KEY = '__ssg_recovery__';
+        function getCount() {
+          try { return parseInt(sessionStorage.getItem(KEY) || '0', 10) || 0; } catch (e) { return 0; }
+        }
+        function setCount(n) {
+          try { sessionStorage.setItem(KEY, String(n)); } catch (e) {}
+        }
+        window.addEventListener('unhandledrejection', function (e) {
+          var reason = e && e.reason;
+          var msg = (reason && (reason.message || (typeof reason === 'string' ? reason : reason.toString()))) || '';
+          var looksJsonParse = /Unexpected token/i.test(msg) || /not valid JSON/i.test(msg) || /JSON\.parse/i.test(msg);
+          if (!looksJsonParse) return;
+          var n = getCount();
+          if (n >= 2) {
+            // Give up, let it bubble. Avoid reload loops.
+            setCount(0);
+            return;
+          }
+          setCount(n + 1);
+          e.preventDefault();
+          // Tiny delay so the rejection finishes propagating; then full reload.
+          setTimeout(function () { window.location.reload(); }, 50);
+        });
+        // Clear the counter on a clean load.
+        window.addEventListener('load', function () {
+          setTimeout(function () {
+            try { sessionStorage.removeItem(KEY); } catch (e) {}
+          }, 2500);
+        });
       })();
     </script>
 
