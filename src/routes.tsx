@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import SmoothScroll from "@/components/SmoothScroll";
 import Index from './pages/Index'
 import Blog from './pages/Blog'
 import BlogPost from './pages/BlogPost'
@@ -15,8 +16,9 @@ import fs from 'fs'
 function Layout({ children }: { children: React.ReactNode }) {
   return (
     <ErrorBoundary fallback={HydrationErrorFallback}>
-      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
         <TooltipProvider>
+          <SmoothScroll />
           <Toaster />
           <Sonner />
           {children}

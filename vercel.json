@@ -47,6 +47,41 @@
           "value": "public, max-age=31536000, immutable"
         }
       ]
+    },
+    {
+      "source": "/static-loader-data-manifest-(.*)\\.json",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/json; charset=utf-8"
+        }
+      ]
+    },
+    {
+      "source": "/manifestInfo.json",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, s-maxage=60, stale-while-revalidate=300"
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/json; charset=utf-8"
+        }
+      ]
+    },
+    {
+      "source": "/static-data/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, s-maxage=300, stale-while-revalidate=600"
+        }
+      ]
     }
   ],
   "redirects": [
@@ -89,11 +124,7 @@
       "destination": "/api/$1"
     },
     {
-      "source": "/:path*.json",
-      "destination": "/:path*.json"
-    },
-    {
-      "source": "/((?!api|_next|favicon.ico|static-data|assets|robots.txt|sitemap.xml|og-image.jpg|harmanpreetresume.pdf|placeholder.svg).*)",
+      "source": "/((?!api/|_next/|favicon\\.ico|static-data/|static-loader-data-manifest-|manifestInfo\\.json|assets/|robots\\.txt|sitemap\\.xml|og-image\\.jpg|harmanpreetresume\\.pdf|placeholder\\.svg|.*\\.(?:json|js|css|map|png|jpg|jpeg|svg|webp|ico|woff2?|ttf|otf|eot|pdf|mp4|webm|xml|txt)).*)",
       "destination": "/index.html"
     }
   ],

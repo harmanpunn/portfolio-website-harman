@@ -1,162 +1,111 @@
+import { motion } from 'motion/react';
+import SectionHeading from '@/components/SectionHeading';
 
-import { useEffect, useRef } from 'react';
-import { 
-  Code, 
-  Database, 
-  Server, 
-  GitBranch, 
-  Cloud, 
-  Cpu, 
-  BarChart, 
-  Bot
-} from 'lucide-react';
-
-type Skill = {
-  name: string;
-  percentage: number;
+type Capability = {
+  title: string;
+  description: string;
 };
 
-const technicalSkills: Skill[] = [
-  { name: "Python", percentage: 95 },
-  { name: "Machine Learning", percentage: 90 },
-  { name: "LLMs & RAG", percentage: 85 },
-  { name: "AWS", percentage: 85 },
-  { name: "Data Analysis", percentage: 90 },
+const capabilities: Capability[] = [
+  {
+    title: 'Agentic systems',
+    description:
+      'Designing agents that use tools, hold memory, and act in loops without falling over past the demo.',
+  },
+  {
+    title: 'Retrieval & semantic search',
+    description:
+      'Embedding pipelines, hybrid search, and the eval loops that keep retrieval honest.',
+  },
+  {
+    title: 'Production ML',
+    description:
+      "Taking models from notebook to deployed APIs with infra that doesn't rot under traffic.",
+  },
 ];
 
-const softSkills: Skill[] = [
-  { name: "Problem Solving", percentage: 95 },
-  { name: "Communication", percentage: 90 },
-  { name: "Teamwork", percentage: 85 },
-  { name: "Time Management", percentage: 80 },
-  { name: "Research", percentage: 90 },
+// Single flat tool cluster — grouped only by line break, no labels.
+// Each inner array becomes a visual row; the grouping is implicit.
+const toolRows: string[][] = [
+  ['Python', 'TypeScript', 'Rust', 'Java', 'SQL', 'JavaScript'],
+  ['PyTorch', 'HuggingFace', 'scikit-learn', 'TensorFlow', 'Whisper', 'NumPy', 'Pandas'],
+  ['LangGraph', 'Langflow', 'MCP', 'n8n', 'LangChain', 'Ollama'],
+  ['Qdrant', 'OpenSearch', 'pgvector', 'PostgreSQL', 'Firestore', 'Supabase', 'MongoDB', 'Redis'],
+  ['AWS SageMaker', 'Bedrock', 'Lambda', 'API Gateway', 'GCP', 'Cloud Run', 'Terraform', 'Docker', 'Kubernetes'],
+  ['FastAPI', 'Tauri', 'Streamlit', 'React', 'Git', 'GitHub Actions', 'CI/CD', 'Linux', 'Claude Code'],
 ];
-
-const SkillCard = ({ 
-  icon: Icon, 
-  title, 
-  description 
-}: { 
-  icon: React.ElementType; 
-  title: string; 
-  description: string 
-}) => (
-  <div className="bg-background dark:bg-card rounded-lg shadow-sm border border-border p-6 transition-all duration-300 hover:shadow-md hover:border-accent1/20 dark:hover:border-accent1/30 animate-on-scroll">
-    <div className="text-accent1 dark:text-accent1 mb-4">
-      <Icon className="h-10 w-10" />
-    </div>
-    <h3 className="text-lg font-medium mb-2">{title}</h3>
-    <p className="text-foreground/70 text-sm">{description}</p>
-  </div>
-);
-
-const SkillBar = ({ skill }: { skill: Skill }) => (
-  <div className="mb-4 animate-on-scroll">
-    <div className="flex justify-between mb-1">
-      <span className="text-sm font-medium">{skill.name}</span>
-      <span className="text-sm text-foreground/70">{skill.percentage}%</span>
-    </div>
-    <div className="skill-bar">
-      <div 
-        className="skill-progress" 
-        style={{ width: `${skill.percentage}%` }}
-      ></div>
-    </div>
-  </div>
-);
 
 const Skills = () => {
-  const sectionRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('animated');
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    const animatedElements = document.querySelectorAll('.animate-on-scroll');
-    animatedElements.forEach((el) => observer.observe(el));
-
-    return () => {
-      animatedElements.forEach((el) => observer.unobserve(el));
-    };
-  }, []);
-
   return (
-    <section id="skills" ref={sectionRef} className="section-padding bg-muted/50">
+    <section id="skills" className="section-padding relative">
       <div className="container mx-auto">
-        <div className="max-w-3xl mx-auto text-center mb-16 animate-on-scroll">
-          <h2 className="text-3xl font-serif font-bold mb-4">My Skills</h2>
-          <p className="text-foreground/70">
-            Technical expertise across data science, machine learning, and cloud infrastructure.
-          </p>
+        <SectionHeading
+          eyebrow="Skills"
+          title={
+            <>
+              What I <span className="italic text-foreground/85">work on</span>.
+            </>
+          }
+          align="center"
+          className="mb-16"
+        />
+
+        {/* Capability prose — 3 verb-led lines, no proper nouns */}
+        <div className="max-w-3xl mx-auto space-y-10 md:space-y-12">
+          {capabilities.map((cap, i) => (
+            <motion.div
+              key={cap.title}
+              initial={{ opacity: 0, y: 16, filter: 'blur(6px)' }}
+              whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              viewport={{ once: true, margin: '-60px' }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: i * 0.06 }}
+              className="grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-6 items-baseline"
+            >
+              <div className="md:col-span-1 text-mono text-xs uppercase tracking-[0.2em] text-foreground/40">
+                0{i + 1}
+              </div>
+              <div className="md:col-span-11">
+                <h3 className="font-display text-2xl md:text-[1.7rem] leading-tight text-foreground">
+                  {cap.title}
+                  <span className="text-accent1">.</span>
+                </h3>
+                <p className="mt-2 text-foreground/70 text-base md:text-lg leading-relaxed">
+                  {cap.description}
+                </p>
+              </div>
+            </motion.div>
+          ))}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-          <SkillCard 
-            icon={Code} 
-            title="Programming Languages" 
-            description="Python, R, Java, JavaScript, HTML/CSS for building data-driven applications and interfaces."
-          />
-          <SkillCard 
-            icon={Cpu} 
-            title="Machine Learning" 
-            description="Expertise in PyTorch, TensorFlow, scikit-learn for predictive modeling and AI solutions."
-          />
-          <SkillCard 
-            icon={Bot} 
-            title="LLMs, RAG & Agentic AI" 
-            description="Experience with GPT, LangChain, LangGraph, OpenAI Agents SDK, CrewAI, and building RAG systems."
-          />
-          <SkillCard
-            icon={Database}
-            title="Data & Search"
-            description="SQL, MongoDB, semantic search, and vector databases (OpenSearch, Qdrant) for intelligent retrieval."
-          />
-          <SkillCard 
-            icon={Cloud} 
-            title="Cloud & AWS" 
-            description="AWS (S3, SageMaker, Bedrock Redshift, Quicksight, EC2, Lambda) for scalable deployments."
-          />
-          <SkillCard 
-            icon={Server} 
-            title="MLOps" 
-            description="Building end-to-end ML pipelines, automated deployments, and monitoring solutions."
-          />
-          <SkillCard 
-            icon={GitBranch} 
-            title="DevOps" 
-            description="Docker, CI/CD, Jenkins for streamlined development and deployment processes."
-          />
-          <SkillCard 
-            icon={BarChart} 
-            title="Data Analysis" 
-            description="Pandas, NumPy, and visualization tools for extracting insights from complex datasets."
-          />
+        {/* Divider */}
+        <div className="max-w-3xl mx-auto my-16 md:my-20">
+          <div className="h-px bg-foreground/10" />
         </div>
 
-        {/* Commented out: Percentage-based skill bars (outdated design pattern)
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mt-12">
-          <div>
-            <h3 className="text-xl font-medium mb-6 animate-on-scroll">Technical Skills</h3>
-            {technicalSkills.map((skill) => (
-              <SkillBar key={skill.name} skill={skill} />
+        {/* Tool cluster — flat chips, grouped by line break only, no labels */}
+        <motion.div
+          initial={{ opacity: 0, y: 16, filter: 'blur(6px)' }}
+          whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          className="max-w-3xl mx-auto"
+        >
+          <div className="eyebrow mb-5 text-center">Tools I reach for</div>
+          <div className="space-y-3">
+            {toolRows.map((row, i) => (
+              <div key={i} className="flex flex-wrap justify-center gap-1.5">
+                {row.map((tool) => (
+                  <span
+                    key={tool}
+                    className="text-mono text-[11px] px-2.5 py-1 rounded-full bg-foreground/[0.04] border border-foreground/[0.08] text-foreground/75"
+                  >
+                    {tool}
+                  </span>
+                ))}
+              </div>
             ))}
           </div>
-          <div>
-            <h3 className="text-xl font-medium mb-6 animate-on-scroll">Soft Skills</h3>
-            {softSkills.map((skill) => (
-              <SkillBar key={skill.name} skill={skill} />
-            ))}
-          </div>
-        </div>
-        */}
+        </motion.div>
       </div>
     </section>
   );

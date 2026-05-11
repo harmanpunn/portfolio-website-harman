@@ -63,17 +63,28 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				accent1: "#3b82f6", // Soft blue
-				accent2: "#0ea5e9", // Light teal
+				accent1: "hsl(var(--accent1) / <alpha-value>)",
+				accent2: "hsl(var(--accent2) / <alpha-value>)",
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
-				sm: 'calc(var(--radius) - 4px)'
+				sm: 'calc(var(--radius) - 4px)',
+				'2xl': 'calc(var(--radius) + 6px)',
+				'3xl': 'calc(var(--radius) + 12px)',
 			},
 			fontFamily: {
-				sans: ['Inter', 'sans-serif'],
+				sans: ['Geist', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+				mono: ['Geist Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
 				serif: ['Playfair Display', 'serif'],
+				display: ['Instrument Serif', 'Geist', 'serif'],
+			},
+			letterSpacing: {
+				tightest: '-0.04em',
+			},
+			backgroundImage: {
+				'aurora-gradient':
+					'radial-gradient(at 20% 20%, hsl(var(--accent1) / 0.4) 0px, transparent 50%), radial-gradient(at 80% 60%, hsl(var(--accent2) / 0.35) 0px, transparent 50%)',
 			},
 			keyframes: {
 				'accordion-down': {

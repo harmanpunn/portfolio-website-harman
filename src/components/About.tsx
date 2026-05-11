@@ -1,91 +1,99 @@
+import { motion } from 'motion/react';
+import { Github, Linkedin, Instagram, Mail, ArrowUpRight } from 'lucide-react';
+import SectionHeading from '@/components/SectionHeading';
 
-import { useEffect, useRef } from 'react';
-import { Github, Linkedin, Instagram, Mail } from 'lucide-react';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+const socials = [
+  { Icon: Github, href: 'https://github.com/harmanpunn', label: 'GitHub' },
+  { Icon: Linkedin, href: 'https://linkedin.com/in/harmanpunn', label: 'LinkedIn' },
+  { Icon: Instagram, href: 'https://www.instagram.com/harmanpunn/', label: 'Instagram' },
+  { Icon: Mail, href: 'mailto:harmanpunn@gmail.com', label: 'Email' },
+];
 
 const About = () => {
-  const sectionRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('animated');
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    const animatedElements = document.querySelectorAll('.animate-on-scroll');
-    animatedElements.forEach((el) => observer.observe(el));
-
-    return () => {
-      animatedElements.forEach((el) => observer.unobserve(el));
-    };
-  }, []);
-
   return (
-    <section id="about" ref={sectionRef} className="section-padding bg-gradient-to-r from-background to-accent/5 dark:from-background dark:to-accent/10">
+    <section id="about" className="section-padding relative">
       <div className="container mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          {/* Left side - Profile Image with round frame */}
-          <div className="animate-on-scroll flex justify-center items-center">
-            <div className="rounded-full overflow-hidden border-4 border-accent1/30 dark:border-accent1/40 shadow-lg h-72 w-72 md:h-80 md:w-80">
-              <img 
-                src="/lovable-uploads/f83a212b-f5e0-4b48-8a12-55e39d05ce12.png" 
-                alt="Profile Photo" 
-                className="w-full h-full object-cover object-top scale-125" 
+        <SectionHeading
+          eyebrow="About"
+          title={
+            <>
+              How I got <span className="italic text-foreground/85">here</span>.
+            </>
+          }
+          align="center"
+          className="mb-16"
+        />
+
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16 items-start max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 24, filter: 'blur(8px)' }}
+            whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            className="md:col-span-5 flex justify-center md:justify-start"
+          >
+            <div className="rounded-3xl overflow-hidden border border-foreground/10 shadow-[0_40px_80px_-30px_rgba(0,0,0,0.5)] h-80 w-80 md:h-96 md:w-96 transition-transform duration-500 ease-out hover:-translate-y-1">
+              <img
+                src="/lovable-uploads/about-nyc-square.jpg"
+                alt="Harmanpreet Singh portrait"
+                className="w-full h-full object-cover"
               />
             </div>
-          </div>
-          
-          {/* Right side - About Content */}
-          <div className="animate-on-scroll">
-            <h2 className="text-4xl font-serif font-bold mb-6 gradient-text">About Me</h2>
-            <p className="text-foreground/80 mb-4 text-justify">
-              I've always enjoyed building things — from scribbling logic in notebooks to shipping code that powers real products. Somewhere along the way, I got curious about the patterns behind the data. That curiosity led me into machine learning, and eventually into designing systems that don't just run, but learn.
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 24, filter: 'blur(8px)' }}
+            whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+            className="md:col-span-7 space-y-5 text-foreground/75 text-base md:text-lg leading-relaxed"
+          >
+            <p>
+              I've always enjoyed building things, from scribbling logic in notebooks to
+              shipping code that powers real products. Somewhere along the way, I got
+              curious about the patterns behind the data. That curiosity led me into
+              machine learning, and eventually into designing systems that don't just run,
+              but <span className="italic text-foreground">learn</span>.
             </p>
-            <p className="text-foreground/80 mb-4 text-justify">
-              These days, I work at the intersection of software engineering and intelligence. I build backend services, search systems, and ML pipelines — and lately, I've been deep into semantic search and autonomous agents. I'm especially into LLMs, cloud-native workflows, and anything that turns raw data into real insights.
+            <p>
+              These days, I work at the intersection of software engineering and
+              intelligence, building backend services, search systems, and ML pipelines.
+              Lately I've been deep into{' '}
+              <span className="text-foreground">semantic search</span> and{' '}
+              <span className="text-foreground">autonomous agents</span>, and anything
+              that turns raw data into real insight.
             </p>
-            <p className="text-foreground/80 mb-8 text-justify">
-              I'm currently based in the NYC metro area, working on projects that blend practical engineering with AI that actually works in production. Outside of work, you'll usually find me hacking on side ideas or chasing good light with my camera. If you're curious or want to collaborate, feel free to reach out.
+            <p>
+              I'm based in the San Francisco Bay Area. Outside of work, you'll usually find me
+              hacking on side ideas or chasing good light with my camera. If you're
+              curious or want to collaborate, reach out.
             </p>
-            
-            <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4 mt-4">
-              <a 
-                href="#contact" 
-                className="inline-flex items-center justify-center px-5 py-2.5 rounded-full bg-gradient-to-r from-accent1 to-accent2 text-white font-medium transition-all hover:shadow-lg hover:scale-105"
+
+            <div className="pt-4 flex flex-wrap items-center gap-4">
+              <a
+                href="#contact"
+                className="group inline-flex items-center gap-2 rounded-full bg-foreground text-background px-5 py-2.5 text-sm font-medium transition hover:bg-foreground/90"
               >
-                Get In Touch
+                Get in touch
+                <ArrowUpRight className="h-4 w-4 transition group-hover:rotate-45" />
               </a>
-              
-              <div className="flex space-x-4 items-center sm:ml-4">
-                <a href="https://github.com/harmanpunn" target="_blank" rel="noopener noreferrer" 
-                   className="text-foreground/70 hover:text-accent1 dark:hover:text-accent1 transition-colors"
-                   aria-label="GitHub Profile">
-                  <Github className="h-5 w-5" />
-                </a>
-                <a href="https://linkedin.com/in/harmanpunn" target="_blank" rel="noopener noreferrer" 
-                   className="text-foreground/70 hover:text-accent1 dark:hover:text-accent1 transition-colors"
-                   aria-label="LinkedIn Profile">
-                  <Linkedin className="h-5 w-5" />
-                </a>
-                <a href="https://www.instagram.com/harmanpunn/" target="_blank" rel="noopener noreferrer" 
-                   className="text-foreground/70 hover:text-accent1 dark:hover:text-accent1 transition-colors"
-                   aria-label="Instagram Profile">
-                  <Instagram className="h-5 w-5" />
-                </a>
-                <a href="mailto:harmanpunn@gmail.com" className="text-foreground/70 hover:text-accent1 dark:hover:text-accent1 transition-colors"
-                   aria-label="Email Me">
-                  <Mail className="h-5 w-5" />
-                </a>
+
+              <div className="flex items-center gap-2">
+                {socials.map(({ Icon, href, label }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    target={href.startsWith('http') ? '_blank' : undefined}
+                    rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                    aria-label={label}
+                    className="glass-pill h-9 w-9 inline-flex items-center justify-center text-foreground/65 hover:text-foreground transition"
+                  >
+                    <Icon className="h-4 w-4" />
+                  </a>
+                ))}
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
