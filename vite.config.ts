@@ -51,8 +51,12 @@ export default defineConfig(({ mode }) => ({
     
     // Build-time optimizations
     dirStyle: 'nested', // Creates SEO-friendly URLs like /blog/post-title/
-    script: 'async',
-    
+    // NOTE: do NOT set script: 'async' — vite-react-ssg's hydration is designed
+    // around `type="module"` (deferred by spec). Forcing async makes the bundle
+    // execute before the inline `__VITE_REACT_SSG_HASH__` setter parses, leading
+    // to manifest-undefined.json 404s and hydration mismatches (#418/#423).
+    // Leaving unset = default sync = deferred modules = correct script order.
+
     // Fix for static loader data manifest filename
     // Ensure consistent build ID generation
     mock: false,

@@ -17,8 +17,17 @@ const sections = [
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string>('home');
+  // `mounted` gates client-only Motion features (layoutId) so SSR and the first
+  // client render produce identical DOM — preventing React hydration mismatch
+  // (#418/#423). Motion's layoutId injects extra style/data attributes that
+  // aren't in SSR HTML.
+  const [mounted, setMounted] = useState(false);
   const location = useLocation();
   const isHomePage = location.pathname === '/';
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Track which section is in view to highlight the corresponding nav link.
   useEffect(() => {
@@ -83,11 +92,18 @@ const Navbar = () => {
                   }`}
                 >
                   {activeSection === id && (
-                    <motion.span
-                      layoutId="nav-active"
-                      className="absolute inset-0 rounded-full bg-foreground/[0.08]"
-                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                    />
+                    mounted ? (
+                      <motion.span
+                        layoutId="nav-active"
+                        className="absolute inset-0 rounded-full bg-foreground/[0.08]"
+                        transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                      />
+                    ) : (
+                      // Plain span on SSR + first client render — matches DOM
+                      // exactly so hydration succeeds. Swaps to motion.span on
+                      // mount, animating subsequent navigation.
+                      <span className="absolute inset-0 rounded-full bg-foreground/[0.08]" />
+                    )
                   )}
                   <span className="relative">{label}</span>
                 </a>

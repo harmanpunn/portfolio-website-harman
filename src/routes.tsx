@@ -51,9 +51,11 @@ export const routes: RouteRecord[] = [
     // Pre-load portfolio data at build time
     loader: async () => {
       console.log('🏠 Loading homepage data for SSG');
-      return { 
-        portfolioData: 'static-generated',
-        timestamp: new Date().toISOString()
+      // Note: keep this deterministic across builds — non-deterministic values
+      // (e.g., timestamps, random) baked into loader data can rendered into the
+      // HTML somewhere and trigger React #418 hydration mismatch.
+      return {
+        portfolioData: 'static-generated'
       };
     }
   },
